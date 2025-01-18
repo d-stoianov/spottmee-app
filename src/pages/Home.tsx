@@ -1,3 +1,4 @@
+import PageLayout from '@/layout/PageLayout'
 import { EventifyService } from '@/service'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -49,17 +50,7 @@ const Home = () => {
     }
 
     return (
-        <main className="mx-10 mt-[15%] flex flex-col items-center justify-end gap-[3rem] lg:mt-[10%]">
-            <div className="flex items-end gap-[1rem]">
-                <img
-                    className="w-[3rem] lg:w-[3.5rem]"
-                    src="logo.png"
-                    alt="logo"
-                />
-                <h1 className="font-comfortaa text-4xl lg:text-5xl">
-                    EventifyAI
-                </h1>
-            </div>
+        <PageLayout>
             <form
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -109,7 +100,7 @@ const Home = () => {
             >
                 Create event link
             </button>
-        </main>
+        </PageLayout>
     )
 }
 
