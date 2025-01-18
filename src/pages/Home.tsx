@@ -1,7 +1,16 @@
-import { ChangeEvent, useState } from 'react'
+import { EventifyService } from '@/service'
+import { ChangeEvent, FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+const service = new EventifyService()
 
 const Home = () => {
     const [files, setFiles] = useState<File[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const navigate = useNavigate()
+
+    const isButtonDisabled = files.length === 0 || isLoading
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -18,6 +27,25 @@ const Home = () => {
 
     const handleDragOver = (e: React.DragEvent<HTMLFormElement>) => {
         e.preventDefault()
+    }
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault()
+
+        const formData = new FormData()
+
+        files.forEach((file) => {
+            formData.append('photos', file)
+        })
+
+        try {
+            setIsLoading(true)
+            const response = await service.createEvent(formData)
+            navigate(`event/${response.eventId}`)
+            setIsLoading(false)
+        } catch (error) {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -75,8 +103,9 @@ const Home = () => {
                 />
             </form>
             <button
-                className={`rounded-lg border-2 border-black px-4 py-2 ${files.length === 0 && 'cursor-not-allowed'}`}
-                disabled={files.length === 0}
+                className={`rounded-lg border-2 border-black px-4 py-2 ${isButtonDisabled && 'cursor-not-allowed'}`}
+                disabled={isButtonDisabled}
+                onClick={handleSubmit}
             >
                 Create event link
             </button>
