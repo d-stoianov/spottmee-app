@@ -1,4 +1,4 @@
-const App = () => {
+const Home = () => {
     return (
         <main className="mt-[10%] flex flex-col items-center justify-end gap-[3rem]">
             <div className="flex items-end gap-[1rem]">
@@ -19,4 +19,4 @@ const App = () => {
     )
 }
 
-export default App
+export default Home
