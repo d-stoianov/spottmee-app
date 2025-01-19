@@ -41,6 +41,7 @@ const EventPage = () => {
                 setImagesPath(response.images)
                 setIsPageLoading(false)
             } catch (error) {
+                console.error(error)
                 setIsPageLoading(false)
             }
         }
@@ -100,6 +101,7 @@ const EventPage = () => {
             setCompareResponse(response)
             setIsCompareLoading(false)
         } catch (error) {
+            console.error(error)
             setCompareResponse(null)
             setIsCompareLoading(false)
         }

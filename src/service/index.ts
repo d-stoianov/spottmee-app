@@ -11,48 +11,36 @@ export class EventifyService {
     }
 
     public async createEvent(formData: FormData): Promise<CreateEventResponse> {
-        try {
-            const response = await fetch(`${this.API_URL}/register`, {
-                method: 'POST',
-                body: formData,
-            })
+        const response = await fetch(`${this.API_URL}/register`, {
+            method: 'POST',
+            body: formData,
+        })
 
-            const data: CreateEventResponse = await response.json()
-            return data
-        } catch (error) {
-            throw error
-        }
+        const data: CreateEventResponse = await response.json()
+        return data
     }
 
     public async getImagesForEvent(
         eventId: string
     ): Promise<EventImagesResponse> {
-        try {
-            const response = await fetch(`${this.API_URL}/event/${eventId}`, {
-                method: 'GET',
-            })
+        const response = await fetch(`${this.API_URL}/event/${eventId}`, {
+            method: 'GET',
+        })
 
-            const data: EventImagesResponse = await response.json()
-            return data
-        } catch (error) {
-            throw error
-        }
+        const data: EventImagesResponse = await response.json()
+        return data
     }
 
     public async getImagesBySelfieForEvent(
         eventId: string,
         formData: FormData
     ): Promise<EventImagesResponse> {
-        try {
-            const response = await fetch(`${this.API_URL}/event/${eventId}`, {
-                method: 'POST',
-                body: formData,
-            })
+        const response = await fetch(`${this.API_URL}/event/${eventId}`, {
+            method: 'POST',
+            body: formData,
+        })
 
-            const data: EventImagesResponse = await response.json()
-            return data
-        } catch (error) {
-            throw error
-        }
+        const data: EventImagesResponse = await response.json()
+        return data
     }
 }

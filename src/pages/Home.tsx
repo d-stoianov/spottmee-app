@@ -45,6 +45,7 @@ const Home = () => {
             navigate(`event/${response.eventId}`)
             setIsLoading(false)
         } catch (error) {
+            console.error(error)
             setIsLoading(false)
         }
     }
