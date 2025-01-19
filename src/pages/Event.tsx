@@ -1,8 +1,10 @@
+import ImageSection from '@/components/ImageSection'
 import Modal from '@/components/Modal'
 import PageLayout from '@/layout/PageLayout'
 import { EventifyService } from '@/service'
+import { EventImagesResponse } from '@/service/types'
 import JSZip from 'jszip'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const service = new EventifyService()
@@ -12,10 +14,16 @@ const EventPage = () => {
     const { id: eventId } = useParams()
     const navigate = useNavigate()
 
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
     const [imagesPath, setImagesPath] = useState<string[]>([])
 
     const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const [file, setFile] = useState<File | null>(null)
+
+    const [isCompareLoading, setIsCompareLoading] = useState<boolean>(false)
+    const [compareResponse, setCompareResponse] =
+        useState<EventImagesResponse | null>(null)
 
     const openFindMeModal = () => setIsModalOpen(true)
     const closeFindMeModal = () => setIsModalOpen(false)
@@ -28,19 +36,25 @@ const EventPage = () => {
             }
 
             try {
-                setIsLoading(true)
+                setIsPageLoading(true)
                 const response = await service.getImagesForEvent(eventId)
                 setImagesPath(response.images)
-                setIsLoading(false)
+                setIsPageLoading(false)
             } catch (error) {
-                setIsLoading(false)
+                setIsPageLoading(false)
             }
         }
 
         getImages()
     }, [])
 
-    const downloadAllImages = async () => {
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setFile(e.target.files[0])
+        }
+    }
+
+    const downloadAllImages = async (imagesPath: string[]) => {
         try {
             const promises = imagesPath.map(async (img) => {
                 const response = await fetch(img)
@@ -67,35 +81,41 @@ const EventPage = () => {
         }
     }
 
+    const compareSelfieWithPhotos = async (e: FormEvent) => {
+        e.preventDefault()
+
+        if (!file || !eventId) {
+            return
+        }
+
+        const formData = new FormData()
+        formData.append('selfie', file)
+
+        try {
+            setIsCompareLoading(true)
+            const response = await service.getImagesBySelfieForEvent(
+                eventId,
+                formData
+            )
+            setCompareResponse(response)
+            setIsCompareLoading(false)
+        } catch (error) {
+            setCompareResponse(null)
+            setIsCompareLoading(false)
+        }
+    }
+
     return (
         <PageLayout>
-            {isLoading ? (
+            {isPageLoading ? (
                 <span>Loading...</span>
-            ) : (
+            ) : !compareResponse ? (
                 <>
-                    <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                        {imagesPath.map((img, idx) => (
-                            <div
-                                className="flex flex-col items-center justify-end gap-2"
-                                key={idx}
-                            >
-                                <img
-                                    className="w-[20rem] rounded-lg"
-                                    src={img}
-                                    alt="image"
-                                />
-                                <span>
-                                    {EventifyService.getHostedImageFileName(
-                                        img
-                                    )}
-                                </span>
-                            </div>
-                        ))}
-                    </section>
+                    <ImageSection imagesPath={imagesPath} />
                     <div className="flex flex-col gap-4 lg:flex-row">
                         <button
                             className="rounded-lg border-2 px-4 py-2"
-                            onClick={downloadAllImages}
+                            onClick={() => downloadAllImages(imagesPath)}
                         >
                             Download all
                         </button>
@@ -111,30 +131,58 @@ const EventPage = () => {
                         <h1 className="mb-4 text-center text-xl font-bold">
                             Find me on the photos
                         </h1>
-                        <form className="flex flex-col items-center justify-center gap-4">
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="photoInput"
-                                    className="mb-2 block text-sm font-medium text-gray-700"
+                        {isCompareLoading ? (
+                            <span>Loading...</span>
+                        ) : (
+                            <form className="flex flex-col items-center justify-center gap-4">
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="photoInput"
+                                        className="mb-2 block text-sm font-medium text-gray-700"
+                                    >
+                                        Please choose a selfie from your device
+                                    </label>
+                                    <input
+                                        id="photoInput"
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/jpg"
+                                        onChange={handleFileChange}
+                                        className="w-full text-sm text-gray-500 file:mr-4 file:rounded file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+                                    />
+                                </div>
+                                <button
+                                    className="flex rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                                    onClick={compareSelfieWithPhotos}
                                 >
-                                    Please choose a selfie from your device
-                                </label>
-                                <input
-                                    id="photoInput"
-                                    type="file"
-                                    accept="image/png, image/jpeg, image/jpg"
-                                    multiple
-                                    className="w-full text-sm text-gray-500 file:mr-4 file:rounded file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="flex rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                            >
-                                Submit
-                            </button>
-                        </form>
+                                    Submit
+                                </button>
+                            </form>
+                        )}
                     </Modal>
+                </>
+            ) : (
+                <>
+                    <span>{`Found ${compareResponse.images.length} match${compareResponse.images.length === 1 ? '' : 'es'}`}</span>
+                    <ImageSection imagesPath={compareResponse.images} />
+
+                    <div className="flex flex-col gap-4 lg:flex-row">
+                        {compareResponse.images.length > 0 && (
+                            <button
+                                className="rounded-lg border-2 px-4 py-2"
+                                onClick={() =>
+                                    downloadAllImages(compareResponse.images)
+                                }
+                            >
+                                Download all
+                            </button>
+                        )}
+                        <button
+                            className="rounded-lg border-2 px-4 py-2"
+                            onClick={() => navigate(0)}
+                        >
+                            Try again
+                        </button>
+                    </div>
                 </>
             )}
         </PageLayout>

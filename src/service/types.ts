@@ -3,7 +3,9 @@ export type CreateEventResponse = {
     photos: string[]
 }
 
-export type GetEventImagesResponse = {
-    message: string
+type EventMessage = 'Success' | 'No matches found'
+
+export type EventImagesResponse = {
+    message: EventMessage
     images: string[]
 }

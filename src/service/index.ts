@@ -1,7 +1,14 @@
-import { CreateEventResponse, GetEventImagesResponse } from '@/service/types'
+import { CreateEventResponse, EventImagesResponse } from '@/service/types'
 
 export class EventifyService {
     API_URL = import.meta.env.VITE_API_URL
+
+    static getHostedImageFileName(imgPath: string): string {
+        const splittedImage = imgPath.split('/')
+        const fileName = splittedImage[splittedImage.length - 1]
+
+        return fileName
+    }
 
     public async createEvent(formData: FormData): Promise<CreateEventResponse> {
         try {
@@ -19,23 +26,33 @@ export class EventifyService {
 
     public async getImagesForEvent(
         eventId: string
-    ): Promise<GetEventImagesResponse> {
+    ): Promise<EventImagesResponse> {
         try {
             const response = await fetch(`${this.API_URL}/event/${eventId}`, {
                 method: 'GET',
             })
 
-            const data: GetEventImagesResponse = await response.json()
+            const data: EventImagesResponse = await response.json()
             return data
         } catch (error) {
             throw error
         }
     }
 
-    static getHostedImageFileName(imgPath: string): string {
-        const splittedImage = imgPath.split('/')
-        const fileName = splittedImage[splittedImage.length - 1]
+    public async getImagesBySelfieForEvent(
+        eventId: string,
+        formData: FormData
+    ): Promise<EventImagesResponse> {
+        try {
+            const response = await fetch(`${this.API_URL}/event/${eventId}`, {
+                method: 'POST',
+                body: formData,
+            })
 
-        return fileName
+            const data: EventImagesResponse = await response.json()
+            return data
+        } catch (error) {
+            throw error
+        }
     }
 }
