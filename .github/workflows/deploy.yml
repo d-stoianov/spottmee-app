@@ -1,0 +1,57 @@
+name: Deploy
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '20'
+
+            - name: Run linter
+              run: |
+                  npm ci
+                  npm run lint
+                  npm run build
+
+    deploy:
+        needs: lint
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Deploy to VPS
+              env:
+                  HOST: ${{ secrets.VPS_HOST }}
+                  USER: ${{ secrets.VPS_USER }}
+                  SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+              run: |
+                  echo "$SSH_KEY" > ssh_key
+                  chmod 600 ssh_key
+
+                  ssh -i ssh_key -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+                      cd ~/eventify-ai-app
+                      git pull
+                      sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+                      sudo /sbin/mkswap /var/swap.1
+                      sudo /sbin/swapon /var/swap.1
+
+                      # deploy
+                      cd ~/eventify-ai-app
+                      npm i
+                      npm run build
+                      rsync -av --exclude 'uploads/' ~/eventify-ai-app/dist/ /var/www/html/eventify-ai-app/
+                      nginx -s reload
+                  EOF
