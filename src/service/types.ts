@@ -3,9 +3,15 @@ export type CreateEventResponse = {
     photos: string[]
 }
 
-type EventMessage = 'Success' | 'No matches found'
-
 export type EventImagesResponse = {
-    message: EventMessage
-    images: string[]
+    photos: string[]
+    status: Map<string, boolean>
+}
+
+export type CreateEventCompareResponse = {
+    compareKey: string
+}
+
+export type EventCompareResult = {
+    matches: string[]
 }

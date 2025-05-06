@@ -1,9 +1,7 @@
 import PageLayout from '@/layout/PageLayout'
-import { EventifyService } from '@/service'
+import eventifyService from '@/service'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-const service = new EventifyService()
 
 const Home = () => {
     const [files, setFiles] = useState<File[]>([])
@@ -41,7 +39,7 @@ const Home = () => {
 
         try {
             setIsLoading(true)
-            const response = await service.createEvent(formData)
+            const response = await eventifyService.createEvent(formData)
             navigate(`event/${response.eventId}`)
             setIsLoading(false)
         } catch (error) {
@@ -81,7 +79,7 @@ const Home = () => {
 
                 <label
                     htmlFor="file-input"
-                    className="font-comfortaa cursor-pointer text-center text-sm text-black"
+                    className="cursor-pointer text-center font-comfortaa text-sm text-black"
                 >
                     Drop files here or click to upload
                 </label>

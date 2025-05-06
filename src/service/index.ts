@@ -1,4 +1,9 @@
-import { CreateEventResponse, EventImagesResponse } from '@/service/types'
+import {
+    CreateEventCompareResponse,
+    CreateEventResponse,
+    EventCompareResult,
+    EventImagesResponse,
+} from '@/service/types'
 
 export class EventifyService {
     API_URL = import.meta.env.VITE_API_URL
@@ -31,16 +36,32 @@ export class EventifyService {
         return data
     }
 
-    public async getImagesBySelfieForEvent(
+    public async createCompareProcess(
         eventId: string,
         formData: FormData
-    ): Promise<EventImagesResponse> {
+    ): Promise<CreateEventCompareResponse> {
         const response = await fetch(`${this.API_URL}/event/${eventId}`, {
             method: 'POST',
             body: formData,
         })
 
-        const data: EventImagesResponse = await response.json()
+        const data: CreateEventCompareResponse = await response.json()
+        return data
+    }
+
+    public async getCompareResult(
+        eventId: string,
+        compareKey: string
+    ): Promise<EventCompareResult> {
+        const response = await fetch(
+            `${this.API_URL}/event/${eventId}/${compareKey}`
+        )
+
+        const data: EventCompareResult = await response.json()
         return data
     }
 }
+
+const eventifyService = new EventifyService()
+
+export default eventifyService
