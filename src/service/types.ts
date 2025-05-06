@@ -3,15 +3,19 @@ export type CreateEventResponse = {
     photos: string[]
 }
 
-export type EventImagesResponse = {
-    photos: string[]
-    status: Map<string, boolean>
+export type EventPhoto = {
+    fileName: string
+    photoUrl: string
+    status?: boolean
 }
+
+export type EventImagesResponse = EventPhoto[]
 
 export type CreateEventCompareResponse = {
     compareKey: string
 }
 
 export type EventCompareResult = {
-    matches: string[]
+    matches: EventPhoto[]
+    ready: boolean
 }

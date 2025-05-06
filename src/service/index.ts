@@ -8,13 +8,6 @@ import {
 export class EventifyService {
     API_URL = import.meta.env.VITE_API_URL
 
-    static getHostedImageFileName(imgPath: string): string {
-        const splittedImage = imgPath.split('/')
-        const fileName = splittedImage[splittedImage.length - 1]
-
-        return fileName
-    }
-
     public async createEvent(formData: FormData): Promise<CreateEventResponse> {
         const response = await fetch(`${this.API_URL}/register`, {
             method: 'POST',

@@ -2,6 +2,7 @@ import ImageSection from '@/components/ImageSection'
 import Modal from '@/components/Modal'
 import PageLayout from '@/layout/PageLayout'
 import eventifyService from '@/service'
+import { EventPhoto } from '@/service/types'
 import JSZip from 'jszip'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -13,7 +14,7 @@ const EventPage = () => {
     const navigate = useNavigate()
 
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
-    const [imagesPath, setImagesPath] = useState<string[]>([])
+    const [eventPhotos, setEventPhotos] = useState<EventPhoto[]>([])
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -35,7 +36,7 @@ const EventPage = () => {
                 setIsPageLoading(true)
                 const response =
                     await eventifyService.getImagesForEvent(eventId)
-                setImagesPath(response.photos)
+                setEventPhotos(response)
                 setIsPageLoading(false)
             } catch (error) {
                 console.error(error)
@@ -108,11 +109,15 @@ const EventPage = () => {
                 <span>Loading...</span>
             ) : (
                 <>
-                    <ImageSection imagesPath={imagesPath} />
+                    <ImageSection images={eventPhotos} />
                     <div className="flex flex-col gap-4 lg:flex-row">
                         <button
                             className="rounded-lg border-2 px-4 py-2"
-                            onClick={() => downloadAllImages(imagesPath)}
+                            onClick={() =>
+                                downloadAllImages(
+                                    eventPhotos.map((i) => i.photoUrl)
+                                )
+                            }
                         >
                             Download all
                         </button>
