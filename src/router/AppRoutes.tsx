@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router'
 
 import Home from '@/pages/Home'
 import EventPage from '@/pages/Event'
+import CompareResultPage from '@/pages/CompareResult'
 
 const AppRoutes = () => {
     return (
@@ -9,6 +10,11 @@ const AppRoutes = () => {
             <Route path="/" index element={<Home />} />
             <Route path="/event" index element={<EventPage />} />
             <Route path="/event/:id" index element={<EventPage />} />
+            <Route
+                path="/event/:id/:compareKey"
+                index
+                element={<CompareResultPage />}
+            />
         </Routes>
     )
 }

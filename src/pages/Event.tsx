@@ -1,13 +1,12 @@
 import ImageSection from '@/components/ImageSection'
 import Modal from '@/components/Modal'
 import PageLayout from '@/layout/PageLayout'
-import { EventifyService } from '@/service'
-import { EventImagesResponse } from '@/service/types'
+import eventifyService from '@/service'
+import { EventPhoto } from '@/service/types'
 import JSZip from 'jszip'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-const service = new EventifyService()
 const zip = new JSZip()
 
 const EventPage = () => {
@@ -15,15 +14,13 @@ const EventPage = () => {
     const navigate = useNavigate()
 
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
-    const [imagesPath, setImagesPath] = useState<string[]>([])
+    const [eventPhotos, setEventPhotos] = useState<EventPhoto[]>([])
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const [file, setFile] = useState<File | null>(null)
 
     const [isCompareLoading, setIsCompareLoading] = useState<boolean>(false)
-    const [compareResponse, setCompareResponse] =
-        useState<EventImagesResponse | null>(null)
 
     const openFindMeModal = () => setIsModalOpen(true)
     const closeFindMeModal = () => setIsModalOpen(false)
@@ -37,8 +34,9 @@ const EventPage = () => {
 
             try {
                 setIsPageLoading(true)
-                const response = await service.getImagesForEvent(eventId)
-                setImagesPath(response.images)
+                const response =
+                    await eventifyService.getImagesForEvent(eventId)
+                setEventPhotos(response)
                 setIsPageLoading(false)
             } catch (error) {
                 console.error(error)
@@ -94,16 +92,14 @@ const EventPage = () => {
 
         try {
             setIsCompareLoading(true)
-            const response = await service.getImagesBySelfieForEvent(
+            const { compareKey } = await eventifyService.createCompareProcess(
                 eventId,
                 formData
             )
-            setCompareResponse(response)
             setIsCompareLoading(false)
+            navigate(compareKey)
         } catch (error) {
             console.error(error)
-            setCompareResponse(null)
-            setIsCompareLoading(false)
         }
     }
 
@@ -111,13 +107,17 @@ const EventPage = () => {
         <PageLayout>
             {isPageLoading ? (
                 <span>Loading...</span>
-            ) : !compareResponse ? (
+            ) : (
                 <>
-                    <ImageSection imagesPath={imagesPath} />
+                    <ImageSection images={eventPhotos} />
                     <div className="flex flex-col gap-4 lg:flex-row">
                         <button
                             className="rounded-lg border-2 px-4 py-2"
-                            onClick={() => downloadAllImages(imagesPath)}
+                            onClick={() =>
+                                downloadAllImages(
+                                    eventPhotos.map((i) => i.photoUrl)
+                                )
+                            }
                         >
                             Download all
                         </button>
@@ -161,30 +161,6 @@ const EventPage = () => {
                             </form>
                         )}
                     </Modal>
-                </>
-            ) : (
-                <>
-                    <span>{`Found ${compareResponse.images.length} match${compareResponse.images.length === 1 ? '' : 'es'}`}</span>
-                    <ImageSection imagesPath={compareResponse.images} />
-
-                    <div className="flex flex-col gap-4 lg:flex-row">
-                        {compareResponse.images.length > 0 && (
-                            <button
-                                className="rounded-lg border-2 px-4 py-2"
-                                onClick={() =>
-                                    downloadAllImages(compareResponse.images)
-                                }
-                            >
-                                Download all
-                            </button>
-                        )}
-                        <button
-                            className="rounded-lg border-2 px-4 py-2"
-                            onClick={() => navigate(0)}
-                        >
-                            Try again
-                        </button>
-                    </div>
                 </>
             )}
         </PageLayout>

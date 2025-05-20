@@ -3,9 +3,19 @@ export type CreateEventResponse = {
     photos: string[]
 }
 
-type EventMessage = 'Success' | 'No matches found'
+export type EventPhoto = {
+    fileName: string
+    photoUrl: string
+    status?: boolean
+}
 
-export type EventImagesResponse = {
-    message: EventMessage
-    images: string[]
+export type EventImagesResponse = EventPhoto[]
+
+export type CreateEventCompareResponse = {
+    compareKey: string
+}
+
+export type EventCompareResult = {
+    matches: EventPhoto[]
+    ready: boolean
 }
