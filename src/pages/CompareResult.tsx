@@ -3,7 +3,7 @@ import PageLayout from '@/layout/PageLayout'
 import eventifyService from '@/service'
 import { EventPhoto } from '@/service/types'
 import JSZip from 'jszip'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const zip = new JSZip()
@@ -12,14 +12,16 @@ const CompareResultPage = () => {
     const { id: eventId, compareKey } = useParams()
     const navigate = useNavigate()
 
+    const invervalIdRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+        undefined
+    )
+
     const [matches, setMatches] = useState<EventPhoto[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     // poll compare result
     useEffect(() => {
         if (!eventId || !compareKey) return
-
-        let intervalId: ReturnType<typeof setTimeout>
 
         const fetchMatches = async () => {
             try {
@@ -30,7 +32,7 @@ const CompareResultPage = () => {
                 setMatches(result.matches)
                 // stop polling if result is present
                 if (result.ready) {
-                    clearInterval(intervalId)
+                    clearInterval(invervalIdRef.current)
                     setIsLoading(false)
                 }
             } catch (error) {
@@ -39,14 +41,14 @@ const CompareResultPage = () => {
         }
 
         fetchMatches() // initial fetch
-        intervalId = setInterval(fetchMatches, 5000) // poll every 5 seconds
+        invervalIdRef.current = setInterval(fetchMatches, 5000) // poll every 5 seconds
 
         if (matches && matches.length > 0) {
-            clearInterval(intervalId)
+            clearInterval(invervalIdRef.current)
         }
 
         return () => {
-            clearInterval(intervalId)
+            clearInterval(invervalIdRef.current)
         }
     }, [eventId, compareKey])
 
