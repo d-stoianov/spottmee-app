@@ -42,16 +42,17 @@ jobs:
                   chmod 600 ssh_key
 
                   ssh -i ssh_key -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-                      cd ~/eventify-ai-app
+                      cd ~/eventify/eventify-ai-app
                       git pull
                       sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
                       sudo /sbin/mkswap /var/swap.1
                       sudo /sbin/swapon /var/swap.1
 
                       # deploy
-                      cd ~/eventify-ai-app
+                      cd ~/eventify/eventify-ai-app
                       npm i
                       npm run build
-                      rsync -av --exclude 'uploads/' ~/eventify-ai-app/dist/ /var/www/html/eventify-ai-app/
-                      nginx -s reload
+                      sudo rm -rf /var/www/eventify-ai.com/*
+                      cp -r ~/eventify/eventify-ai-app/dist/* /var/www//eventify-ai.com/
+                      sudo systemctl restart nginx
                   EOF
