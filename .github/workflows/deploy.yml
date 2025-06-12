@@ -16,13 +16,12 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version: '20'
+                  node-version: '22'
 
-            - name: Run linter
+            - name: Install dependencies and run linter
               run: |
                   npm ci
                   npm run lint
-                  npm run build
 
     deploy:
         needs: lint
@@ -32,7 +31,29 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            - name: Deploy to VPS
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '20'
+
+            - name: Build and Package Application
+              run: |
+                  npm ci
+                  npm run build
+                  tar czf ../app.tar.gz -C dist .
+
+            - name: Copy Package to VPS
+              env:
+                  HOST: ${{ secrets.VPS_HOST }}
+                  USER: ${{ secrets.VPS_USER }}
+                  SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+              run: |
+                  echo "$SSH_KEY" > ssh_key
+                  chmod 600 ssh_key
+
+                  scp -i ssh_key -o StrictHostKeyChecking=no ../app.tar.gz $USER@$HOST:~/spottmee/tars/
+
+            - name: Deploy on VPS
               env:
                   HOST: ${{ secrets.VPS_HOST }}
                   USER: ${{ secrets.VPS_USER }}
@@ -42,17 +63,23 @@ jobs:
                   chmod 600 ssh_key
 
                   ssh -i ssh_key -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-                      cd ~/eventify/eventify-ai-app
-                      git pull
-                      sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
-                      sudo /sbin/mkswap /var/swap.1
-                      sudo /sbin/swapon /var/swap.1
+                    set -e
+                    cd ~/spottmee/tars
 
-                      # deploy
-                      cd ~/eventify/eventify-ai-app
-                      npm i
-                      npm run build
-                      sudo rm -rf /var/www/eventify-ai.com/*
-                      cp -r ~/eventify/eventify-ai-app/dist/* /var/www//eventify-ai.com/
-                      sudo systemctl restart nginx
+                    # Extract package
+                    mkdir -p spottmee-app
+                    tar xzf app.tar.gz -C spottmee-app --strip-components=1
+                    cd spottmee-app
+
+                    # Ensure swap is enabled
+                    if ! sudo swapon --show | grep -q '/var/swap.1'; then
+                      sudo fallocate -l 1G /var/swap.1 || sudo dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+                      sudo chmod 600 /var/swap.1
+                      sudo mkswap /var/swap.1
+                      sudo swapon /var/swap.1
+                    fi
+
+                    # Copy built files to /var/www/spottmee.com/ replacing the old ones
+                    sudo rm -rf /var/www/spottmee.com/*
+                    sudo cp -r ./* /var/www/spottmee.com/
                   EOF
