@@ -74,7 +74,7 @@ const CompareRoute: React.FC = () => {
             })
             const link = document.createElement('a')
             link.href = window.URL.createObjectURL(zipData)
-            link.download = `eventify-ai-${eventId}.zip`
+            link.download = `spottmee-${eventId}.zip`
             link.click()
         } catch (error) {
             console.error('error while downloading images:', error)

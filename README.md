@@ -1,10 +1,10 @@
-# Eventify AI App
+# Spottmee App
 
-This project is **Eventify AI App**, developed during the **Amsterdam Hack!** ([hackathon](https://lu.ma/j7oaryet?tk=Qf5bH2)). The app was built in just 30 hours and achieved **3rd place** in the competition. The goal was to build a platform powered with AI. Eventify AI simplifies the process of sharing photos from events by providing a self face recognition.
+This project is **Spottmee App**, initially developed during the **Amsterdam Hack!** ([hackathon](https://lu.ma/j7oaryet?tk=Qf5bH2)). The app was built in just 30 hours and achieved **3rd place** in the competition. The goal was to build a platform powered with AI. Spottmee simplifies the process of sharing photos from events by providing a self face recognition.
 
-The project utilizes the **Eventify AI Service** ([GitHub Repository](https://github.com/d-stoianov/eventify-ai-service)) for backend AI-driven functionalities.
+The project consumes the **Spottmee Service** ([GitHub Repository](https://github.com/d-stoianov/spottmee-service)) REST API.
 
-The app is live on [eventify-ai.com](https://eventify-ai.com)
+The app is live on [spottmee.com](https://spottmee.com)
 
 <img width="1490" alt="screenshot-1" src="https://github.com/user-attachments/assets/94ad13a0-08b1-4e88-8b96-c78e82577e87" />
 <img width="1490" alt="screenshot-2" src="https://github.com/user-attachments/assets/b580e3cd-181f-43a6-8ed4-ebf38092b067" />
@@ -42,8 +42,8 @@ The event page is being created with a unique link containing an (`eventId`) in 
 1.  Clone the repository:
 
     ```bash
-    git clone https://github.com/d-stoianov/eventify-ai-app.git
-    cd eventify-ai-app
+    git clone https://github.com/d-stoianov/spottmee-app.git
+    cd spottmee-app
     ```
 
 2.  Install dependencies:
@@ -57,7 +57,7 @@ The event page is being created with a unique link containing an (`eventId`) in 
     Create file in the root of the project called `.env`, with the following content:
     `VITE_API_URL=https://api_url`
 
-    You can run and build an eventify-ai-service yourself and put the link from localhost there. Please see - [eventify-ai-service](https://github.com/d-stoianov/eventify-ai-service)
+    You can run and build an spottmee-service yourself and put the link from localhost there. Please see - [spottmee-service](https://github.com/d-stoianov/spottmee-service)
 
 4.  Start the development server:
 
@@ -71,7 +71,7 @@ The event page is being created with a unique link containing an (`eventId`) in 
 
 -   `src/`: Contains all the source code
     -   `pages/`: Components for each page (Home, Event)
-    -   `services/`: API service to fetch data from the eventify service
+    -   `services/`: API service to fetch data from the spottmee service
     -   `router/`: Router setup
     -   `layout/`: Contains page layout component
     -   `components/`: Contains reusable components that are used in other components

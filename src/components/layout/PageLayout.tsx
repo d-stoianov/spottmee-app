@@ -8,7 +8,7 @@ const PageLayout = ({ children }: { children: React.ReactNode }) => {
                     alt="logo"
                 />
                 <h1 className="font-comfortaa text-4xl lg:text-5xl">
-                    EventifyAI
+                    Spottmee
                 </h1>
             </div>
             {children}
