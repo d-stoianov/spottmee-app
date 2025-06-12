@@ -1,5 +1,5 @@
 import { useApp } from '@/app/provider'
-import PageLayout from '@/layout/PageLayout'
+import PageLayout from '@/components/layout/PageLayout'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 

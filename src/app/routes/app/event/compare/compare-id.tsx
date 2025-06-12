@@ -1,6 +1,6 @@
 import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
-import PageLayout from '@/layout/PageLayout'
+import PageLayout from '@/components/layout/PageLayout'
 import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { useEffect, useRef, useState } from 'react'

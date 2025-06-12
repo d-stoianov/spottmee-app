@@ -1,7 +1,7 @@
 import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
 import Modal from '@/components/Modal'
-import PageLayout from '@/layout/PageLayout'
+import PageLayout from '@/components/layout/PageLayout'
 import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
