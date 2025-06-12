@@ -3,7 +3,7 @@ import eventifyService from '@/service'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const Home = () => {
+const HomeRoute: React.FC = () => {
     const [files, setFiles] = useState<File[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -103,4 +103,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default HomeRoute

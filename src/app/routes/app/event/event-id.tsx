@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const zip = new JSZip()
 
-const EventPage = () => {
+const EventRoute: React.FC = () => {
     const { id: eventId } = useParams()
     const navigate = useNavigate()
 
@@ -167,4 +167,4 @@ const EventPage = () => {
     )
 }
 
-export default EventPage
+export default EventRoute

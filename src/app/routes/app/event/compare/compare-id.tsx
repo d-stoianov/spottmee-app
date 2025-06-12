@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const zip = new JSZip()
 
-const CompareResultPage = () => {
+const CompareRoute: React.FC = () => {
     const { id: eventId, compareKey } = useParams()
     const navigate = useNavigate()
 
@@ -114,4 +114,4 @@ const CompareResultPage = () => {
     )
 }
 
-export default CompareResultPage
+export default CompareRoute
