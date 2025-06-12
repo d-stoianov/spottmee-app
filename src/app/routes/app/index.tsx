@@ -1,5 +1,5 @@
 import PageLayout from '@/layout/PageLayout'
-import eventifyService from '@/service'
+import eventifyService from '@/services/EventService'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
