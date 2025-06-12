@@ -30,8 +30,8 @@ const CompareResultPage = () => {
                     compareKey
                 )
                 setMatches(result.matches)
-                // stop polling if result is present
-                if (result.ready) {
+                // stop polling if status is present
+                if (result.status) {
                     clearInterval(invervalIdRef.current)
                     setIsLoading(false)
                 }

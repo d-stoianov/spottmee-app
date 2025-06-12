@@ -17,5 +17,5 @@ export type CreateEventCompareResponse = {
 
 export type EventCompareResult = {
     matches: EventPhoto[]
-    ready: boolean
+    status: boolean
 }
