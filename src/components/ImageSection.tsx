@@ -1,4 +1,4 @@
-import { EventPhoto } from '@/service/types'
+import { EventPhoto } from '@/services/EventService/types'
 
 interface ImageSectionProps {
     images: EventPhoto[]

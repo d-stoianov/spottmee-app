@@ -1,16 +1,18 @@
+import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
-import PageLayout from '@/layout/PageLayout'
-import eventifyService from '@/service'
-import { EventPhoto } from '@/service/types'
+import PageLayout from '@/components/layout/PageLayout'
+import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const zip = new JSZip()
 
-const CompareResultPage = () => {
+const CompareRoute: React.FC = () => {
     const { id: eventId, compareKey } = useParams()
     const navigate = useNavigate()
+
+    const { eventService } = useApp()
 
     const invervalIdRef = useRef<ReturnType<typeof setTimeout> | undefined>(
         undefined
@@ -25,7 +27,7 @@ const CompareResultPage = () => {
 
         const fetchMatches = async () => {
             try {
-                const result = await eventifyService.getCompareResult(
+                const result = await eventService.getCompareResult(
                     eventId,
                     compareKey
                 )
@@ -72,7 +74,7 @@ const CompareResultPage = () => {
             })
             const link = document.createElement('a')
             link.href = window.URL.createObjectURL(zipData)
-            link.download = `eventify-ai-${eventId}.zip`
+            link.download = `spottmee-${eventId}.zip`
             link.click()
         } catch (error) {
             console.error('error while downloading images:', error)
@@ -114,4 +116,4 @@ const CompareResultPage = () => {
     )
 }
 
-export default CompareResultPage
+export default CompareRoute

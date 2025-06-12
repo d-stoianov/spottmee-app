@@ -3,9 +3,9 @@ import {
     CreateEventResponse,
     EventCompareResult,
     EventImagesResponse,
-} from '@/service/types'
+} from '@/services/EventService/types'
 
-export class EventifyService {
+export class EventService {
     API_URL = import.meta.env.VITE_API_URL
 
     public async createEvent(formData: FormData): Promise<CreateEventResponse> {
@@ -54,7 +54,3 @@ export class EventifyService {
         return data
     }
 }
-
-const eventifyService = new EventifyService()
-
-export default eventifyService

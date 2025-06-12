@@ -1,13 +1,15 @@
-import PageLayout from '@/layout/PageLayout'
-import eventifyService from '@/service'
+import { useApp } from '@/app/provider'
+import PageLayout from '@/components/layout/PageLayout'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const Home = () => {
+const HomeRoute: React.FC = () => {
     const [files, setFiles] = useState<File[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const navigate = useNavigate()
+
+    const { eventService } = useApp()
 
     const isButtonDisabled = files.length === 0 || isLoading
 
@@ -39,7 +41,7 @@ const Home = () => {
 
         try {
             setIsLoading(true)
-            const response = await eventifyService.createEvent(formData)
+            const response = await eventService.createEvent(formData)
             navigate(`event/${response.eventId}`)
             setIsLoading(false)
         } catch (error) {
@@ -103,4 +105,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default HomeRoute

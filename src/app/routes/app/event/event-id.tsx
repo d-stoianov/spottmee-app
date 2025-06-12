@@ -1,17 +1,19 @@
+import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
 import Modal from '@/components/Modal'
-import PageLayout from '@/layout/PageLayout'
-import eventifyService from '@/service'
-import { EventPhoto } from '@/service/types'
+import PageLayout from '@/components/layout/PageLayout'
+import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const zip = new JSZip()
 
-const EventPage = () => {
+const EventRoute: React.FC = () => {
     const { id: eventId } = useParams()
     const navigate = useNavigate()
+
+    const { eventService } = useApp()
 
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
     const [eventPhotos, setEventPhotos] = useState<EventPhoto[]>([])
@@ -34,8 +36,7 @@ const EventPage = () => {
 
             try {
                 setIsPageLoading(true)
-                const response =
-                    await eventifyService.getImagesForEvent(eventId)
+                const response = await eventService.getImagesForEvent(eventId)
                 setEventPhotos(response)
                 setIsPageLoading(false)
             } catch (error) {
@@ -73,7 +74,7 @@ const EventPage = () => {
             })
             const link = document.createElement('a')
             link.href = window.URL.createObjectURL(zipData)
-            link.download = `eventify-ai-${eventId}.zip`
+            link.download = `spottmee-${eventId}.zip`
             link.click()
         } catch (error) {
             console.error('error while downloading images:', error)
@@ -92,7 +93,7 @@ const EventPage = () => {
 
         try {
             setIsCompareLoading(true)
-            const { compareKey } = await eventifyService.createCompareProcess(
+            const { compareKey } = await eventService.createCompareProcess(
                 eventId,
                 formData
             )
@@ -167,4 +168,4 @@ const EventPage = () => {
     )
 }
 
-export default EventPage
+export default EventRoute
