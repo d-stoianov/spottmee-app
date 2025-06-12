@@ -1,6 +1,6 @@
+import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
 import PageLayout from '@/layout/PageLayout'
-import eventifyService from '@/services/EventService'
 import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { useEffect, useRef, useState } from 'react'
@@ -11,6 +11,8 @@ const zip = new JSZip()
 const CompareRoute: React.FC = () => {
     const { id: eventId, compareKey } = useParams()
     const navigate = useNavigate()
+
+    const { eventService } = useApp()
 
     const invervalIdRef = useRef<ReturnType<typeof setTimeout> | undefined>(
         undefined
@@ -25,7 +27,7 @@ const CompareRoute: React.FC = () => {
 
         const fetchMatches = async () => {
             try {
-                const result = await eventifyService.getCompareResult(
+                const result = await eventService.getCompareResult(
                     eventId,
                     compareKey
                 )

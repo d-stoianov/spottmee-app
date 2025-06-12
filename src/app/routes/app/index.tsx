@@ -1,5 +1,5 @@
+import { useApp } from '@/app/provider'
 import PageLayout from '@/layout/PageLayout'
-import eventifyService from '@/services/EventService'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,6 +8,8 @@ const HomeRoute: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const navigate = useNavigate()
+
+    const { eventService } = useApp()
 
     const isButtonDisabled = files.length === 0 || isLoading
 
@@ -39,7 +41,7 @@ const HomeRoute: React.FC = () => {
 
         try {
             setIsLoading(true)
-            const response = await eventifyService.createEvent(formData)
+            const response = await eventService.createEvent(formData)
             navigate(`event/${response.eventId}`)
             setIsLoading(false)
         } catch (error) {

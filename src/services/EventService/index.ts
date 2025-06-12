@@ -54,7 +54,3 @@ export class EventService {
         return data
     }
 }
-
-const eventService = new EventService()
-
-export default eventService
