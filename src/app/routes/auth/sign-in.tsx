@@ -1,3 +1,4 @@
+import { useAuth } from '@/providers/AuthProvider'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -5,8 +6,11 @@ const SignInRoute: React.FC = () => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
-    const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { signIn } = useAuth()
+
+    const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        await signIn(email, password)
     }
 
     return (
