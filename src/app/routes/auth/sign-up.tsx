@@ -1,11 +1,14 @@
 import { useAuth } from '@/providers/AuthProvider'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 
 const SignUpRoute: React.FC = () => {
     const [name, setName] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+
+    const { t } = useTranslation()
 
     const navigate = useNavigate()
 
@@ -22,27 +25,27 @@ const SignUpRoute: React.FC = () => {
             <form className="mt-14 flex h-fit w-fit flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md">
                 <div className="mb-4 flex w-[450px] flex-col items-center">
                     <h1 className="font-comfortaa text-xl font-bold">
-                        Sign up to Spottmee
+                        {t('auth.signUp')}
                     </h1>
                 </div>
                 <div className="mb-6 flex w-full flex-col items-center justify-center gap-2">
                     <input
                         type="text"
-                        placeholder="Name"
+                        placeholder={t('auth.name')}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full rounded-md border bg-gray-100 px-1.5 py-1"
                     />
                     <input
                         type="text"
-                        placeholder="E-mail"
+                        placeholder={t('auth.email')}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full rounded-md border bg-gray-100 px-1.5 py-1"
                     />
                     <input
                         type="password"
-                        placeholder="Password"
+                        placeholder={t('auth.password')}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full rounded-md border bg-gray-100 px-1.5 py-1"
@@ -52,12 +55,14 @@ const SignUpRoute: React.FC = () => {
                     onClick={onSubmit}
                     className="mb-2 w-full rounded-xl bg-blue-600 py-2.5 text-white"
                 >
-                    Create an account
+                    {t('auth.createAccount')}
                 </button>
                 <div>
-                    <p className="inline-block">Already have an account ?</p>{' '}
+                    <p className="inline-block">
+                        {t('auth.alreadyHaveAnAccount')}
+                    </p>{' '}
                     <Link to={'/sign-in'} className="text-blue-600">
-                        Sign in
+                        {t('auth.signIn')}
                     </Link>
                 </div>
             </form>

@@ -1,3 +1,14 @@
 {
-    "signIn": "Sign in"
+    "auth": {
+        "signIn": "Sign in",
+        "continue": "Continue",
+        "dontHaveAnAccount": "Don't have an account ?",
+        "createOne": "Create one",
+        "signUp": "Sign up to Spottmee",
+        "createAccount": "Create account",
+        "alreadyHaveAnAccount": "Already have an account ?",
+        "name": "Name",
+        "email": "E-mail",
+        "password": "Password"
+    }
 }
