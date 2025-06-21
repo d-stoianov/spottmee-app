@@ -33,13 +33,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const signUp = async (name: string, email: string, password: string) => {
-        try {
-            const result = await authService.signUp(name, email, password)
-            setToken(result.jwt)
-            setUser(result.user)
-        } catch (error) {
-            console.error(error)
-        }
+        const result = await authService.signUp(name, email, password)
+        setToken(result.jwt)
+        setUser(result.user)
     }
 
     useEffect(() => {

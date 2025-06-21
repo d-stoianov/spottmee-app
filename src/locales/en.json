@@ -18,6 +18,8 @@
         "incorrectEmailFormat": "Incorrect email format",
         "passwordIsEmpty": "Password is empty",
         "passwordShoulBe8Chars": "Password should be at least 8 characters",
-        "passwordIsTooLong": "Password is too long"
+        "passwordIsTooLong": "Password is too long",
+        "unexpectedSignInError": "Unexpected error occured during sign in",
+        "unexpectedSignUpError": "Unexpected error occured during sign up"
     }
 }

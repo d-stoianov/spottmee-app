@@ -1,5 +1,6 @@
 import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
 import { useAuth } from '@/providers/AuthProvider'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -10,15 +11,24 @@ const SignInRoute: React.FC = () => {
 
     const { signIn } = useAuth()
 
+    const [signInErrorMessage, setSignInErrorMessage] = useState<string>('')
+
     const onSubmit = async (formData: AuthFormData) => {
         const { email, password } = formData
-        await signIn(email, password)
-        navigate('/')
+        setSignInErrorMessage('')
+
+        try {
+            await new Promise((resolve) => setTimeout(resolve, 1500))
+            await signIn(email, password)
+            navigate('/')
+        } catch (error) {
+            setSignInErrorMessage(t('auth.unexpectedSignInError'))
+        }
     }
 
     return (
         <main className="flex h-screen w-full justify-center bg-gray-100 px-6 py-8">
-            <div className="flex h-fit w-full flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md sm:w-[450px] sm:mt-14">
+            <div className="flex h-fit w-full flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md sm:mt-14 sm:w-[450px]">
                 {/* header */}
                 <div className="mb-4 flex w-full flex-col items-center">
                     <h1 className="font-comfortaa text-xl font-bold">
@@ -37,6 +47,11 @@ const SignInRoute: React.FC = () => {
                         {t('auth.createOne')}
                     </Link>
                 </div>
+
+                {/* error message */}
+                <p className="h-4 font-comfortaa text-sm text-red-500 mt-1">
+                    {signInErrorMessage}
+                </p>
             </div>
         </main>
     )

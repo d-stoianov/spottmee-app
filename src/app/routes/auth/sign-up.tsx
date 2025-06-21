@@ -1,5 +1,6 @@
 import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
 import { useAuth } from '@/providers/AuthProvider'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -10,11 +11,19 @@ const SignUpRoute: React.FC = () => {
 
     const { signUp } = useAuth()
 
+    const [signUpErrorMessage, setSignUpErrorMessage] = useState<string>('')
+
     const onSubmit = async (formData: AuthFormData) => {
         const { name, email, password } = formData
+        setSignUpErrorMessage('')
 
-        await signUp(name, email, password)
-        navigate('/')
+        try {
+            await new Promise((resolve) => setTimeout(resolve, 1500))
+            await signUp(name, email, password)
+            navigate('/')
+        } catch (error) {
+            setSignUpErrorMessage(t('auth.unexpectedSignUpError'))
+        }
     }
 
     return (
@@ -38,6 +47,11 @@ const SignUpRoute: React.FC = () => {
                         {t('auth.signIn')}
                     </Link>
                 </div>
+
+                {/* error message */}
+                <p className="mt-1 h-4 font-comfortaa text-sm text-red-500">
+                    {signUpErrorMessage}
+                </p>
             </div>
         </main>
     )

@@ -31,6 +31,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
     const [passwordValidationMessages, setPasswordValidationMessages] =
         useState<string[]>([])
 
+    const [submitDisabled, setSubmitDisabled] = useState<boolean>(false)
+
     const { t } = useTranslation()
 
     const validateFormData = (): boolean => {
@@ -120,10 +122,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                     e.preventDefault()
 
                     if (validateFormData()) {
+                        setSubmitDisabled(true)
                         await onSubmit({ name, email, password })
+                        setSubmitDisabled(false)
                     }
                 }}
-                className="mb-2 w-full rounded-xl bg-blue-600 py-2.5 text-white"
+                disabled={submitDisabled}
+                className="mb-2 w-full rounded-xl bg-blue-600 py-2.5 text-white disabled:bg-blue-300"
             >
                 {formType === 'SIGN_IN' ? t('auth.continue') : t('auth.signUp')}
             </button>
