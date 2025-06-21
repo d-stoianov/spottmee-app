@@ -20,9 +20,9 @@ const SignInRoute: React.FC = () => {
     }
 
     return (
-        <main className="flex h-screen w-full justify-center bg-gray-100">
-            <form className="mt-14 flex h-fit w-fit flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md">
-                <div className="mb-4 flex w-[450px] flex-col items-center">
+        <main className="flex h-screen w-full justify-center bg-gray-100 px-6 py-8">
+            <form className="md:mt-14 flex h-fit w-fit flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md">
+                <div className="mb-4 flex flex-col items-center w-full md:w-[450px]">
                     <h1 className="font-comfortaa text-xl font-bold">
                         {t('auth.signIn')}
                     </h1>
