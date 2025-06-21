@@ -4,7 +4,12 @@ import { Navigate, Outlet } from 'react-router-dom'
 const ProtectedRoute = () => {
     const { user } = useAuth()
 
-    return user ? <Outlet /> : <Navigate to="/sign-in" replace />
+    // undefined - value is still unset (auth provider deciding is user authorized or not)
+    if (user === undefined) {
+        return <div>Loading....</div>
+    }
+
+    return user === null ? <Navigate to="/sign-in" replace /> : <Outlet />
 }
 
 export default ProtectedRoute
