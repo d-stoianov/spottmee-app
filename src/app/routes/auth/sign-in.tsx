@@ -22,7 +22,7 @@ const SignInRoute: React.FC = () => {
             await signIn(email, password)
             navigate('/')
         } catch (error) {
-            setSignInErrorMessage(t('auth.unexpectedSignInError'))
+            setSignInErrorMessage(t('auth.unexpectedError'))
         }
     }
 
@@ -49,7 +49,7 @@ const SignInRoute: React.FC = () => {
                 </div>
 
                 {/* error message */}
-                <p className="h-4 font-comfortaa text-sm text-red-500 mt-1">
+                <p className="mt-1 h-4 font-comfortaa text-sm text-red-500">
                     {signInErrorMessage}
                 </p>
             </div>

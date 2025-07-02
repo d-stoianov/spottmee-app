@@ -3,7 +3,7 @@ import {
     signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { auth } from '../firebase'
-import { SignUpResponse, User, UserDTO } from './types'
+import { AuthErrorResponse, SignUpResponse, User, UserDTO } from './types'
 
 export class AuthService {
     private API_URL = import.meta.env.VITE_API_URL
@@ -38,7 +38,9 @@ export class AuthService {
         })
 
         if (!response.ok) {
-            throw new Error('Failed to sign up')
+            const authErrorResponse: AuthErrorResponse = await response.json()
+
+            throw authErrorResponse
         }
 
         const signUpResponse: SignUpResponse = await response.json()

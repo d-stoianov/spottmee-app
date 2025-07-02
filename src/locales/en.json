@@ -21,7 +21,15 @@
         "passwordIsTooLong": "Password is too long",
         "passwordMustContainLetter": "Password must contain at least one letter",
         "passwordMustContainDigit": "Password must contain at least one digit",
-        "unexpectedSignInError": "Unexpected error occured during sign in",
-        "unexpectedSignUpError": "Unexpected error occured during sign up"
+        "unexpectedError": "An unexpected error occurred. Please try again.",
+        "errors": {
+            "INCORRECT_DATA_TYPE": "Invalid form data submitted.",
+            "MISSING_EMAIL_OR_PASSWORD": "Email or password is missing.",
+            "USER_ALREADY_EXISTS": "An account with this email already exists.",
+            "INVALID_PASSWORD": "The password you entered is incorrect.",
+            "INVALID_EMAIL": "The email address is invalid.",
+            "INVALID_NAME": "The name you provided is invalid.",
+            "UNKNOWN_ERROR": "An unexpected error occurred. Please try again."
+        }
     }
 }

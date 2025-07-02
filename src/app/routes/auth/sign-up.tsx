@@ -1,5 +1,6 @@
 import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
 import { useAuth } from '@/providers/AuthProvider'
+import { AuthErrorResponse } from '@/services/AuthService/types'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
@@ -18,11 +19,20 @@ const SignUpRoute: React.FC = () => {
         setSignUpErrorMessage('')
 
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1500))
             await signUp(name, email, password)
             navigate('/')
-        } catch (error) {
-            setSignUpErrorMessage(t('auth.unexpectedSignUpError'))
+        } catch (error: unknown) {
+            const authErrorResponse = error as AuthErrorResponse
+            const translationKey = `auth.errors.${authErrorResponse.code}`
+            const translated = t(translationKey)
+
+            const isTranslationMissing = translated === translationKey
+
+            setSignUpErrorMessage(
+                isTranslationMissing
+                    ? `${t('auth.unexpectedSignUpError')}`
+                    : translated
+            )
         }
     }
 
