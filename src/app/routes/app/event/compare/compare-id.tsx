@@ -1,6 +1,5 @@
 import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
-import PageLayout from '@/components/layout/PageLayout'
 import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { useEffect, useRef, useState } from 'react'
@@ -82,7 +81,7 @@ const CompareRoute: React.FC = () => {
     }
 
     return (
-        <PageLayout>
+        <div className="flex h-full w-full flex-col items-center gap-8">
             {isLoading ? (
                 <span>Loading...</span>
             ) : (
@@ -112,7 +111,7 @@ const CompareRoute: React.FC = () => {
                     </div>
                 </>
             )}
-        </PageLayout>
+        </div>
     )
 }
 

@@ -1,5 +1,4 @@
 import { useApp } from '@/app/provider'
-import PageLayout from '@/components/layout/PageLayout'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -51,7 +50,7 @@ const HomeRoute: React.FC = () => {
     }
 
     return (
-        <PageLayout>
+        <div className="flex h-full w-full flex-col items-center gap-8">
             <form
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -101,7 +100,7 @@ const HomeRoute: React.FC = () => {
             >
                 Create event link
             </button>
-        </PageLayout>
+        </div>
     )
 }
 

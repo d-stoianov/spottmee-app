@@ -1,7 +1,6 @@
 import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
 import Modal from '@/components/Modal'
-import PageLayout from '@/components/layout/PageLayout'
 import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
@@ -105,7 +104,7 @@ const EventRoute: React.FC = () => {
     }
 
     return (
-        <PageLayout>
+        <div className="flex h-full w-full flex-col items-center gap-8">
             {isPageLoading ? (
                 <span>Loading...</span>
             ) : (
@@ -164,7 +163,7 @@ const EventRoute: React.FC = () => {
                     </Modal>
                 </>
             )}
-        </PageLayout>
+        </div>
     )
 }
 
