@@ -1,5 +1,5 @@
-import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
+import { useDashboard } from '@/providers/DashboardProvider'
 import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { useEffect, useRef, useState } from 'react'
@@ -11,7 +11,7 @@ const CompareRoute: React.FC = () => {
     const { id: eventId, compareKey } = useParams()
     const navigate = useNavigate()
 
-    const { eventService } = useApp()
+    const { getCompareResult } = useDashboard()
 
     const invervalIdRef = useRef<ReturnType<typeof setTimeout> | undefined>(
         undefined
@@ -26,10 +26,7 @@ const CompareRoute: React.FC = () => {
 
         const fetchMatches = async () => {
             try {
-                const result = await eventService.getCompareResult(
-                    eventId,
-                    compareKey
-                )
+                const result = await getCompareResult(eventId, compareKey)
                 setMatches(result.matches)
                 // stop polling if status is present
                 if (result.status) {

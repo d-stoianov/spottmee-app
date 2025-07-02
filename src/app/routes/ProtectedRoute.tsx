@@ -1,4 +1,5 @@
 import { useAuth } from '@/providers/AuthProvider'
+import { DashboardProvider } from '@/providers/DashboardProvider'
 import { Navigate, Outlet } from 'react-router-dom'
 
 const ProtectedRoute = () => {
@@ -9,7 +10,15 @@ const ProtectedRoute = () => {
         return <div>Loading....</div>
     }
 
-    return user === null ? <Navigate to="/sign-in" replace /> : <Outlet />
+    if (user === null) {
+        return <Navigate to="/sign-in" replace />
+    }
+
+    return (
+        <DashboardProvider>
+            <Outlet />
+        </DashboardProvider>
+    )
 }
 
 export default ProtectedRoute

@@ -1,6 +1,6 @@
-import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
 import Modal from '@/components/Modal'
+import { useDashboard } from '@/providers/DashboardProvider'
 import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
@@ -12,7 +12,7 @@ const EventRoute: React.FC = () => {
     const { id: eventId } = useParams()
     const navigate = useNavigate()
 
-    const { eventService } = useApp()
+    const { getImagesFromAlbum, createCompareProcess } = useDashboard()
 
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
     const [eventPhotos, setEventPhotos] = useState<EventPhoto[]>([])
@@ -35,7 +35,7 @@ const EventRoute: React.FC = () => {
 
             try {
                 setIsPageLoading(true)
-                const response = await eventService.getImagesForEvent(eventId)
+                const response = await getImagesFromAlbum(eventId)
                 setEventPhotos(response)
                 setIsPageLoading(false)
             } catch (error) {
@@ -92,10 +92,7 @@ const EventRoute: React.FC = () => {
 
         try {
             setIsCompareLoading(true)
-            const { compareKey } = await eventService.createCompareProcess(
-                eventId,
-                formData
-            )
+            const compareKey = await createCompareProcess(eventId, formData)
             setIsCompareLoading(false)
             navigate(compareKey)
         } catch (error) {
