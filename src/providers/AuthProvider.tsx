@@ -1,5 +1,7 @@
 import { AuthService } from '@/services/AuthService'
 import { User } from '@/services/AuthService/types'
+import { auth } from '@/services/firebase'
+import { onAuthStateChanged } from 'firebase/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface AuthContextType {
@@ -18,6 +20,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null)
     const [user, setUser] = useState<User | null | undefined>(undefined)
 
+    // Firebase auth sdk - keeps sessions persisted
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                // user is signed in, update UI and fetch fresh ID token
+                const jwt = await firebaseUser.getIdToken()
+                const user = await authService.getUser(jwt)
+
+                setUser(user)
+                setToken(jwt)
+            } else {
+                // user not signed in
+                setUser(null)
+                setToken(null)
+            }
+        })
+        return () => unsubscribe()
+    }, [])
+
     const signIn = async (email: string, password: string) => {
         const result = await authService.signIn(email, password)
 
@@ -28,6 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const signOut = async () => {
+        await auth.signOut() // this clears Firebase session properly
         setToken(null)
         setUser(null)
     }
@@ -37,33 +59,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(result.jwt)
         setUser(result.user)
     }
-
-    useEffect(() => {
-        // runs on auth provider mount
-        // sets jwt and user if exists in local storage
-        const initializeUserFromLocalStorage = async () => {
-            const jwt = localStorage.getItem('jwt')
-            if (jwt) {
-                try {
-                    // get user by jwt. if jwt is invalid - will throw an exception
-                    const user = await authService.getUser(jwt)
-                    setUser(user)
-                    setToken(jwt)
-                } catch (error) {
-                    console.error('Failed to initialize user:', error)
-                    // clear invalid token from storage and protected route will handle the redirect
-                    localStorage.removeItem('jwt')
-                    setUser(null)
-                    setToken(null)
-                }
-            } else {
-                // if no jwt - user needs to sign in
-                setUser(null)
-                setToken(null)
-            }
-        }
-        initializeUserFromLocalStorage()
-    }, [])
 
     return (
         <AuthContext.Provider

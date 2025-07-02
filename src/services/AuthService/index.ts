@@ -11,7 +11,7 @@ export class AuthService {
     public async signIn(email: string, password: string) {
         const result = await signInWithEmailAndPassword(auth, email, password)
         const firebaseUser = result.user
-        const jwt = await firebaseUser.getIdToken(true)
+        const jwt = await firebaseUser.getIdToken()
         const user = await this.getUser(jwt)
 
         return { user, jwt }
@@ -47,7 +47,7 @@ export class AuthService {
             auth,
             signUpResponse.customToken
         )
-        const jwt = await userCredential.user.getIdToken(true)
+        const jwt = await userCredential.user.getIdToken()
 
         return { user: this.userDTOToUser(signUpResponse.user), jwt }
     }
