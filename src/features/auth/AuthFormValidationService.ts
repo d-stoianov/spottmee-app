@@ -40,8 +40,7 @@ export class AuthFormValidationService {
     }
 
     public validateEmail(email: string): AuthFormValidationResponse {
-        // TODO: put email regex
-        const EMAIL_REGEX = new RegExp('')
+        const EMAIL_REGEX = new RegExp('^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$')
 
         const response: AuthFormValidationResponse = {
             isValid: true,
@@ -85,6 +84,16 @@ export class AuthFormValidationService {
         if (password.length > MAX_PASSWORD_LENGTH) {
             response.isValid = false
             response.messages.push(i18next.t('auth.passwordIsTooLong'))
+        }
+
+        if (!/[a-zA-Z]/.test(password)) {
+            response.isValid = false
+            response.messages.push(i18next.t('auth.passwordMustContainLetter'))
+        }
+
+        if (!/\d/.test(password)) {
+            response.isValid = false
+            response.messages.push(i18next.t('auth.passwordMustContainDigit'))
         }
 
         return response
