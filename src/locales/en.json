@@ -29,7 +29,16 @@
             "INVALID_PASSWORD": "The password you entered is incorrect.",
             "INVALID_EMAIL": "The email address is invalid.",
             "INVALID_NAME": "The name you provided is invalid.",
-            "UNKNOWN_ERROR": "An unexpected error occurred. Please try again."
+            "UNKNOWN_ERROR": "An unexpected error occurred. Please try again.",
+
+            "auth/invalid-credential": "Incorrect combination of email and password.",
+            "auth/unknown": "An unknown error occurred. Please try again.",
+            "auth/invalid-email": "The email address provided is not in a valid format.",
+            "auth/user-disabled": "The user account has been disabled.",
+            "auth/user-not-found": "There is no user record corresponding to the given email address.",
+            "auth/wrong-password": "The password provided is incorrect.",
+            "auth/too-many-requests": "Too many unsuccessful login attempts. Please try again later.",
+            "auth/network-request-failed": "A network error occurred. Please check your internet connection."
         }
     }
 }

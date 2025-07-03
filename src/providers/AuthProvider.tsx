@@ -42,8 +42,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const signIn = async (email: string, password: string) => {
         const result = await authService.signIn(email, password)
 
-        localStorage.setItem('jwt', result.jwt)
-
         setToken(result.jwt)
         setUser(result.user)
     }

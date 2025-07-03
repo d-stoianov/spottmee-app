@@ -1,5 +1,6 @@
 import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
 import { useAuth } from '@/providers/AuthProvider'
+import { FirebaseError } from 'firebase/app'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
@@ -18,11 +19,23 @@ const SignInRoute: React.FC = () => {
         setSignInErrorMessage('')
 
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1500))
             await signIn(email, password)
             navigate('/')
         } catch (error) {
-            setSignInErrorMessage(t('auth.unexpectedError'))
+            let translationKey = 'auth.unexpectedError'
+
+            if (error instanceof FirebaseError) {
+                translationKey = `auth.errors.${error.code}`
+            }
+
+            const translated = t(translationKey)
+            const isTranslationMissing = translated === translationKey
+
+            setSignInErrorMessage(
+                isTranslationMissing
+                    ? `${t('auth.unexpectedError')} (${translationKey})`
+                    : translated
+            )
         }
     }
 
