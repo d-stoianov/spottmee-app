@@ -24,12 +24,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
-                // user is signed in, update UI and fetch fresh ID token
-                const jwt = await firebaseUser.getIdToken()
-                const user = await authService.getUser(jwt)
-
-                setUser(user)
-                setToken(jwt)
+                try {
+                    // user is signed in, update UI and fetch fresh ID token
+                    const jwt = await firebaseUser.getIdToken()
+                    const user = await authService.getUser(jwt)
+                    setUser(user)
+                    setToken(jwt)
+                } catch (error) {
+                    // user not signed in
+                    setUser(null)
+                    setToken(null)
+                }
             } else {
                 // user not signed in
                 setUser(null)

@@ -25,7 +25,7 @@ export class AuthService {
         user: User
         jwt: string
     }> {
-        const response = await fetch(`${this.API_URL}/auth/signup`, {
+        const response = await fetch(`${this.API_URL}/auth/sign-up`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
