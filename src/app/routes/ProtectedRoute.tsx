@@ -1,5 +1,4 @@
 import { useAuth } from '@/providers/AuthProvider'
-import { DashboardProvider } from '@/providers/DashboardProvider'
 import { Navigate, Outlet } from 'react-router-dom'
 
 const ProtectedRoute = () => {
@@ -14,11 +13,7 @@ const ProtectedRoute = () => {
         return <Navigate to="/sign-in" replace />
     }
 
-    return (
-        <DashboardProvider>
-            <Outlet />
-        </DashboardProvider>
-    )
+    return <Outlet />
 }
 
 export default ProtectedRoute
