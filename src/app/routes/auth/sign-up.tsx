@@ -1,0 +1,70 @@
+import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
+import { useAuth } from '@/providers/AuthProvider'
+import { AuthErrorResponse } from '@/services/AuthService/types'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link, useNavigate } from 'react-router-dom'
+
+const SignUpRoute: React.FC = () => {
+    const { t } = useTranslation()
+
+    const navigate = useNavigate()
+
+    const { signUp } = useAuth()
+
+    const [signUpErrorMessage, setSignUpErrorMessage] = useState<string>('')
+
+    const onSubmit = async (formData: AuthFormData) => {
+        const { name, email, password } = formData
+        setSignUpErrorMessage('')
+
+        try {
+            await signUp(name, email, password)
+            navigate('/')
+        } catch (error: unknown) {
+            const authErrorResponse = error as AuthErrorResponse
+            const translationKey = `auth.errors.${authErrorResponse.code}`
+            const translated = t(translationKey)
+
+            const isTranslationMissing = translated === translationKey
+
+            setSignUpErrorMessage(
+                isTranslationMissing
+                    ? `${t('auth.unexpectedSignUpError')}`
+                    : translated
+            )
+        }
+    }
+
+    return (
+        <main className="flex h-screen w-full justify-center bg-gray-100 px-6 py-8">
+            <div className="flex h-fit w-full flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md sm:mt-14 sm:w-[450px]">
+                {/* header */}
+                <div className="mb-4 flex w-full flex-col items-center">
+                    <h1 className="font-comfortaa text-xl font-bold">
+                        {t('auth.signUp')}
+                    </h1>
+                </div>
+
+                <AuthForm formType="SIGN_UP" onSubmit={onSubmit} />
+
+                {/* subtext */}
+                <div>
+                    <p className="inline-block">
+                        {t('auth.alreadyHaveAnAccount')}
+                    </p>{' '}
+                    <Link to={'/sign-in'} className="text-blue-600">
+                        {t('auth.signIn')}
+                    </Link>
+                </div>
+
+                {/* error message */}
+                <p className="mt-1 h-4 font-comfortaa text-sm text-red-500">
+                    {signUpErrorMessage}
+                </p>
+            </div>
+        </main>
+    )
+}
+
+export default SignUpRoute

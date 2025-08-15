@@ -1,5 +1,4 @@
-import { useApp } from '@/app/provider'
-import PageLayout from '@/components/layout/PageLayout'
+import { useDashboard } from '@/providers/DashboardProvider'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,7 +8,7 @@ const HomeRoute: React.FC = () => {
 
     const navigate = useNavigate()
 
-    const { eventService } = useApp()
+    const { createAlbum } = useDashboard()
 
     const isButtonDisabled = files.length === 0 || isLoading
 
@@ -41,8 +40,8 @@ const HomeRoute: React.FC = () => {
 
         try {
             setIsLoading(true)
-            const response = await eventService.createEvent(formData)
-            navigate(`event/${response.eventId}`)
+            const eventId = await createAlbum(formData)
+            navigate(`event/${eventId}`)
             setIsLoading(false)
         } catch (error) {
             console.error(error)
@@ -51,7 +50,7 @@ const HomeRoute: React.FC = () => {
     }
 
     return (
-        <PageLayout>
+        <div className="flex h-full w-full flex-col items-center gap-8">
             <form
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -101,7 +100,7 @@ const HomeRoute: React.FC = () => {
             >
                 Create event link
             </button>
-        </PageLayout>
+        </div>
     )
 }
 

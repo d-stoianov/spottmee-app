@@ -1,0 +1,44 @@
+{
+    "auth": {
+        "signIn": "Sign in",
+        "continue": "Continue",
+        "dontHaveAnAccount": "Don't have an account ?",
+        "createOne": "Create one",
+        "signUp": "Sign up to Spottmee",
+        "createAccount": "Create account",
+        "alreadyHaveAnAccount": "Already have an account ?",
+        "name": "Name",
+        "email": "E-mail",
+        "password": "Password",
+        "nameIsEmpty": "Name is empty",
+        "nameIsTooShort": "Name is too short",
+        "nameIsTooLong": "Name is too long",
+        "nameShouldBeOneWord": "Name should be one word",
+        "emailIsEmpty": "Email is empty",
+        "incorrectEmailFormat": "Incorrect email format",
+        "passwordIsEmpty": "Password is empty",
+        "passwordShoulBe8Chars": "Password should be at least 8 characters",
+        "passwordIsTooLong": "Password is too long",
+        "passwordMustContainLetter": "Password must contain at least one letter",
+        "passwordMustContainDigit": "Password must contain at least one digit",
+        "unexpectedError": "An unexpected error occurred. Please try again.",
+        "errors": {
+            "INCORRECT_DATA_TYPE": "Invalid form data submitted.",
+            "MISSING_EMAIL_OR_PASSWORD": "Email or password is missing.",
+            "USER_ALREADY_EXISTS": "An account with this email already exists.",
+            "INVALID_PASSWORD": "The password you entered is incorrect.",
+            "INVALID_EMAIL": "The email address is invalid.",
+            "INVALID_NAME": "The name you provided is invalid.",
+            "UNKNOWN_ERROR": "An unexpected error occurred. Please try again.",
+
+            "auth/invalid-credential": "Incorrect combination of email and password.",
+            "auth/unknown": "An unknown error occurred. Please try again.",
+            "auth/invalid-email": "The email address provided is not in a valid format.",
+            "auth/user-disabled": "The user account has been disabled.",
+            "auth/user-not-found": "There is no user record corresponding to the given email address.",
+            "auth/wrong-password": "The password provided is incorrect.",
+            "auth/too-many-requests": "Too many unsuccessful login attempts. Please try again later.",
+            "auth/network-request-failed": "A network error occurred. Please check your internet connection."
+        }
+    }
+}

@@ -1,6 +1,5 @@
-import { useApp } from '@/app/provider'
 import ImageSection from '@/components/ImageSection'
-import PageLayout from '@/components/layout/PageLayout'
+import { useDashboard } from '@/providers/DashboardProvider'
 import { EventPhoto } from '@/services/EventService/types'
 import JSZip from 'jszip'
 import { useEffect, useRef, useState } from 'react'
@@ -12,7 +11,7 @@ const CompareRoute: React.FC = () => {
     const { id: eventId, compareKey } = useParams()
     const navigate = useNavigate()
 
-    const { eventService } = useApp()
+    const { getCompareResult } = useDashboard()
 
     const invervalIdRef = useRef<ReturnType<typeof setTimeout> | undefined>(
         undefined
@@ -27,10 +26,7 @@ const CompareRoute: React.FC = () => {
 
         const fetchMatches = async () => {
             try {
-                const result = await eventService.getCompareResult(
-                    eventId,
-                    compareKey
-                )
+                const result = await getCompareResult(eventId, compareKey)
                 setMatches(result.matches)
                 // stop polling if status is present
                 if (result.status) {
@@ -82,7 +78,7 @@ const CompareRoute: React.FC = () => {
     }
 
     return (
-        <PageLayout>
+        <div className="flex h-full w-full flex-col items-center gap-8">
             {isLoading ? (
                 <span>Loading...</span>
             ) : (
@@ -112,7 +108,7 @@ const CompareRoute: React.FC = () => {
                     </div>
                 </>
             )}
-        </PageLayout>
+        </div>
     )
 }
 

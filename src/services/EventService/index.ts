@@ -6,12 +6,20 @@ import {
 } from '@/services/EventService/types'
 
 export class EventService {
-    API_URL = import.meta.env.VITE_API_URL
+    private API_URL = `${import.meta.env.VITE_API_URL}/event`
+    private JWT_TOKEN
+
+    constructor(JWT_TOKEN: string) {
+        this.JWT_TOKEN = JWT_TOKEN
+    }
 
     public async createEvent(formData: FormData): Promise<CreateEventResponse> {
-        const response = await fetch(`${this.API_URL}/register`, {
+        const response = await fetch(this.API_URL, {
             method: 'POST',
             body: formData,
+            headers: {
+                Authorization: `Bearer ${this.JWT_TOKEN}`,
+            },
         })
 
         const data: CreateEventResponse = await response.json()
@@ -21,8 +29,11 @@ export class EventService {
     public async getImagesForEvent(
         eventId: string
     ): Promise<EventImagesResponse> {
-        const response = await fetch(`${this.API_URL}/event/${eventId}`, {
+        const response = await fetch(`${this.API_URL}/${eventId}`, {
             method: 'GET',
+            headers: {
+                Authorization: `Bearer ${this.JWT_TOKEN}`,
+            },
         })
 
         const data: EventImagesResponse = await response.json()
@@ -33,9 +44,12 @@ export class EventService {
         eventId: string,
         formData: FormData
     ): Promise<CreateEventCompareResponse> {
-        const response = await fetch(`${this.API_URL}/event/${eventId}`, {
+        const response = await fetch(`${this.API_URL}/${eventId}`, {
             method: 'POST',
             body: formData,
+            headers: {
+                Authorization: `Bearer ${this.JWT_TOKEN}`,
+            },
         })
 
         const data: CreateEventCompareResponse = await response.json()
@@ -47,7 +61,12 @@ export class EventService {
         compareKey: string
     ): Promise<EventCompareResult> {
         const response = await fetch(
-            `${this.API_URL}/event/${eventId}/${compareKey}`
+            `${this.API_URL}/${eventId}/${compareKey}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${this.JWT_TOKEN}`,
+                },
+            }
         )
 
         const data: EventCompareResult = await response.json()
