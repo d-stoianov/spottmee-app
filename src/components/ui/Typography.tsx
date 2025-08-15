@@ -18,13 +18,13 @@ type TypographyProps = {
 }
 
 const variantClasses: Record<TypographyVariant, string> = {
-    heading1: 'font-plusJakartaSans text-[48px] leading-[100%]',
-    heading2: 'font-plusJakartaSans text-[36px] leading-[100%]',
-    heading3: 'font-plusJakartaSans text-[28px] leading-[100%]',
-    bodyLarge: 'font-plusJakartaSans text-[20px] leading-[100%]',
-    bodyDefault: 'font-plusJakartaSans text-[16px] leading-[100%]',
-    buttonText: 'font-plusJakartaSans text-[20px] leading-[100%]',
-    smallText: 'font-plusJakartaSans text-[12px] leading-[100%]',
+    heading1: 'font-plusJakarta font-[700] text-[3rem] leading-[100%]',
+    heading2: 'font-plusJakarta font-[500] text-[2.25rem] leading-[100%]',
+    heading3: 'font-plusJakarta font-[500] text-[1.75rem] leading-[100%]',
+    bodyLarge: 'font-plusJakarta font-[400] text-[1.25rem] leading-[150%]',
+    bodyDefault: 'font-plusJakarta font-[400] text-[1rem] leading-[150%]',
+    buttonText: 'font-plusJakarta font-[500] text-[1.25rem] leading-[100%]',
+    smallText: 'font-plusJakarta font-[300] text-[0.75rem] leading-[150%]',
 }
 
 const variantTag: Record<TypographyVariant, keyof JSX.IntrinsicElements> = {

@@ -1,3 +1,5 @@
+import Main from '@/components/layout/Main'
+import { Typography } from '@/components/ui/Typography'
 import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
 import { useAuth } from '@/providers/AuthProvider'
 import { AuthErrorResponse } from '@/services/AuthService/types'
@@ -37,33 +39,41 @@ const SignUpRoute: React.FC = () => {
     }
 
     return (
-        <main className="flex h-screen w-full justify-center bg-gray-100 px-6 py-8">
-            <div className="flex h-fit w-full flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md sm:mt-14 sm:w-[450px]">
+        <Main className="flex w-full justify-center px-6 py-8">
+            <div className="mt-[6rem] w-[30rem]">
                 {/* header */}
-                <div className="mb-4 flex w-full flex-col items-center">
-                    <h1 className="font-comfortaa text-xl font-bold">
-                        {t('auth.signUp')}
-                    </h1>
+                <div className="mb-[5rem] flex w-full flex-col items-center">
+                    <Typography variant="heading1">
+                        {t('auth.createAccount')}
+                    </Typography>
+                </div>
+
+                {/* error message */}
+                <div className="mb-[1rem] h-4">
+                    <p className="text-sm text-red-500">{signUpErrorMessage}</p>
                 </div>
 
                 <AuthForm formType="SIGN_UP" onSubmit={onSubmit} />
 
                 {/* subtext */}
-                <div>
-                    <p className="inline-block">
+                <div className="mt-[1rem] text-center">
+                    <Typography
+                        className="inline-block text-secondary"
+                        variant="bodyDefault"
+                    >
                         {t('auth.alreadyHaveAnAccount')}
-                    </p>{' '}
-                    <Link to={'/sign-in'} className="text-blue-600">
-                        {t('auth.signIn')}
+                    </Typography>{' '}
+                    <Link to={'/sign-in'}>
+                        <Typography
+                            className="inline-block text-accent"
+                            variant="bodyDefault"
+                        >
+                            {t('auth.login')}
+                        </Typography>
                     </Link>
                 </div>
-
-                {/* error message */}
-                <p className="mt-1 h-4 font-comfortaa text-sm text-red-500">
-                    {signUpErrorMessage}
-                </p>
             </div>
-        </main>
+        </Main>
     )
 }
 

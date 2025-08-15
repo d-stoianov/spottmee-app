@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AuthFormValidationService } from './AuthFormValidationService'
+import Input from '@/components/ui/Input'
+import { Key, Mail, Pencil } from 'lucide-react'
+import Button, { IntegrationButton } from '@/components/ui/Button'
+import { Typography } from '@/components/ui/Typography'
 
 type AuthFormType = 'SIGN_IN' | 'SIGN_UP'
 
@@ -61,16 +65,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
     }
 
     return (
-        <form className="flex w-full flex-col">
+        <form className="flex w-full flex-col gap-[1rem]">
             <div className="mb-6 flex w-full flex-col items-center justify-center gap-2">
                 {formType === 'SIGN_UP' && (
                     <div className="flex w-full flex-col gap-2">
-                        <input
+                        <Input
                             type="text"
                             placeholder={t('auth.name')}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full rounded-md border bg-gray-100 px-1.5 py-1"
+                            icon={<Pencil />}
                         />
                         {nameValidationMessages.map((m, idx) => (
                             <p
@@ -83,12 +87,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                     </div>
                 )}
                 <div className="flex w-full flex-col gap-2">
-                    <input
+                    <Input
                         type="text"
                         placeholder={t('auth.email')}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full rounded-md border bg-gray-100 px-1.5 py-1"
+                        icon={<Mail />}
                     />
                     {emailValidationMessages.map((m, idx) => (
                         <p
@@ -100,12 +104,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                     ))}
                 </div>
                 <div className="flex w-full flex-col gap-2">
-                    <input
+                    <Input
                         type="password"
                         placeholder={t('auth.password')}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full rounded-md border bg-gray-100 px-1.5 py-1"
+                        icon={<Key />}
                     />
                     {passwordValidationMessages.map((m, idx) => (
                         <p
@@ -117,7 +121,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                     ))}
                 </div>
             </div>
-            <button
+            <Button
                 onClick={async (e) => {
                     e.preventDefault()
 
@@ -128,10 +132,17 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                     }
                 }}
                 disabled={submitDisabled}
-                className="mb-2 w-full rounded-xl bg-blue-600 py-2.5 text-white disabled:bg-blue-300"
+                className="w-full"
             >
-                {formType === 'SIGN_IN' ? t('auth.continue') : t('auth.signUp')}
-            </button>
+                <Typography variant="buttonText" className="text-white">
+                    {formType === 'SIGN_IN'
+                        ? t('auth.login')
+                        : t('auth.createAccount')}
+                </Typography>
+            </Button>
+            {formType === 'SIGN_IN' && (
+                <IntegrationButton className="w-full" integration="Google" />
+            )}
         </form>
     )
 }

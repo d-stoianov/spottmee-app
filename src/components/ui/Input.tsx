@@ -29,7 +29,7 @@ const Input: React.FC<InputProps> = ({
                     size: '1.375rem',
                 })}
             <input
-                className="w-full bg-transparent font-plusJakartaSans text-[1rem] font-[300] leading-[150%] text-secondary placeholder-secondary outline-none"
+                className="font-plusJakarta w-full bg-transparent text-[1rem] font-[300] leading-[150%] text-secondary placeholder-secondary outline-none"
                 {...rest}
             />
         </div>

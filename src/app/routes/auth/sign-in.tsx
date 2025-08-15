@@ -1,3 +1,5 @@
+import Main from '@/components/layout/Main'
+import { Typography } from '@/components/ui/Typography'
 import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
 import { useAuth } from '@/providers/AuthProvider'
 import { FirebaseError } from 'firebase/app'
@@ -40,33 +42,41 @@ const SignInRoute: React.FC = () => {
     }
 
     return (
-        <main className="flex h-screen w-full justify-center bg-gray-100 px-6 py-8">
-            <div className="flex h-fit w-full flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md sm:mt-14 sm:w-[450px]">
+        <Main className="flex w-full justify-center px-6 py-8">
+            <div className="mt-[6rem] w-[30rem]">
                 {/* header */}
-                <div className="mb-4 flex w-full flex-col items-center">
-                    <h1 className="font-comfortaa text-xl font-bold">
-                        {t('auth.signIn')}
-                    </h1>
+                <div className="mb-[5rem] flex w-full flex-col items-center">
+                    <Typography variant="heading1">
+                        {t('auth.login')}
+                    </Typography>
+                </div>
+
+                {/* error message */}
+                <div className="mb-[1rem] h-4">
+                    <p className="text-sm text-red-500">{signInErrorMessage}</p>
                 </div>
 
                 <AuthForm formType="SIGN_IN" onSubmit={onSubmit} />
 
                 {/* subtext */}
-                <div>
-                    <p className="inline-block">
-                        {t('auth.dontHaveAnAccount')}
-                    </p>{' '}
-                    <Link to={'/sign-up'} className="text-blue-600">
-                        {t('auth.createOne')}
+                <div className="mt-[1rem] text-center">
+                    <Typography
+                        className="inline-block text-secondary"
+                        variant="bodyDefault"
+                    >
+                        {t('auth.newOnSpottmee')}
+                    </Typography>{' '}
+                    <Link to={'/sign-up'}>
+                        <Typography
+                            className="inline-block text-accent"
+                            variant="bodyDefault"
+                        >
+                            {t('auth.createAccount')}
+                        </Typography>
                     </Link>
                 </div>
-
-                {/* error message */}
-                <p className="mt-1 h-4 font-comfortaa text-sm text-red-500">
-                    {signInErrorMessage}
-                </p>
             </div>
-        </main>
+        </Main>
     )
 }
 
