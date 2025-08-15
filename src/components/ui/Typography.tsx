@@ -1,5 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 type TypographyVariant =
     | 'heading1'
@@ -43,7 +44,9 @@ export const Typography: React.FC<TypographyProps> = ({
 }) => {
     const Component = variantTag[variant]
     return (
-        <Component className={clsx(variantClasses[variant], className)}>
+        <Component
+            className={twMerge(clsx(variantClasses[variant], className))}
+        >
             {children}
         </Component>
     )

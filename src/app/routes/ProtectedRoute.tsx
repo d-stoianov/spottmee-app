@@ -1,3 +1,4 @@
+import LoadingPage from '@/app/loading'
 import { useAuth } from '@/providers/AuthProvider'
 import { Navigate, Outlet } from 'react-router-dom'
 
@@ -6,7 +7,7 @@ const ProtectedRoute = () => {
 
     // undefined - value is still unset (auth provider deciding is user authorized or not)
     if (user === undefined) {
-        return <div>Loading....</div>
+        return <LoadingPage />
     }
 
     if (user === null) {

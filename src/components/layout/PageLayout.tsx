@@ -1,11 +1,15 @@
 import Header from '@/components/layout/Header'
 import { Outlet } from 'react-router-dom'
 
-const PageLayout: React.FC = () => {
+type PageLayoutProps = {
+    children?: React.ReactNode
+}
+
+const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
     return (
         <div className="flex h-screen w-full flex-col">
             <Header />
-            <Outlet />
+            {children ?? <Outlet />}
         </div>
     )
 }
