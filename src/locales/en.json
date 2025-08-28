@@ -38,5 +38,28 @@
             "auth/too-many-requests": "Too many unsuccessful login attempts. Please try again later.",
             "auth/network-request-failed": "A network error occurred. Please check your internet connection."
         }
+    },
+    "albums": {
+        "yourAlbums": "Your Albums",
+        "searchForAlbums": "Search for albums",
+        "sortBy": "Sort by",
+        "createNewAlbum": "Create A New Album",
+        "createdOn": "Created on",
+        "matches": "Matches",
+        "countGuestMatched": "{{count}} guest matched",
+        "photos": "photos",
+        "viewAlbum": "View Album",
+        "createAlbumSubtext": "It only takes 30 seconds to create a album",
+        "uploadAlbumCover": "Upload Album Cover",
+        "uploadAlbumCoverSubtext": "Default cover will be used if none is uploaded.",
+        "nameField": "Enter album  name*",
+        "descriptionField": "Description (optional)",
+        "makeThisAlbumPrivate": "Make this album private",
+        "uploadPhotos": "Upload Photos",
+        "yourPhotosAreUploading": "Your Photos are Uploading...",
+        "seeMore": "see more+",
+        "uploadMore": "Upload More",
+        "reupload": "Reupload",
+        "yourAlbumIsReady": "Your album is ready to share !"
     }
 }
