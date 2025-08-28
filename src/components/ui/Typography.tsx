@@ -19,7 +19,7 @@ type TypographyProps = {
 
 const variantClasses: Record<TypographyVariant, string> = {
     heading1: 'font-plusJakarta font-[700] text-[3rem] leading-[100%]',
-    heading2: 'font-plusJakarta font-[500] text-[2.25rem] leading-[100%]',
+    heading2: 'font-plusJakarta font-[600] text-[2.25rem] leading-[100%]',
     heading3: 'font-plusJakarta font-[500] text-[1.75rem] leading-[100%]',
     bodyLarge: 'font-plusJakarta font-[400] text-[1.25rem] leading-[150%]',
     bodyDefault: 'font-plusJakarta font-[400] text-[1rem] leading-[150%]',

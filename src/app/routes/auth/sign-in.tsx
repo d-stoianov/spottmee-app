@@ -2,6 +2,7 @@ import Main from '@/components/layout/Main'
 import { IntegrationButton } from '@/components/ui/Button'
 import { Typography } from '@/components/ui/Typography'
 import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
+import useIsMobile from '@/hooks/useIsMobile'
 import { useAuth } from '@/providers/AuthProvider'
 import { SignInProvider } from '@/services/AuthService/types'
 import { FirebaseError } from 'firebase/app'
@@ -13,6 +14,7 @@ const SignInRoute: React.FC = () => {
     const { t } = useTranslation()
 
     const navigate = useNavigate()
+    const isMobile = useIsMobile()
 
     const { signIn, signInWithProvider } = useAuth()
 
@@ -48,7 +50,7 @@ const SignInRoute: React.FC = () => {
             <div className="mt-[6rem] w-[30rem]">
                 {/* header */}
                 <div className="mb-[5rem] flex w-full flex-col items-center">
-                    <Typography variant="heading1">
+                    <Typography variant={isMobile ? "heading2" : "heading1"}>
                         {t('auth.login')}
                     </Typography>
                 </div>
