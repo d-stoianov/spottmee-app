@@ -1,7 +1,9 @@
 import Main from '@/components/layout/Main'
+import { IntegrationButton } from '@/components/ui/Button'
 import { Typography } from '@/components/ui/Typography'
 import AuthForm, { AuthFormData } from '@/features/auth/AuthForm'
 import { useAuth } from '@/providers/AuthProvider'
+import { SignInProvider } from '@/services/AuthService/types'
 import { FirebaseError } from 'firebase/app'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +14,7 @@ const SignInRoute: React.FC = () => {
 
     const navigate = useNavigate()
 
-    const { signIn } = useAuth()
+    const { signIn, signInWithProvider } = useAuth()
 
     const [signInErrorMessage, setSignInErrorMessage] = useState<string>('')
 
@@ -57,6 +59,17 @@ const SignInRoute: React.FC = () => {
                 </div>
 
                 <AuthForm formType="SIGN_IN" onSubmit={onSubmit} />
+
+                {/* sign in providers */}
+                <div className="mt-[1rem]">
+                    <IntegrationButton
+                        onClick={async () => {
+                            await signInWithProvider(SignInProvider.Google)
+                        }}
+                        className="w-full"
+                        integration="Google"
+                    />
+                </div>
 
                 {/* subtext */}
                 <div className="mt-[1rem] text-center">

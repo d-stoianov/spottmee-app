@@ -33,3 +33,7 @@ export type AuthErrorResponse = {
     code: AuthError
     message: string
 }
+
+export enum SignInProvider {
+    Google = 'GOOGLE',
+}

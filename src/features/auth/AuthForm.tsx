@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { AuthFormValidationService } from './AuthFormValidationService'
 import Input from '@/components/ui/Input'
 import { Key, Mail, Pencil } from 'lucide-react'
-import Button, { IntegrationButton } from '@/components/ui/Button'
+import Button from '@/components/ui/Button'
 import { Typography } from '@/components/ui/Typography'
 
 type AuthFormType = 'SIGN_IN' | 'SIGN_UP'
@@ -140,9 +140,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                         : t('auth.createAccount')}
                 </Typography>
             </Button>
-            {formType === 'SIGN_IN' && (
-                <IntegrationButton className="w-full" integration="Google" />
-            )}
         </form>
     )
 }

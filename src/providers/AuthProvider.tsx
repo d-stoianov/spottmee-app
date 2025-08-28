@@ -1,11 +1,12 @@
 import { AuthService } from '@/services/AuthService'
-import { User } from '@/services/AuthService/types'
+import { SignInProvider, User } from '@/services/AuthService/types'
 import { auth } from '@/services/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface AuthContextType {
     signIn: (email: string, password: string) => Promise<void>
+    signInWithProvider: (provider: SignInProvider) => Promise<void>
     signUp: (name: string, email: string, password: string) => Promise<void>
     signOut: () => void
     user: User | null | undefined // User - user is authorized, null - user needs to sign in, undefined - value is unset
@@ -22,6 +23,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Firebase auth sdk - keeps sessions persisted
     useEffect(() => {
+        if (user) return
+
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
                 try {
@@ -51,6 +54,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(result.user)
     }
 
+    const signInWithProvider = async (provider: SignInProvider) => {
+        const result = await authService.signInWithProvider(provider)
+
+        setToken(result.jwt)
+        setUser(result.user)
+    }
+
     const signOut = async () => {
         await auth.signOut() // this clears Firebase session properly
         setToken(null)
@@ -67,6 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         <AuthContext.Provider
             value={{
                 signIn,
+                signInWithProvider,
                 signUp,
                 signOut,
                 user,
