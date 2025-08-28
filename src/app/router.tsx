@@ -9,6 +9,7 @@ import SignUpRoute from './routes/auth/sign-up'
 import HomeRoute from './routes/app'
 
 import PageLayout from '@/components/layout/PageLayout'
+import { AlbumsProvider } from '@/features/albums/AlbumsProvider'
 
 const createAppRouter = () => {
     return createBrowserRouter([
@@ -30,7 +31,11 @@ const createAppRouter = () => {
             element: <ProtectedRoute />,
             children: [
                 {
-                    element: <PageLayout />,
+                    element: (
+                        <AlbumsProvider>
+                            <PageLayout />
+                        </AlbumsProvider>
+                    ),
                     children: [{ path: '/', element: <HomeRoute /> }],
                 },
             ],
