@@ -47,7 +47,7 @@
         "createdOn": "Created on",
         "matches": "Matches",
         "countGuestMatched": "{{count}} guest matched",
-        "photos": "photos",
+        "countPhotos": "{{count}} photos",
         "viewAlbum": "View Album",
         "createAlbumSubtext": "It only takes 30 seconds to create a album",
         "uploadAlbumCover": "Upload Album Cover",
