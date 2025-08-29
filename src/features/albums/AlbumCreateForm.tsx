@@ -7,10 +7,13 @@ import { useRef, useState } from 'react'
 import { AlbumCreateDTO } from '@/services/AlbumService/types'
 import { useNavigate } from 'react-router-dom'
 import Button from '@/components/ui/Button'
+import { AlbumFormValidationService } from '@/features/albums/AlbumFormValidationService'
 
 type AlbumCreateFormProps = {
     onAlbumCreate: (albumCreateDTO: AlbumCreateDTO) => Promise<void>
 }
+
+const albumFormValidationService = new AlbumFormValidationService()
 
 const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
     const { t } = useTranslation()
@@ -22,8 +25,16 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
         undefined
     ) // file that goes to submit
 
-    const [albumName, setAlbumName] = useState<string>('')
-    const [albumDescription, setAlbumDescription] = useState<string>('')
+    const [name, setName] = useState<string>('')
+    const [description, setDescription] = useState<string>('')
+
+    const [nameValidationMessages, setNameValidationMessage] = useState<
+        string[]
+    >([])
+    const [descriptionValidationMessages, setDescriptionValidationMessages] =
+        useState<string[]>([])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false)
 
     const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -40,14 +51,39 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
         }
     }
 
+    const validateFormData = (): boolean => {
+        // validate each field
+        const nameResponse = albumFormValidationService.validateName(
+            name.trim()
+        )
+        const descriptionResponse =
+            albumFormValidationService.validateDescription(description.trim())
+
+        setNameValidationMessage(nameResponse.messages)
+        setDescriptionValidationMessages(descriptionResponse.messages)
+
+        return nameResponse.isValid && descriptionResponse.isValid
+    }
+
     const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e?.preventDefault()
-        await onAlbumCreate({
-            name: albumName,
-            description: albumDescription,
-            coverImage: albumCoverFile,
-        })
-        navigate('/')
+
+        const isValid = validateFormData()
+
+        if (!isValid) return
+
+        try {
+            setIsButtonDisabled(true)
+            await onAlbumCreate({
+                name: name.trim(),
+                description: description.trim(),
+                coverImage: albumCoverFile,
+            })
+            navigate('/')
+        } catch (error) {
+        } finally {
+            setIsButtonDisabled(false)
+        }
     }
 
     const onUploadPhotosClick = () => {
@@ -87,26 +123,45 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
             {/* inputs */}
             <form
                 onSubmit={onFormSubmit}
-                className="flex w-full flex-col items-center gap-[2.5rem] lg:w-auto"
+                className="flex w-full flex-col items-start gap-[2.5rem] lg:w-auto"
             >
-                <Input
-                    onChange={(e) => setAlbumName(e.target.value)}
-                    value={albumName}
-                    icon={<PencilLine />}
-                    placeholder={t('albums.nameField')}
-                    className="w-full lg:w-[34rem]"
-                />
-                <Input
-                    onChange={(e) => setAlbumDescription(e.target.value)}
-                    value={albumDescription}
-                    icon={<PencilLine />}
-                    placeholder={t('albums.descriptionField')}
-                    className="w-full lg:w-[34rem]"
-                />
+                <div className="flex w-full flex-col gap-2 lg:w-[34rem]">
+                    <Input
+                        onChange={(e) => setName(e.target.value)}
+                        value={name}
+                        icon={<PencilLine />}
+                        placeholder={t('albums.nameField')}
+                    />
+                    {nameValidationMessages.map((m, idx) => (
+                        <p
+                            key={idx}
+                            className="font-comfortaa text-xs text-red-500"
+                        >
+                            {m}
+                        </p>
+                    ))}
+                </div>
+                <div className="flex w-full flex-col gap-2 lg:w-[34rem]">
+                    <Input
+                        onChange={(e) => setDescription(e.target.value)}
+                        value={description}
+                        icon={<PencilLine />}
+                        placeholder={t('albums.descriptionField')}
+                    />
+                    {descriptionValidationMessages.map((m, idx) => (
+                        <p
+                            key={idx}
+                            className="font-comfortaa text-xs text-red-500"
+                        >
+                            {m}
+                        </p>
+                    ))}
+                </div>
                 <Button
                     className="w-full self-start text-nowrap px-10 lg:w-[20rem]"
                     variant="primary"
                     type="submit"
+                    disabled={isButtonDisabled}
                 >
                     <Typography className="text-white" variant="buttonText">
                         {t('albums.uploadPhotos')}

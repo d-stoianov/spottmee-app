@@ -1,6 +1,6 @@
 import i18next from 'i18next'
 
-export type AuthFormValidationResponse = {
+ type AuthFormValidationResponse = {
     isValid: boolean
     messages: string[]
 }
@@ -17,23 +17,23 @@ export class AuthFormValidationService {
 
         if (name.length === 0) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.nameIsEmpty'))
+            response.messages.push(i18next.t('auth.validation.nameIsEmpty'))
             return response
         }
 
         if (name.length < MIN_NAME_LENGTH) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.nameIsTooShort'))
+            response.messages.push(i18next.t('auth.validation.nameIsTooShort'))
         }
 
         if (name.length > MAX_NAME_LENGTH) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.nameIsTooLong'))
+            response.messages.push(i18next.t('auth.validation.nameIsTooLong'))
         }
 
         if (name.split(' ').length > 1) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.nameShouldBeOneWord'))
+            response.messages.push(i18next.t('auth.validation.nameShouldBeOneWord'))
         }
 
         return response
@@ -49,13 +49,13 @@ export class AuthFormValidationService {
 
         if (email.length === 0) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.emailIsEmpty'))
+            response.messages.push(i18next.t('auth.validation.emailIsEmpty'))
             return response
         }
 
         if (!EMAIL_REGEX.test(email)) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.incorrectEmailFormat'))
+            response.messages.push(i18next.t('auth.validation.incorrectEmailFormat'))
         }
 
         return response
@@ -72,28 +72,28 @@ export class AuthFormValidationService {
 
         if (password.length === 0) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.passwordIsEmpty'))
+            response.messages.push(i18next.t('auth.validation.passwordIsEmpty'))
             return response
         }
 
         if (password.length < MIN_PASSWORD_LENGTH) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.passwordShoulBe8Chars'))
+            response.messages.push(i18next.t('auth.validation.passwordShoulBe8Chars'))
         }
 
         if (password.length > MAX_PASSWORD_LENGTH) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.passwordIsTooLong'))
+            response.messages.push(i18next.t('auth.validation.passwordIsTooLong'))
         }
 
         if (!/[a-zA-Z]/.test(password)) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.passwordMustContainLetter'))
+            response.messages.push(i18next.t('auth.validation.passwordMustContainLetter'))
         }
 
         if (!/\d/.test(password)) {
             response.isValid = false
-            response.messages.push(i18next.t('auth.passwordMustContainDigit'))
+            response.messages.push(i18next.t('auth.validation.passwordMustContainDigit'))
         }
 
         return response

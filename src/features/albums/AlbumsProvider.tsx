@@ -34,9 +34,9 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
         const { name, description, coverImage } = albumDto
         const formData = new FormData()
 
-        formData.append('name', name.trim())
+        formData.append('name', name)
         if (description) {
-            formData.append('description', description.trim())
+            formData.append('description', description)
         }
         if (coverImage) {
             formData.append('coverImage', coverImage)

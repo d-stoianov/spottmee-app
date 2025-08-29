@@ -44,9 +44,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
         const { validateName, validateEmail, validatePassword } =
             authFormValidationService
 
-        const nameResponse = validateName(name)
-        const emailResponse = validateEmail(email)
-        const passwordResponse = validatePassword(password)
+        const nameResponse = validateName(name.trim())
+        const emailResponse = validateEmail(email.trim())
+        const passwordResponse = validatePassword(password.trim())
 
         setNameValidationMessages(nameResponse.messages)
         setEmailValidationMessages(emailResponse.messages)
