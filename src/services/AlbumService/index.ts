@@ -22,6 +22,19 @@ export class AlbumService {
         return albums
     }
 
+    public async createAlbum(formData: FormData): Promise<Album> {
+        const response = await fetch(this.ALBUM_URL, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${this.jwt}`,
+            },
+            body: formData,
+        })
+
+        const albumDTO: AlbumDTO = await response.json()
+        return this.albumDTOtoAlbum(albumDTO)
+    }
+
     private albumDTOtoAlbum(albumDTO: AlbumDTO): Album {
         return {
             ...albumDTO,

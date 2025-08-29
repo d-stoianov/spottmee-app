@@ -1,10 +1,11 @@
 import { useAuth } from '@/providers/AuthProvider'
 import { AlbumService } from '@/services/AlbumService'
-import { Album } from '@/services/AlbumService/types'
+import { Album, AlbumCreateDTO } from '@/services/AlbumService/types'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 interface AlbumsContextType {
     albums: Album[]
+    createAlbum: (albumDto: AlbumCreateDTO) => Promise<void>
 }
 
 const AlbumsContext = createContext<AlbumsContextType | undefined>(undefined)
@@ -29,10 +30,31 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
         loadAlbums()
     }, [albumService])
 
+    const createAlbum = async (albumDto: AlbumCreateDTO) => {
+        const { name, description, coverImage } = albumDto
+        const formData = new FormData()
+
+        formData.append('name', name.trim())
+        if (description) {
+            formData.append('description', description.trim())
+        }
+        if (coverImage) {
+            formData.append('coverImage', coverImage)
+        }
+
+        const album = await albumService.createAlbum(formData)
+
+        // update shared local albums state array to not make extra fetch
+        setAlbums((prevAlbums) => {
+            return [...prevAlbums, album]
+        })
+    }
+
     return (
         <AlbumsContext.Provider
             value={{
                 albums,
+                createAlbum,
             }}
         >
             {children}

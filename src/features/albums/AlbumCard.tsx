@@ -1,7 +1,7 @@
 import { Typography } from '@/components/ui/Typography'
 import { Album } from '@/services/AlbumService/types'
 import { CalendarDays, Users } from 'lucide-react'
-import defaultAlbumCover from '@/assets/album-cover.jpg'
+import defaultAlbumCover from '@/assets/default-album-cover.jpg'
 import { useTranslation } from 'react-i18next'
 
 type AlbumCardProps = Album & {
