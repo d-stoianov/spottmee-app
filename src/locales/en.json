@@ -60,6 +60,7 @@
         "makeThisAlbumPrivate": "Make this album private",
         "uploadPhotos": "Upload Photos",
         "validation": {
+            "imageIsTooBig": "Image cannot be larger than 5MB",
             "nameIsEmpty": "Name is empty",
             "nameIsTooShort": "Name is too short",
             "nameIsTooLong": "Name is too long",

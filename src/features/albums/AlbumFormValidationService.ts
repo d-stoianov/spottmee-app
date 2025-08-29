@@ -6,6 +6,24 @@ type AlbumFormValidationResponse = {
 }
 
 export class AlbumFormValidationService {
+    public validateCoverFile(coverFile?: File): AlbumFormValidationResponse {
+        const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5 MB
+
+        const response: AlbumFormValidationResponse = {
+            isValid: true,
+            messages: [],
+        }
+
+        if (!coverFile) return response
+
+        if (coverFile.size > MAX_IMAGE_SIZE) {
+            response.isValid = false
+            response.messages.push(i18next.t('albums.validation.imageIsTooBig'))
+        }
+
+        return response
+    }
+
     public validateName(name: string): AlbumFormValidationResponse {
         const MIN_NAME_LENGTH = 2
         const MAX_NAME_LENGTH = 32

@@ -20,14 +20,14 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
 
     const navigate = useNavigate()
 
-    const [albumCoverImage, setAlbumCoverImage] = useState<string>(uploadCover) // preview image
-    const [albumCoverFile, setAlbumCoverFile] = useState<File | undefined>(
-        undefined
-    ) // file that goes to submit
+    const [coverImage, setCoverImage] = useState<string>(uploadCover) // preview image for the album cover
+    const [coverFile, setCoverFile] = useState<File | undefined>(undefined) // file that goes to submit
 
     const [name, setName] = useState<string>('')
     const [description, setDescription] = useState<string>('')
 
+    const [coverFileValidationMessages, setCoverFileValidationMessages] =
+        useState<string[]>([])
     const [nameValidationMessages, setNameValidationMessage] = useState<
         string[]
     >([])
@@ -41,11 +41,11 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
     const onAlbumCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
-            setAlbumCoverFile(file)
+            setCoverFile(file)
 
             const reader = new FileReader()
             reader.onloadend = () => {
-                setAlbumCoverImage(reader.result as string)
+                setCoverImage(reader.result as string)
             }
             reader.readAsDataURL(file)
         }
@@ -53,16 +53,25 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
 
     const validateFormData = (): boolean => {
         // validate each field
+        const coverFileResponse =
+            albumFormValidationService.validateCoverFile(coverFile)
         const nameResponse = albumFormValidationService.validateName(
             name.trim()
         )
         const descriptionResponse =
             albumFormValidationService.validateDescription(description.trim())
 
+            console.log('coverFileResponse', coverFile)
+
+        setCoverFileValidationMessages(coverFileResponse.messages)
         setNameValidationMessage(nameResponse.messages)
         setDescriptionValidationMessages(descriptionResponse.messages)
 
-        return nameResponse.isValid && descriptionResponse.isValid
+        return (
+            coverFileResponse.isValid &&
+            nameResponse.isValid &&
+            descriptionResponse.isValid
+        )
     }
 
     const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -77,7 +86,7 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
             await onAlbumCreate({
                 name: name.trim(),
                 description: description.trim(),
-                coverImage: albumCoverFile,
+                coverImage: coverFile,
             })
             navigate('/')
         } catch (error) {
@@ -96,16 +105,26 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
             <div className="flex flex-col items-center gap-[1.5rem]">
                 <input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg, image/png, image/webp"
                     onChange={onAlbumCoverChange}
                     className="hidden"
                     ref={fileInputRef}
                 />
-                <img
-                    src={albumCoverImage}
-                    className="h-[10rem] w-[10rem] rounded-lg lg:h-[22rem] lg:w-[22rem]"
-                    onClick={onUploadPhotosClick}
-                />
+                <div className="flex w-full flex-col gap-2 lg:w-[34rem] items-center">
+                    <img
+                        src={coverImage}
+                        className="h-[10rem] w-[10rem] rounded-lg lg:h-[22rem] lg:w-[22rem]"
+                        onClick={onUploadPhotosClick}
+                    />
+                    {coverFileValidationMessages.map((m, idx) => (
+                        <p
+                            key={idx}
+                            className="font-comfortaa text-xs text-red-500"
+                        >
+                            {m}
+                        </p>
+                    ))}
+                </div>
                 <Typography className="text-white" variant="bodyLarge">
                     {t('albums.uploadAlbumCover')}
                 </Typography>
