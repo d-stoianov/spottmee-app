@@ -7,7 +7,10 @@ type MainProps = React.HTMLAttributes<HTMLElement> & {
 
 const Main: React.FC<MainProps> = ({ className, children, ...props }) => {
     return (
-        <main className={twMerge(clsx('p-4 md:p-8 flex-1', className))} {...props}>
+        <main
+            className={twMerge(clsx('mt-[4rem] flex-1 p-4 md:p-8', className))}
+            {...props}
+        >
             {children}
         </main>
     )

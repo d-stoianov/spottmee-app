@@ -7,6 +7,7 @@ import SignInRoute from './routes/auth/sign-in'
 import SignUpRoute from './routes/auth/sign-up'
 
 import HomeRoute from './routes/app'
+import CreateRoute from '@/app/routes/app/create'
 
 import PageLayout from '@/components/layout/PageLayout'
 import { AlbumsProvider } from '@/features/albums/AlbumsProvider'
@@ -36,7 +37,10 @@ const createAppRouter = () => {
                             <PageLayout />
                         </AlbumsProvider>
                     ),
-                    children: [{ path: '/', element: <HomeRoute /> }],
+                    children: [
+                        { path: '/', element: <HomeRoute /> },
+                        { path: '/create', element: <CreateRoute /> },
+                    ],
                 },
             ],
         },
