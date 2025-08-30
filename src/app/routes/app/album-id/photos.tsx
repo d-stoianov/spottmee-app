@@ -35,6 +35,17 @@ const AlbumPhotosRoute: React.FC = () => {
 
     const album = albumId ? getAlbumById(albumId) : undefined
 
+    const handlePhotosUpload = async (files: File[]) => {
+        setPhotosToUpload(files)
+        closeModal()
+        await uploadPhotosInBatches(files, PHOTOS_BATCH_SIZE)
+        if (album) {
+            const photos = await getPhotos()
+            setPhotos(photos)
+            setPhotosToUpload([])
+        }
+    }
+
     useEffect(() => {
         const getAlbumPhotos = async () => {
             if (album) {
@@ -97,16 +108,20 @@ const AlbumPhotosRoute: React.FC = () => {
                     )
                 })}
                 {/* existing photos in the grid */}
-                {photos.map((photo) => {
-                    return (
-                        <PhotoCard
-                            key={photo.id}
-                            photo={photo}
-                            onDownload={async () => {}}
-                            onDelete={async () => {}}
-                        />
+                {photos
+                    .sort(
+                        (a, b) => b.createdAt.getTime() - a.createdAt.getTime() // sort by recents first
                     )
-                })}
+                    .map((photo) => {
+                        return (
+                            <PhotoCard
+                                key={photo.id}
+                                photo={photo}
+                                onDownload={async () => {}}
+                                onDelete={async () => {}}
+                            />
+                        )
+                    })}
             </div>
 
             <AnimatePresence>
@@ -116,16 +131,7 @@ const AlbumPhotosRoute: React.FC = () => {
                         title={t('albums.uploadPhotos')}
                     >
                         {/* upload drag-n-drop */}
-                        <DragDropUpload
-                            onFilesSelected={async (files) => {
-                                setPhotosToUpload(files)
-                                closeModal()
-                                await uploadPhotosInBatches(
-                                    files,
-                                    PHOTOS_BATCH_SIZE
-                                )
-                            }}
-                        />
+                        <DragDropUpload onFilesSelected={handlePhotosUpload} />
                     </Modal>
                 )}
             </AnimatePresence>
