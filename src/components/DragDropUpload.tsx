@@ -3,9 +3,13 @@ import { useTranslation } from 'react-i18next'
 
 type DragDropUploadProps = {
     onFilesSelected?: (files: File[]) => void
+    allowMultiple?: boolean
 }
 
-const DragDropUpload: React.FC<DragDropUploadProps> = ({ onFilesSelected }) => {
+const DragDropUpload: React.FC<DragDropUploadProps> = ({
+    onFilesSelected,
+    allowMultiple = true,
+}) => {
     const { t } = useTranslation()
 
     const [isDragging, setIsDragging] = useState(false)
@@ -49,7 +53,7 @@ const DragDropUpload: React.FC<DragDropUploadProps> = ({ onFilesSelected }) => {
                     ref={inputRef}
                     type="file"
                     accept="image/*"
-                    multiple
+                    multiple={allowMultiple}
                     className="hidden"
                     onChange={handleFileChange}
                 />

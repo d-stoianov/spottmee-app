@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import { motion } from 'motion/react'
+import { useEffect } from 'react'
 
 export type ModalProps = {
     title?: string
@@ -8,6 +9,19 @@ export type ModalProps = {
 }
 
 const Modal: React.FC<ModalProps> = ({ title, children, onClose }) => {
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose()
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [onClose])
+
     return (
         <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"

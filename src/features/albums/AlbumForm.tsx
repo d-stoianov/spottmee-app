@@ -3,12 +3,16 @@ import { Typography } from '@/components/ui/Typography'
 import { Info, PencilLine } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import uploadCover from '@/assets/upload-cover.svg'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Album, AlbumCreateDTO } from '@/services/AlbumService/types'
 import Button from '@/components/ui/Button'
 import { AlbumFormValidationService } from '@/features/albums/AlbumFormValidationService'
 import clsx from 'clsx'
 import { useNavigate } from 'react-router-dom'
+import DragDropUpload from '@/components/DragDropUpload'
+import Modal from '@/components/ui/Modal'
+import { AnimatePresence } from 'motion/react'
+import useModal from '@/hooks/useModal'
 
 type AlbumFormProps = {
     onSubmit: (albumCreateDTO: AlbumCreateDTO) => Promise<void>
@@ -22,6 +26,8 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
     const { t } = useTranslation()
 
     const navigate = useNavigate()
+
+    const { isModalOpen, closeModal, openModal } = useModal()
 
     const [coverImage, setCoverImage] = useState<string>(
         album?.coverImageUrl || uploadCover
@@ -41,27 +47,23 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
     const [descriptionValidationMessages, setDescriptionValidationMessages] =
         useState<string[]>([])
 
-    const [actionButtonsDisabled, setActionButtonsDisabled] = useState<boolean>(false)
+    const [actionButtonsDisabled, setActionButtonsDisabled] =
+        useState<boolean>(false)
 
-    const fileInputRef = useRef<HTMLInputElement>(null)
-
-    // if values didn't change from their original - disable button
+    // if values didn't change from their original - disable save button
     const isUnchanged =
         name.trim() === (album?.name || '') &&
         description.trim() === (album?.description || '') &&
         !coverFile
 
-    const onAlbumCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        if (file) {
-            setCoverFile(file)
+    const onAlbumCoverChange = (file: File) => {
+        setCoverFile(file)
 
-            const reader = new FileReader()
-            reader.onloadend = () => {
-                setCoverImage(reader.result as string)
-            }
-            reader.readAsDataURL(file)
+        const reader = new FileReader()
+        reader.onloadend = () => {
+            setCoverImage(reader.result as string)
         }
+        reader.readAsDataURL(file)
     }
 
     const validateFormData = (): boolean => {
@@ -73,8 +75,6 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
         )
         const descriptionResponse =
             albumFormValidationService.validateDescription(description.trim())
-
-        console.log('coverFileResponse', coverFile)
 
         setCoverFileValidationMessages(coverFileResponse.messages)
         setNameValidationMessage(nameResponse.messages)
@@ -107,33 +107,23 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
         }
     }
 
-    const onUploadPhotosClick = () => {
-        fileInputRef.current?.click()
-    }
-
     return (
         <div className="flex w-full flex-col items-center justify-center gap-[3rem] lg:flex-row lg:gap-[7.5rem]">
             {/* banner */}
             <div className="flex flex-col items-center gap-[1rem]">
-                <input
-                    type="file"
-                    accept="image/jpeg, image/png, image/webp"
-                    onChange={onAlbumCoverChange}
-                    className="hidden"
-                    ref={fileInputRef}
-                />
                 <div className="flex w-full flex-col items-center gap-2 lg:w-[34rem]">
-                    <img
-                        src={coverImage}
-                        className={clsx(
-                            'h-[10rem] w-[10rem] lg:h-[22rem] lg:w-[22rem]',
-                            {
-                                'rounded-lg object-cover':
-                                    coverImage !== uploadCover,
-                            }
-                        )}
-                        onClick={onUploadPhotosClick}
-                    />
+                    <button onClick={() => openModal()}>
+                        <img
+                            src={coverImage}
+                            className={clsx(
+                                'h-[10rem] w-[10rem] lg:h-[22rem] lg:w-[22rem]',
+                                {
+                                    'rounded-lg object-cover':
+                                        coverImage !== uploadCover,
+                                }
+                            )}
+                        />
+                    </button>
                     {coverFileValidationMessages.map((m, idx) => (
                         <p
                             key={idx}
@@ -143,9 +133,7 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
                         </p>
                     ))}
                 </div>
-                <Typography className="text-white" variant="bodyLarge">
-                    {t('albums.uploadAlbumCover')}
-                </Typography>
+
                 <div className="flex items-center gap-4">
                     <Info className="text-secondary" size={'1.25rem'} />
                     <Typography
@@ -244,6 +232,27 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
                     </Button>
                 )}
             </form>
+
+            {/* upload cover image modal */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <Modal
+                        onClose={closeModal}
+                        title={t('albums.uploadAlbumCover')}
+                    >
+                        {/* upload drag-n-drop */}
+                        <DragDropUpload
+                            onFilesSelected={(files) => {
+                                if (files.length > 0) {
+                                    onAlbumCoverChange(files[0])
+                                }
+                                closeModal()
+                            }}
+                            allowMultiple={false}
+                        />
+                    </Modal>
+                )}
+            </AnimatePresence>
         </div>
     )
 }
