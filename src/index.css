@@ -5,3 +5,7 @@
 #root {
     height: 100vh;
 }
+
+body {
+    background: rgb(91, 77, 117);
+}

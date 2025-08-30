@@ -57,8 +57,7 @@ export class AlbumFormValidationService {
     public validateDescription(
         description: string
     ): AlbumFormValidationResponse {
-        const MIN_NAME_LENGTH = 2
-        const MAX_NAME_LENGTH = 32
+        const MAX_NAME_LENGTH = 256
 
         const response: AlbumFormValidationResponse = {
             isValid: true,
@@ -66,13 +65,6 @@ export class AlbumFormValidationService {
         }
 
         if (description.length === 0) return response // valid
-
-        if (description.length < MIN_NAME_LENGTH) {
-            response.isValid = false
-            response.messages.push(
-                i18next.t('albums.validation.descriptionIsTooShort')
-            )
-        }
 
         if (description.length > MAX_NAME_LENGTH) {
             response.isValid = false

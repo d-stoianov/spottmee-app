@@ -1,19 +1,32 @@
 import Main from '@/components/layout/Main'
 import { Typography } from '@/components/ui/Typography'
+import AlbumForm from '@/features/albums/AlbumForm'
+import { useAlbums } from '@/features/albums/AlbumsProvider'
 import useIsMobile from '@/hooks/useIsMobile'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 
 const AlbumRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
 
+    const { updateAlbum, getAlbumById } = useAlbums()
+
+    const { albumId } = useParams()
+
+    const album = albumId ? getAlbumById(albumId) : undefined
+
+    if (!album) {
+        return
+    }
+
     return (
         <Main className="flex w-full flex-col items-center lg:px-[8rem] lg:py-[3rem]">
             <Typography
-                className="mb-[0.75rem]"
+                className="mb-[0.75rem] text-white"
                 variant={isMobile ? 'heading2' : 'heading1'}
             >
-                {t('albums.yourAlbum')}
+                {t('albums.manageYourAlbum', { albumName: album.name })}
             </Typography>
 
             {!isMobile && (
@@ -25,7 +38,12 @@ const AlbumRoute: React.FC = () => {
                 </Typography>
             )}
 
-            {/* upload drag-n-drop */}
+            <AlbumForm
+                onSubmit={async (albumCreateDTO) => {
+                    await updateAlbum(album.id, albumCreateDTO)
+                }}
+                album={album}
+            />
         </Main>
     )
 }

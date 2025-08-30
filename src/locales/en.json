@@ -64,9 +64,10 @@
             "nameIsEmpty": "Name is empty",
             "nameIsTooShort": "Name is too short",
             "nameIsTooLong": "Name is too long",
-            "descriptionIsTooShort": "Description is too short",
             "descriptionIsTooLong": "Description is too long"
         },
+        "manageYourAlbum": "Manage Your Album \"{{albumName}}\" ",
+        "save": "Save",
         "yourPhotosAreUploading": "Your Photos are Uploading...",
         "seeMore": "see more+",
         "uploadMore": "Upload More",

@@ -1,6 +1,6 @@
 import Main from '@/components/layout/Main'
 import { Typography } from '@/components/ui/Typography'
-import AlbumCreateForm from '@/features/albums/AlbumCreateForm'
+import AlbumForm from '@/features/albums/AlbumForm'
 import { useAlbums } from '@/features/albums/AlbumsProvider'
 import useIsMobile from '@/hooks/useIsMobile'
 import { useTranslation } from 'react-i18next'
@@ -33,8 +33,8 @@ const CreateRoute: React.FC = () => {
             )}
 
             {/* creation form */}
-            <AlbumCreateForm
-                onAlbumCreate={async (albumCreateDTO) => {
+            <AlbumForm
+                onSubmit={async (albumCreateDTO) => {
                     const newAlbum = await createAlbum(albumCreateDTO)
                     navigate(`/${newAlbum.id}/upload`)
                 }}

@@ -4,24 +4,29 @@ import { Info, PencilLine } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import uploadCover from '@/assets/upload-cover.svg'
 import { useRef, useState } from 'react'
-import { AlbumCreateDTO } from '@/services/AlbumService/types'
+import { Album, AlbumCreateDTO } from '@/services/AlbumService/types'
 import Button from '@/components/ui/Button'
 import { AlbumFormValidationService } from '@/features/albums/AlbumFormValidationService'
 
-type AlbumCreateFormProps = {
-    onAlbumCreate: (albumCreateDTO: AlbumCreateDTO) => Promise<void>
+type AlbumFormProps = {
+    onSubmit: (albumCreateDTO: AlbumCreateDTO) => Promise<void>
+    album?: Album // existing album object
 }
 
 const albumFormValidationService = new AlbumFormValidationService()
 
-const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
+const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, album }) => {
     const { t } = useTranslation()
 
-    const [coverImage, setCoverImage] = useState<string>(uploadCover) // preview image for the album cover
+    const [coverImage, setCoverImage] = useState<string>(
+        album?.coverImageUrl || uploadCover
+    ) // preview image for the album cover
     const [coverFile, setCoverFile] = useState<File | undefined>(undefined) // file that goes to submit
 
-    const [name, setName] = useState<string>('')
-    const [description, setDescription] = useState<string>('')
+    const [name, setName] = useState<string>(album?.name || '')
+    const [description, setDescription] = useState<string>(
+        album?.description || ''
+    )
 
     const [coverFileValidationMessages, setCoverFileValidationMessages] =
         useState<string[]>([])
@@ -34,6 +39,12 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
     const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false)
 
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    // if values didn't change from their original - disable button
+    const isUnchanged =
+        name.trim() === (album?.name || '') &&
+        description.trim() === (album?.description || '') &&
+        !coverFile
 
     const onAlbumCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -80,7 +91,7 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
 
         try {
             setIsButtonDisabled(true)
-            await onAlbumCreate({
+            await onSubmit({
                 name: name.trim(),
                 description: description.trim(),
                 coverImage: coverFile,
@@ -109,7 +120,7 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
                 <div className="flex w-full flex-col items-center gap-2 lg:w-[34rem]">
                     <img
                         src={coverImage}
-                        className="h-[10rem] w-[10rem] rounded-lg lg:h-[22rem] lg:w-[22rem]"
+                        className="h-[10rem] w-[10rem] rounded-lg lg:h-[22rem] lg:w-[22rem] object-cover"
                         onClick={onUploadPhotosClick}
                     />
                     {coverFileValidationMessages.map((m, idx) => (
@@ -176,10 +187,10 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
                     className="w-full self-start text-nowrap px-10 lg:w-[20rem]"
                     variant="primary"
                     type="submit"
-                    disabled={isButtonDisabled}
+                    disabled={isButtonDisabled || isUnchanged}
                 >
                     <Typography className="text-white" variant="buttonText">
-                        {t('albums.uploadPhotos')}
+                        {album ? t('albums.save') : t('albums.uploadPhotos')}
                     </Typography>
                 </Button>
             </form>
@@ -187,4 +198,4 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
     )
 }
 
-export default AlbumCreateForm
+export default AlbumForm
