@@ -1,3 +1,4 @@
+import DragDropUpload from '@/components/DragDropUpload'
 import Main from '@/components/layout/Main'
 import { Typography } from '@/components/ui/Typography'
 import { useAlbums } from '@/features/albums/AlbumsProvider'
@@ -22,7 +23,7 @@ const AlbumPhotosRoute: React.FC = () => {
     return (
         <Main className="flex w-full flex-col items-center lg:px-[8rem] lg:py-[3rem]">
             <Typography
-                className="mb-[0.75rem] text-white text-center"
+                className="mb-[0.75rem] text-center text-white"
                 variant={isMobile ? 'heading2' : 'heading1'}
             >
                 {t('albums.uploadFirstPhotos')}
@@ -40,6 +41,11 @@ const AlbumPhotosRoute: React.FC = () => {
             )}
 
             {/* upload drag-n-drop */}
+            <DragDropUpload
+                onFilesSelected={(files) => {
+                    console.log(files)
+                }}
+            />
         </Main>
     )
 }

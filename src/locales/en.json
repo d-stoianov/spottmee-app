@@ -72,6 +72,8 @@
         "managePhotos": "Manage Photos",
         "uploadFirstPhotos": "Upload your first photos to your album",
         "uploadFirstPhotosSubtext": "Your album \"{{albumName}}\" has no photos yet",
+        "dropPhotosHere": "Drop your photos here...",
+        "dragDropPhotos": "Drag & drop photos here, or click to select",
         "yourPhotosAreUploading": "Your Photos are Uploading...",
         "seeMore": "see more+",
         "uploadMore": "Upload More",
