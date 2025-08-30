@@ -3,11 +3,14 @@ import { twMerge } from 'tailwind-merge'
 import logo from '@/assets/logo.svg'
 import { useAuth } from '@/providers/AuthProvider'
 import { Typography } from '@/components/ui/Typography'
+import { useNavigate } from 'react-router-dom'
 
 type HeaderProps = React.HTMLAttributes<HTMLElement>
 
 const Header: React.FC<HeaderProps> = ({ className, ...props }) => {
     const { user, signOut } = useAuth()
+
+    const navigate = useNavigate()
 
     return (
         <header
@@ -19,7 +22,9 @@ const Header: React.FC<HeaderProps> = ({ className, ...props }) => {
             )}
             {...props}
         >
-            <img className="mt-[0.5rem] h-[2.5rem]" src={logo} />
+            <button onClick={() => navigate('/')}>
+                <img className="mt-[0.5rem] h-[2.5rem]" src={logo} />
+            </button>
 
             {user && (
                 <div className="flex items-center gap-2">

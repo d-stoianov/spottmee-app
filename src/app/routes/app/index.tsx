@@ -70,13 +70,13 @@ const HomeRoute: React.FC = () => {
             {/* album cards grid */}
             <div className="flex w-full flex-wrap justify-center gap-x-4 gap-y-10 md:justify-between">
                 {filteredAlbums.map((al) => (
-                    <AlbumCard {...al} />
+                    <AlbumCard album={al} onClick={() => navigate(al.id)} />
                 ))}
             </div>
 
             {/* button footer mobile */}
             {isMobile && (
-                <div className='fixed bottom-0 mb-[2.5rem]'>
+                <div className="fixed bottom-0 mb-[2.5rem]">
                     <Button
                         onClick={() => navigate('/create')}
                         variant="primary"

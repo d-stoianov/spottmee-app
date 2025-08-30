@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import uploadCover from '@/assets/upload-cover.svg'
 import { useRef, useState } from 'react'
 import { AlbumCreateDTO } from '@/services/AlbumService/types'
-import { useNavigate } from 'react-router-dom'
 import Button from '@/components/ui/Button'
 import { AlbumFormValidationService } from '@/features/albums/AlbumFormValidationService'
 
@@ -17,8 +16,6 @@ const albumFormValidationService = new AlbumFormValidationService()
 
 const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
     const { t } = useTranslation()
-
-    const navigate = useNavigate()
 
     const [coverImage, setCoverImage] = useState<string>(uploadCover) // preview image for the album cover
     const [coverFile, setCoverFile] = useState<File | undefined>(undefined) // file that goes to submit
@@ -61,7 +58,7 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
         const descriptionResponse =
             albumFormValidationService.validateDescription(description.trim())
 
-            console.log('coverFileResponse', coverFile)
+        console.log('coverFileResponse', coverFile)
 
         setCoverFileValidationMessages(coverFileResponse.messages)
         setNameValidationMessage(nameResponse.messages)
@@ -88,7 +85,6 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
                 description: description.trim(),
                 coverImage: coverFile,
             })
-            navigate('/')
         } catch (error) {
         } finally {
             setIsButtonDisabled(false)
@@ -110,7 +106,7 @@ const AlbumCreateForm: React.FC<AlbumCreateFormProps> = ({ onAlbumCreate }) => {
                     className="hidden"
                     ref={fileInputRef}
                 />
-                <div className="flex w-full flex-col gap-2 lg:w-[34rem] items-center">
+                <div className="flex w-full flex-col items-center gap-2 lg:w-[34rem]">
                     <img
                         src={coverImage}
                         className="h-[10rem] w-[10rem] rounded-lg lg:h-[22rem] lg:w-[22rem]"

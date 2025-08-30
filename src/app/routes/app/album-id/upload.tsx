@@ -1,16 +1,9 @@
 import Main from '@/components/layout/Main'
 import { Typography } from '@/components/ui/Typography'
-import AlbumCreateForm from '@/features/albums/AlbumCreateForm'
-import { useAlbums } from '@/features/albums/AlbumsProvider'
 import useIsMobile from '@/hooks/useIsMobile'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 
-const CreateRoute: React.FC = () => {
-    const { createAlbum } = useAlbums()
-
-    const navigate = useNavigate()
-
+const AlbumUploadRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
 
@@ -20,7 +13,7 @@ const CreateRoute: React.FC = () => {
                 className="mb-[0.75rem]"
                 variant={isMobile ? 'heading2' : 'heading1'}
             >
-                {t('albums.createNewAlbum')}
+                {t('albums.uploadFirstPhotos')}
             </Typography>
 
             {!isMobile && (
@@ -32,15 +25,9 @@ const CreateRoute: React.FC = () => {
                 </Typography>
             )}
 
-            {/* creation form */}
-            <AlbumCreateForm
-                onAlbumCreate={async (albumCreateDTO) => {
-                    const newAlbum = await createAlbum(albumCreateDTO)
-                    navigate(`/${newAlbum.id}/upload`)
-                }}
-            />
+            {/* upload drag-n-drop */}
         </Main>
     )
 }
 
-export default CreateRoute
+export default AlbumUploadRoute

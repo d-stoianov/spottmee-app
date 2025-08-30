@@ -11,6 +11,8 @@ import CreateRoute from '@/app/routes/app/create'
 
 import PageLayout from '@/components/layout/PageLayout'
 import { AlbumsProvider } from '@/features/albums/AlbumsProvider'
+import AlbumRoute from '@/app/routes/app/album-id'
+import AlbumUploadRoute from '@/app/routes/app/album-id/upload'
 
 const createAppRouter = () => {
     return createBrowserRouter([
@@ -40,6 +42,16 @@ const createAppRouter = () => {
                     children: [
                         { path: '/', element: <HomeRoute /> },
                         { path: '/create', element: <CreateRoute /> },
+                        {
+                            path: '/:albumId',
+                            children: [
+                                { path: '/:albumId', element: <AlbumRoute /> },
+                                {
+                                    path: '/:albumId/upload',
+                                    element: <AlbumUploadRoute />,
+                                },
+                            ],
+                        },
                     ],
                 },
             ],

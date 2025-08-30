@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 interface AlbumsContextType {
     albums: Album[]
-    createAlbum: (albumDto: AlbumCreateDTO) => Promise<void>
+    createAlbum: (albumDto: AlbumCreateDTO) => Promise<Album>
 }
 
 const AlbumsContext = createContext<AlbumsContextType | undefined>(undefined)
@@ -30,7 +30,7 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
         loadAlbums()
     }, [albumService])
 
-    const createAlbum = async (albumDto: AlbumCreateDTO) => {
+    const createAlbum = async (albumDto: AlbumCreateDTO): Promise<Album> => {
         const { name, description, coverImage } = albumDto
         const formData = new FormData()
 
@@ -48,6 +48,8 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
         setAlbums((prevAlbums) => {
             return [...prevAlbums, album]
         })
+
+        return album
     }
 
     return (
