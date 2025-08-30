@@ -17,7 +17,7 @@ const CreateRoute: React.FC = () => {
     return (
         <Main className="flex w-full flex-col items-center lg:px-[8rem] lg:py-[3rem]">
             <Typography
-                className="mb-[0.75rem]"
+                className="mb-[0.75rem] text-center text-white"
                 variant={isMobile ? 'heading2' : 'heading1'}
             >
                 {t('albums.createNewAlbum')}
@@ -36,7 +36,7 @@ const CreateRoute: React.FC = () => {
             <AlbumForm
                 onSubmit={async (albumCreateDTO) => {
                     const newAlbum = await createAlbum(albumCreateDTO)
-                    navigate(`/${newAlbum.id}/upload`)
+                    navigate(`/${newAlbum.id}/photos`)
                 }}
             />
         </Main>

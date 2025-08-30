@@ -8,6 +8,7 @@ import { Album, AlbumCreateDTO } from '@/services/AlbumService/types'
 import Button from '@/components/ui/Button'
 import { AlbumFormValidationService } from '@/features/albums/AlbumFormValidationService'
 import clsx from 'clsx'
+import { useNavigate } from 'react-router-dom'
 
 type AlbumFormProps = {
     onSubmit: (albumCreateDTO: AlbumCreateDTO) => Promise<void>
@@ -19,6 +20,8 @@ const albumFormValidationService = new AlbumFormValidationService()
 
 const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
     const { t } = useTranslation()
+
+    const navigate = useNavigate()
 
     const [coverImage, setCoverImage] = useState<string>(
         album?.coverImageUrl || uploadCover
@@ -213,8 +216,7 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
                             onClick={async () => {
                                 setActionButtonsDisabled(true)
                                 await onDelete()
-                            setActionButtonsDisabled(false)
-
+                                setActionButtonsDisabled(false)
                             }}
                             disabled={actionButtonsDisabled}
                         >
@@ -227,6 +229,20 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
                         </Button>
                     )}
                 </div>
+                {album && (
+                    <Button
+                        className="w-full self-start text-nowrap px-10"
+                        variant="primary"
+                        onClick={() => {
+                            navigate(`/${album.id}/photos`)
+                        }}
+                        disabled={actionButtonsDisabled}
+                    >
+                        <Typography className="text-white" variant="buttonText">
+                            {t('albums.managePhotos')}
+                        </Typography>
+                    </Button>
+                )}
             </form>
         </div>
     )
