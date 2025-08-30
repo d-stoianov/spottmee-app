@@ -57,8 +57,8 @@ const usePhotos = (albumId: string) => {
         return allPhotos
     }
 
-    const getPhotos = async (): Promise<Photo[]> => {
-        return await photoService.getPhotos()
+    const getPhotos = async (offset?: number, size?: number): Promise<Photo[]> => {
+        return await photoService.getPhotos(offset, size)
     }
 
     return {

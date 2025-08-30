@@ -12,8 +12,15 @@ export class PhotoService {
         this.PHOTO_URL = `${import.meta.env.VITE_API_URL}/albums/${this.albumId}/photos`
     }
 
-    public async getPhotos(): Promise<Photo[]> {
-        const response = await fetch(this.PHOTO_URL, {
+    public async getPhotos(offset?: number, size?: number): Promise<Photo[]> {
+        const params = new URLSearchParams()
+
+        if (offset !== undefined) params.append('offset', offset.toString())
+        if (size !== undefined) params.append('size', size.toString())
+
+        const url = `${this.PHOTO_URL}?${params.toString()}`
+
+        const response = await fetch(url, {
             headers: {
                 Authorization: `Bearer ${this.jwt}`,
                 'Content-Type': 'application/json',
@@ -21,9 +28,7 @@ export class PhotoService {
         })
 
         const photoDTOs: PhotoDTO[] = await response.json()
-        const photos = photoDTOs.map((al) => this.photoDTOtoPhoto(al))
-
-        return photos
+        return photoDTOs.map((al) => this.photoDTOtoPhoto(al))
     }
 
     // instead of using fetch API, using XHR to track progress

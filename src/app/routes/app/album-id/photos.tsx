@@ -14,7 +14,11 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-const PHOTOS_BATCH_SIZE = 10
+// count of photos shown in a grid (API only, not the one that are uploading)
+const PHOTOS_GRID_SIZE = 20
+
+// size of the batch the photos are being uploaded to the API (whole batch shares the same progress)
+const PHOTOS_UPLOAD_BATCH_SIZE = 10
 
 const AlbumPhotosRoute: React.FC = () => {
     const { t } = useTranslation()
@@ -27,6 +31,8 @@ const AlbumPhotosRoute: React.FC = () => {
     const [photos, setPhotos] = useState<Photo[]>([]) // photos from API
     const [photosToUpload, setPhotosToUpload] = useState<File[]>([])
 
+    const [photosOffset, setPhotosOffset] = useState<number>(0)
+
     const { getAlbumById } = useAlbums()
 
     const { getPhotos, uploadProgress, uploadPhotosInBatches } = usePhotos(
@@ -38,18 +44,28 @@ const AlbumPhotosRoute: React.FC = () => {
     const handlePhotosUpload = async (files: File[]) => {
         setPhotosToUpload(files)
         closeModal()
-        await uploadPhotosInBatches(files, PHOTOS_BATCH_SIZE)
+        await uploadPhotosInBatches(files, PHOTOS_UPLOAD_BATCH_SIZE)
         if (album) {
-            const photos = await getPhotos()
+            const photos = await getPhotos(0, PHOTOS_GRID_SIZE)
             setPhotos(photos)
             setPhotosToUpload([])
+            setPhotosOffset(0)
+        }
+    }
+
+    const loadMorePhotos = async () => {
+        const newOffset = photosOffset + PHOTOS_GRID_SIZE
+        if (album) {
+            const photos = await getPhotos(newOffset, PHOTOS_GRID_SIZE)
+            setPhotos((prev) => [...prev, ...photos])
+            setPhotosOffset(newOffset)
         }
     }
 
     useEffect(() => {
         const getAlbumPhotos = async () => {
             if (album) {
-                const photos = await getPhotos()
+                const photos = await getPhotos(0, PHOTOS_GRID_SIZE)
                 setPhotos(photos)
             }
         }
@@ -95,7 +111,9 @@ const AlbumPhotosRoute: React.FC = () => {
             >
                 {/* uploading photos in the grid */}
                 {photosToUpload.map((f, idx) => {
-                    const batchIndex = Math.floor(idx / PHOTOS_BATCH_SIZE)
+                    const batchIndex = Math.floor(
+                        idx / PHOTOS_UPLOAD_BATCH_SIZE
+                    )
 
                     return (
                         <PhotoCard
@@ -123,6 +141,14 @@ const AlbumPhotosRoute: React.FC = () => {
                         )
                     })}
             </div>
+
+            {photos.length > 0 && (
+                <button onClick={loadMorePhotos}>
+                    <Typography className="text-secondary" variant="buttonText">
+                        {t('albums.seeMore')}
+                    </Typography>
+                </button>
+            )}
 
             <AnimatePresence>
                 {isModalOpen && (
