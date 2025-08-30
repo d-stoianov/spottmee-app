@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import { Typography } from '@/components/ui/Typography'
 import { useAlbums } from '@/features/albums/AlbumsProvider'
+import usePhotosUpload from '@/features/albums/usePhotosUpload'
 import PhotoCard from '@/features/photos/PhotoCard'
 import useIsMobile from '@/hooks/useIsMobile'
 import useModal from '@/hooks/useModal'
@@ -12,9 +13,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
+const PHOTOS_BATCH_SIZE = 10
+
 const AlbumPhotosRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
+
+    const { albumId } = useParams()
 
     const { isModalOpen, closeModal, openModal } = useModal()
 
@@ -22,7 +27,10 @@ const AlbumPhotosRoute: React.FC = () => {
 
     const { getAlbumById } = useAlbums()
 
-    const { albumId } = useParams()
+    const { uploadProgress, uploadPhotosInBatches } = usePhotosUpload(
+        albumId || '',
+        PHOTOS_BATCH_SIZE
+    )
 
     const album = albumId ? getAlbumById(albumId) : undefined
 
@@ -58,21 +66,25 @@ const AlbumPhotosRoute: React.FC = () => {
 
             {/* photos grid */}
             <div
-                className="w-full mt-8 grid justify-center gap-6"
+                className="mt-8 grid w-full justify-center gap-6"
                 style={{
                     gridTemplateColumns:
                         'repeat(auto-fit, minmax(25rem, max-content))',
                 }}
             >
-                {filesToUpload.map((f, idx) => (
-                    <PhotoCard
-                        key={idx} // make sure to have a unique key
-                        file={f}
-                        uploadProgress={0}
-                        onDownload={() => {}}
-                        onDelete={() => {}}
-                    />
-                ))}
+                {filesToUpload.map((f, idx) => {
+                    const batchIndex = Math.floor(idx / PHOTOS_BATCH_SIZE)
+
+                    return (
+                        <PhotoCard
+                            key={idx} // make sure to have a unique key
+                            file={f}
+                            uploadProgress={uploadProgress[batchIndex]}
+                            onDownload={() => {}}
+                            onDelete={() => {}}
+                        />
+                    )
+                })}
             </div>
 
             <AnimatePresence>
@@ -85,6 +97,7 @@ const AlbumPhotosRoute: React.FC = () => {
                         <DragDropUpload
                             onFilesSelected={(files) => {
                                 setFilesToUpload(files)
+                                uploadPhotosInBatches(files)
                                 closeModal()
                             }}
                         />
