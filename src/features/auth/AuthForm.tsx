@@ -66,7 +66,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
 
     return (
         <form className="flex w-full flex-col gap-[1rem]">
-            <div className="mb-6 flex w-full flex-col items-center justify-center gap-2">
+            <div className="mb-6 flex w-full flex-col items-center justify-center gap-4">
                 {formType === 'SIGN_UP' && (
                     <div className="flex w-full flex-col gap-2">
                         <Input

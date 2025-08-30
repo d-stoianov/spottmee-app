@@ -44,7 +44,7 @@ const HomeRoute: React.FC = () => {
             </Typography>
 
             {/* input + button */}
-            <div className="mb-[2rem] flex w-full gap-[5rem]">
+            <div className="mb-[2rem] flex w-full gap-[5rem] items-center">
                 <Input
                     onChange={onSearch}
                     className="border-secondary"
@@ -55,7 +55,6 @@ const HomeRoute: React.FC = () => {
                     <Button
                         onClick={() => navigate('/create')}
                         variant="primary"
-                        className="px-8 py-2"
                     >
                         <Typography
                             variant="buttonText"
@@ -80,7 +79,6 @@ const HomeRoute: React.FC = () => {
                     <Button
                         onClick={() => navigate('/create')}
                         variant="primary"
-                        className="px-8 py-2"
                     >
                         <Typography
                             variant="buttonText"

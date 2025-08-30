@@ -6,7 +6,7 @@ import { Typography } from '@/components/ui/Typography'
 import { useTranslation } from 'react-i18next'
 
 type ButtonProps = {
-    variant?: 'primary' | 'transparent'
+    variant?: 'primary' | 'transparent' | 'danger'
     children?: React.ReactNode
     className?: string
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
@@ -21,12 +21,13 @@ const Button: React.FC<ButtonProps> = ({
         <button
             className={twMerge(
                 clsx(
-                    'flex h-[3.5rem] w-fit items-center justify-center rounded-[1.25rem] text-center shadow-[inset_0_4px_4px_0_rgba(255,255,255,0.35)]',
+                    'flex w-fit items-center justify-center rounded-[1.25rem] px-6 py-3.5 text-center shadow-md',
                     {
                         'bg-primary disabled:bg-blue-300':
                             variant === 'primary',
                         'border border-primary bg-transparent':
                             variant === 'transparent',
+                        'bg-red-500 disabled:bg-red-300': variant === 'danger',
                     },
                     className
                 )
@@ -63,7 +64,7 @@ export const IntegrationButton: React.FC<IntegrationButtonProps> = ({
         <button
             className={twMerge(
                 clsx(
-                    'flex h-[3.5rem] w-fit items-center justify-between rounded-[1.25rem] border border-primary bg-transparent px-[1.75rem] text-center shadow-[inset_0_4px_4px_0_rgba(255,255,255,0.35)]',
+                    'flex px-6 py-3 w-fit items-center justify-between rounded-[1.25rem] border border-primary bg-transparent text-center',
                     className
                 )
             )}
@@ -72,7 +73,7 @@ export const IntegrationButton: React.FC<IntegrationButtonProps> = ({
             {integrationLogo && (
                 <img className="h-[1.375rem]" src={integrationLogo} />
             )}
-            <Typography className="text-[#0E0E10]" variant="buttonText">
+            <Typography className='text-white' variant="buttonText">
                 {t('auth.continueWithIntegration', {
                     integration,
                 })}

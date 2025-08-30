@@ -68,6 +68,7 @@
         },
         "manageYourAlbum": "Manage Your Album \"{{albumName}}\" ",
         "save": "Save",
+        "delete": "Delete",
         "yourPhotosAreUploading": "Your Photos are Uploading...",
         "seeMore": "see more+",
         "uploadMore": "Upload More",

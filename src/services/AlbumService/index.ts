@@ -35,7 +35,10 @@ export class AlbumService {
         return this.albumDTOtoAlbum(albumDTO)
     }
 
-    public async updateAlbum(albumId: string, formData: FormData): Promise<Album> {
+    public async updateAlbum(
+        albumId: string,
+        formData: FormData
+    ): Promise<Album> {
         const response = await fetch(`${this.ALBUM_URL}/${albumId}`, {
             method: 'PUT',
             headers: {
@@ -46,6 +49,15 @@ export class AlbumService {
 
         const albumDTO: AlbumDTO = await response.json()
         return this.albumDTOtoAlbum(albumDTO)
+    }
+
+    public async deleteAlbum(albumId: string): Promise<void> {
+        await fetch(`${this.ALBUM_URL}/${albumId}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${this.jwt}`,
+            },
+        })
     }
 
     private albumDTOtoAlbum(albumDTO: AlbumDTO): Album {

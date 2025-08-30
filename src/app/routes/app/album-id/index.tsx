@@ -4,15 +4,17 @@ import AlbumForm from '@/features/albums/AlbumForm'
 import { useAlbums } from '@/features/albums/AlbumsProvider'
 import useIsMobile from '@/hooks/useIsMobile'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const AlbumRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
 
-    const { updateAlbum, getAlbumById } = useAlbums()
+    const { getAlbumById, updateAlbum, deleteAlbum } = useAlbums()
 
     const { albumId } = useParams()
+
+    const navigate = useNavigate()
 
     const album = albumId ? getAlbumById(albumId) : undefined
 
@@ -41,6 +43,10 @@ const AlbumRoute: React.FC = () => {
             <AlbumForm
                 onSubmit={async (albumCreateDTO) => {
                     await updateAlbum(album.id, albumCreateDTO)
+                }}
+                onDelete={async () => {
+                    await deleteAlbum(album.id)
+                    navigate('/')
                 }}
                 album={album}
             />

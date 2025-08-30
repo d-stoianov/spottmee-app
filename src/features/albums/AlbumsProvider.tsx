@@ -11,6 +11,7 @@ interface AlbumsContextType {
         albumId: string,
         albumCreateDTO: AlbumCreateDTO
     ) => Promise<Album | undefined>
+    deleteAlbum: (albumId: string) => Promise<void>
 }
 
 const AlbumsContext = createContext<AlbumsContextType | undefined>(undefined)
@@ -94,6 +95,17 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
         return album
     }
 
+    const deleteAlbum = async (albumId: string) => {
+        await albumService.deleteAlbum(albumId)
+
+        // update shared local albums state array to not make extra fetch
+        setAlbums((prevAlbums) => {
+            // remove element
+
+            return prevAlbums.filter((al) => al.id !== albumId)
+        })
+    }
+
     const getAlbumById = (albumId: string): Album | undefined => {
         return albums.find((al) => al.id === albumId)
     }
@@ -105,6 +117,7 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
                 createAlbum,
                 getAlbumById,
                 updateAlbum,
+                deleteAlbum,
             }}
         >
             {children}
