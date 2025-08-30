@@ -1,14 +1,23 @@
 import DragDropUpload from '@/components/DragDropUpload'
 import Main from '@/components/layout/Main'
+import Button from '@/components/ui/Button'
+import Modal from '@/components/ui/Modal'
 import { Typography } from '@/components/ui/Typography'
 import { useAlbums } from '@/features/albums/AlbumsProvider'
 import useIsMobile from '@/hooks/useIsMobile'
+import useModal from '@/hooks/useModal'
+import { AnimatePresence } from 'motion/react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 const AlbumPhotosRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
+
+    const { isModalOpen, closeModal, openModal } = useModal()
+
+    const [filesToUpload, setFilesToUpload] = useState<File[]>([])
 
     const { getAlbumById } = useAlbums()
 
@@ -40,12 +49,28 @@ const AlbumPhotosRoute: React.FC = () => {
                 </Typography>
             )}
 
-            {/* upload drag-n-drop */}
-            <DragDropUpload
-                onFilesSelected={(files) => {
-                    console.log(files)
-                }}
-            />
+            <Button onClick={() => openModal()} variant="primary">
+                <Typography className="text-white" variant="buttonText">
+                    {t('albums.uploadPhotos')}
+                </Typography>
+            </Button>
+
+            <AnimatePresence>
+                {isModalOpen && (
+                    <Modal
+                        onClose={closeModal}
+                        title={t('albums.uploadPhotos')}
+                    >
+                        {/* upload drag-n-drop */}
+                        <DragDropUpload
+                            onFilesSelected={(files) => {
+                                setFilesToUpload(files)
+                                closeModal()
+                            }}
+                        />
+                    </Modal>
+                )}
+            </AnimatePresence>
         </Main>
     )
 }
