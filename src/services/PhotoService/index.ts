@@ -1,4 +1,4 @@
-import { Photo, PhotoDTO } from '@/services/PhotoService.ts/types'
+import { Photo, PhotoDTO } from '@/services/PhotoService/types'
 
 export class PhotoService {
     private PHOTO_URL: string

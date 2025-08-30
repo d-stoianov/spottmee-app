@@ -4,12 +4,13 @@ import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import { Typography } from '@/components/ui/Typography'
 import { useAlbums } from '@/features/albums/AlbumsProvider'
-import usePhotosUpload from '@/features/albums/usePhotosUpload'
+import usePhotos from '@/features/albums/usePhotosUpload'
 import PhotoCard from '@/features/photos/PhotoCard'
 import useIsMobile from '@/hooks/useIsMobile'
 import useModal from '@/hooks/useModal'
+import { Photo } from '@/services/PhotoService/types'
 import { AnimatePresence } from 'motion/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -23,16 +24,26 @@ const AlbumPhotosRoute: React.FC = () => {
 
     const { isModalOpen, closeModal, openModal } = useModal()
 
-    const [filesToUpload, setFilesToUpload] = useState<File[]>([])
+    const [photos, setPhotos] = useState<Photo[]>([]) // photos from API
+    const [photosToUpload, setPhotosToUpload] = useState<File[]>([])
 
     const { getAlbumById } = useAlbums()
 
-    const { uploadProgress, uploadPhotosInBatches } = usePhotosUpload(
-        albumId || '',
-        PHOTOS_BATCH_SIZE
+    const { getPhotos, uploadProgress, uploadPhotosInBatches } = usePhotos(
+        albumId || ''
     )
 
     const album = albumId ? getAlbumById(albumId) : undefined
+
+    useEffect(() => {
+        const getAlbumPhotos = async () => {
+            if (album) {
+                const photos = await getPhotos()
+                setPhotos(photos)
+            }
+        }
+        getAlbumPhotos()
+    }, [album])
 
     if (!album) {
         return
@@ -64,7 +75,6 @@ const AlbumPhotosRoute: React.FC = () => {
                 </Typography>
             </Button>
 
-            {/* photos grid */}
             <div
                 className="mt-8 grid w-full justify-center gap-6"
                 style={{
@@ -72,16 +82,28 @@ const AlbumPhotosRoute: React.FC = () => {
                         'repeat(auto-fit, minmax(25rem, max-content))',
                 }}
             >
-                {filesToUpload.map((f, idx) => {
+                {/* uploading photos in the grid */}
+                {photosToUpload.map((f, idx) => {
                     const batchIndex = Math.floor(idx / PHOTOS_BATCH_SIZE)
 
                     return (
                         <PhotoCard
                             key={idx} // make sure to have a unique key
-                            file={f}
+                            photo={f}
                             uploadProgress={uploadProgress[batchIndex]}
-                            onDownload={() => {}}
-                            onDelete={() => {}}
+                            onDownload={async () => {}}
+                            onDelete={async () => {}}
+                        />
+                    )
+                })}
+                {/* existing photos in the grid */}
+                {photos.map((photo) => {
+                    return (
+                        <PhotoCard
+                            key={photo.id}
+                            photo={photo}
+                            onDownload={async () => {}}
+                            onDelete={async () => {}}
                         />
                     )
                 })}
@@ -95,10 +117,13 @@ const AlbumPhotosRoute: React.FC = () => {
                     >
                         {/* upload drag-n-drop */}
                         <DragDropUpload
-                            onFilesSelected={(files) => {
-                                setFilesToUpload(files)
-                                uploadPhotosInBatches(files)
+                            onFilesSelected={async (files) => {
+                                setPhotosToUpload(files)
                                 closeModal()
+                                await uploadPhotosInBatches(
+                                    files,
+                                    PHOTOS_BATCH_SIZE
+                                )
                             }}
                         />
                     </Modal>
