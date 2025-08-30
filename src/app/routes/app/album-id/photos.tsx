@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import { Typography } from '@/components/ui/Typography'
 import { useAlbums } from '@/features/albums/AlbumsProvider'
+import PhotoCard from '@/features/photos/PhotoCard'
 import useIsMobile from '@/hooks/useIsMobile'
 import useModal from '@/hooks/useModal'
 import { AnimatePresence } from 'motion/react'
@@ -54,6 +55,25 @@ const AlbumPhotosRoute: React.FC = () => {
                     {t('albums.uploadPhotos')}
                 </Typography>
             </Button>
+
+            {/* photos grid */}
+            <div
+                className="w-full mt-8 grid justify-center gap-6"
+                style={{
+                    gridTemplateColumns:
+                        'repeat(auto-fit, minmax(25rem, max-content))',
+                }}
+            >
+                {filesToUpload.map((f, idx) => (
+                    <PhotoCard
+                        key={idx} // make sure to have a unique key
+                        file={f}
+                        uploadProgress={0}
+                        onDownload={() => {}}
+                        onDelete={() => {}}
+                    />
+                ))}
+            </div>
 
             <AnimatePresence>
                 {isModalOpen && (

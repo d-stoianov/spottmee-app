@@ -44,7 +44,7 @@ const HomeRoute: React.FC = () => {
             </Typography>
 
             {/* input + button */}
-            <div className="mb-[2rem] flex w-full gap-[5rem] items-center">
+            <div className="mb-[2rem] flex w-full items-center gap-[5rem]">
                 <Input
                     onChange={onSearch}
                     className="border-secondary"
@@ -67,7 +67,13 @@ const HomeRoute: React.FC = () => {
             </div>
 
             {/* album cards grid */}
-            <div className="flex w-full flex-wrap justify-center gap-x-4 gap-y-10 md:justify-between">
+            <div
+                className="mt-8 grid w-full justify-start gap-12"
+                style={{
+                    gridTemplateColumns:
+                        'repeat(auto-fit, minmax(20rem, max-content))',
+                }}
+            >
                 {filteredAlbums.map((al) => (
                     <AlbumCard album={al} onClick={() => navigate(al.id)} />
                 ))}
