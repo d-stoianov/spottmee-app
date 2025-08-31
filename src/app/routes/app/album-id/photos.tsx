@@ -35,9 +35,13 @@ const AlbumPhotosRoute: React.FC = () => {
 
     const { getAlbumById } = useAlbums()
 
-    const { getPhotos, uploadProgress, uploadPhotosInBatches } = usePhotos(
-        albumId || ''
-    )
+    const {
+        getPhotos,
+        uploadProgress,
+        uploadPhotosInBatches,
+        downloadPhoto,
+        deletePhoto,
+    } = usePhotos(albumId || '')
 
     const album = albumId ? getAlbumById(albumId) : undefined
 
@@ -120,8 +124,6 @@ const AlbumPhotosRoute: React.FC = () => {
                             key={idx} // make sure to have a unique key
                             photo={f}
                             uploadProgress={uploadProgress[batchIndex]}
-                            onDownload={async () => {}}
-                            onDelete={async () => {}}
                         />
                     )
                 })}
@@ -135,8 +137,19 @@ const AlbumPhotosRoute: React.FC = () => {
                             <PhotoCard
                                 key={photo.id}
                                 photo={photo}
-                                onDownload={async () => {}}
-                                onDelete={async () => {}}
+                                onDownload={async () => {
+                                    await downloadPhoto(photo)
+                                }}
+                                onDelete={async () => {
+                                    // delete in the API
+                                    await deletePhoto(photo.id)
+                                    // delete locally
+                                    setPhotos((prevPhotos) =>
+                                        prevPhotos.filter(
+                                            (p) => p.id !== photo.id
+                                        )
+                                    )
+                                }}
                             />
                         )
                     })}

@@ -57,14 +57,45 @@ const usePhotos = (albumId: string) => {
         return allPhotos
     }
 
-    const getPhotos = async (offset?: number, size?: number): Promise<Photo[]> => {
+    const getPhotos = async (
+        offset?: number,
+        size?: number
+    ): Promise<Photo[]> => {
         return await photoService.getPhotos(offset, size)
+    }
+
+    const downloadPhoto = async (photo: Photo) => {
+        try {
+            const response = await fetch(photo.url)
+            const blob = await response.blob()
+
+            const url = window.URL.createObjectURL(blob)
+
+            const link = document.createElement('a')
+            link.href = url
+
+            link.download = photo.originalName
+
+            document.body.appendChild(link)
+            link.click()
+
+            link.remove()
+            window.URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error('Failed to download photo:', error)
+        }
+    }
+
+    const deletePhoto = async (photoId: string) => {
+        await photoService.deletePhoto(photoId)
     }
 
     return {
         getPhotos,
         uploadPhotosInBatches,
         uploadProgress,
+        downloadPhoto,
+        deletePhoto,
         isUploading,
         error,
     }

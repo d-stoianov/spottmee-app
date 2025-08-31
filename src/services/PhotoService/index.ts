@@ -74,6 +74,15 @@ export class PhotoService {
         })
     }
 
+    public async getPhotoById(photoId: string): Promise<void> {
+        await fetch(`${this.PHOTO_URL}/${photoId}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${this.jwt}`,
+            },
+        })
+    }
+
     public async deletePhoto(photoId: string): Promise<void> {
         await fetch(`${this.PHOTO_URL}/${photoId}`, {
             method: 'DELETE',
