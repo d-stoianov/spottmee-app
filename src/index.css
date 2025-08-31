@@ -3,9 +3,18 @@
 @tailwind utilities;
 
 #root {
-    height: 100vh;
+    min-height: 100vh;
 }
 
 body {
-    background: rgb(91, 77, 117);
+    background:
+        linear-gradient(
+            to bottom right,
+            rgba(168, 85, 247, 0.2),
+            rgba(63, 140, 255, 0.2),
+            rgba(14, 14, 16, 0.2)
+        ),
+        #23232d;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }

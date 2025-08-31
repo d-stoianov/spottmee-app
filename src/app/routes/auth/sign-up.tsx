@@ -45,7 +45,7 @@ const SignUpRoute: React.FC = () => {
             <div className="mt-[6rem] w-[30rem]">
                 {/* header */}
                 <div className="mb-[5rem] flex w-full flex-col items-center">
-                    <Typography variant={isMobile ? 'heading2' : 'heading1'}>
+                    <Typography className='text-white' variant={isMobile ? 'heading2' : 'heading1'}>
                         {t('auth.createAccount')}
                     </Typography>
                 </div>
