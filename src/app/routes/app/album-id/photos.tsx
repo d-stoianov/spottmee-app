@@ -39,6 +39,7 @@ const AlbumPhotosRoute: React.FC = () => {
         getPhotos,
         uploadProgress,
         uploadPhotosInBatches,
+        isUploading,
         downloadPhoto,
         deletePhoto,
     } = usePhotos(albumId || '')
@@ -86,7 +87,11 @@ const AlbumPhotosRoute: React.FC = () => {
                 className="mb-[0.75rem] text-center text-white"
                 variant={isMobile ? 'heading2' : 'heading1'}
             >
-                {t('albums.uploadFirstPhotos')}
+                {isUploading
+                    ? t('albums.yourPhotosAreUploading')
+                    : photos.length === 0
+                      ? t('albums.uploadFirstPhotos')
+                      : t('albums.photosFromAlbum', { albumName: album.name })}
             </Typography>
 
             {!isMobile && (
@@ -94,9 +99,13 @@ const AlbumPhotosRoute: React.FC = () => {
                     className="mb-[4rem] text-secondary"
                     variant={isMobile ? 'heading3' : 'heading3'}
                 >
-                    {t('albums.uploadFirstPhotosSubtext', {
-                        albumName: album.name,
-                    })}
+                    {photos.length > 0
+                        ? t('albums.photosFromAlbumSubtext', {
+                              count: photos.length,
+                          })
+                        : t('albums.uploadFirstPhotosSubtext', {
+                              albumName: album.name,
+                          })}
                 </Typography>
             )}
 
