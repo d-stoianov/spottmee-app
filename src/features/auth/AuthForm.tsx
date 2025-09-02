@@ -74,7 +74,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                             placeholder={t('auth.name')}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            icon={<Pencil />}
+                            icon={{
+                                icon: <Pencil />,
+                                position: 'left',
+                            }}
                         />
                         {nameValidationMessages.map((m, idx) => (
                             <p
@@ -92,7 +95,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                         placeholder={t('auth.email')}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        icon={<Mail />}
+                        icon={{
+                            icon: <Mail />,
+                            position: 'left',
+                        }}
                     />
                     {emailValidationMessages.map((m, idx) => (
                         <p
@@ -109,7 +115,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType, onSubmit }) => {
                         placeholder={t('auth.password')}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        icon={<Key />}
+                        icon={{
+                            icon: <Key />,
+                            position: 'left',
+                        }}
                     />
                     {passwordValidationMessages.map((m, idx) => (
                         <p

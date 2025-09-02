@@ -49,7 +49,10 @@ const HomeRoute: React.FC = () => {
                     onChange={onSearch}
                     className="border-secondary"
                     placeholder={t('albums.searchForAlbums')}
-                    icon={<Search />}
+                    icon={{
+                        icon: <Search />,
+                        position: 'left'
+                    }}
                 />
                 {!isMobile && (
                     <Button
@@ -75,7 +78,10 @@ const HomeRoute: React.FC = () => {
                 }}
             >
                 {filteredAlbums.map((al) => (
-                    <AlbumCard album={al} onClick={() => navigate(al.id)} />
+                    <AlbumCard
+                        album={al}
+                        onClick={() => navigate(al.id)}
+                    />
                 ))}
             </div>
 

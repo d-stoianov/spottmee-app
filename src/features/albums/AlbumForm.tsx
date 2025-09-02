@@ -155,7 +155,10 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
                         <Input
                             onChange={(e) => setName(e.target.value)}
                             value={name}
-                            icon={<PencilLine />}
+                            icon={{
+                                icon: <PencilLine />,
+                                position: 'left',
+                            }}
                             placeholder={t('albums.nameField')}
                         />
                         {nameValidationMessages.map((m, idx) => (
@@ -171,7 +174,10 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
                         <Input
                             onChange={(e) => setDescription(e.target.value)}
                             value={description}
-                            icon={<PencilLine />}
+                            icon={{
+                                icon: <PencilLine />,
+                                position: 'left',
+                            }}
                             placeholder={t('albums.descriptionField')}
                         />
                         {descriptionValidationMessages.map((m, idx) => (

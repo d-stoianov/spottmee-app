@@ -1,6 +1,7 @@
 {   
     "general": {
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "backToHome": "Back to Home"
     },
     "auth": {
         "login": "Log In",

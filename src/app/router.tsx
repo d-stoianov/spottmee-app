@@ -10,9 +10,11 @@ import HomeRoute from './routes/app'
 import CreateRoute from '@/app/routes/app/create'
 
 import PageLayout from '@/components/layout/PageLayout'
+
 import { AlbumsProvider } from '@/features/albums/AlbumsProvider'
 import AlbumRoute from '@/app/routes/app/album-id'
 import AlbumPhotosRoute from '@/app/routes/app/album-id/photos'
+import AlbumShareRoute from '@/app/routes/app/album-id/share'
 
 const createAppRouter = () => {
     return createBrowserRouter([
@@ -49,6 +51,10 @@ const createAppRouter = () => {
                                 {
                                     path: '/:albumId/photos',
                                     element: <AlbumPhotosRoute />,
+                                },
+                                {
+                                    path: '/:albumId/share',
+                                    element: <AlbumShareRoute />,
                                 },
                             ],
                         },

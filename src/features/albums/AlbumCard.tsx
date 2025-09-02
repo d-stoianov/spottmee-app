@@ -7,10 +7,15 @@ import clsx from 'clsx'
 
 type AlbumCardProps = {
     album: Album
+    showDetails?: boolean
     onClick?: () => any
 }
 
-const AlbumCard: React.FC<AlbumCardProps> = ({ album, onClick }) => {
+const AlbumCard: React.FC<AlbumCardProps> = ({
+    album,
+    showDetails = true,
+    onClick,
+}) => {
     const { t } = useTranslation()
 
     const { createdAt, name, coverImageUrl } = album
@@ -38,53 +43,64 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album, onClick }) => {
                 alt={`${name} album cover`}
             />
 
-            <div className="absolute left-1/2 top-2/3 flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center p-[1rem]">
-                <Typography className="text-white" variant="heading3">
-                    {name}
-                </Typography>
-                {/* created on and matches */}
-                <div className="mt-[2rem] grid w-full grid-rows-2 justify-center">
-                    <div className="flex w-full items-center gap-3">
-                        <CalendarDays className="text-secondary" size={20} />
+            {showDetails && (
+                <div className="absolute left-1/2 top-2/3 flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center p-[1rem]">
+                    <Typography className="text-white" variant="heading3">
+                        {name}
+                    </Typography>
+                    {/* created on and matches */}
+                    <div className="mt-[2rem] grid w-full grid-rows-2 justify-center">
+                        <div className="flex w-full items-center gap-3">
+                            <CalendarDays
+                                className="text-secondary"
+                                size={20}
+                            />
+                            <Typography
+                                className="w-[6rem] text-secondary"
+                                variant="bodyDefault"
+                            >
+                                {t('albums.createdOn')}:
+                            </Typography>
+                            <Typography
+                                className="text-white"
+                                variant="bodyDefault"
+                            >
+                                {formattedDate}
+                            </Typography>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <Users className="text-secondary" size={20} />
+                            <Typography
+                                className="w-[6rem] text-secondary"
+                                variant="bodyDefault"
+                            >
+                                {t('albums.matches')}:
+                            </Typography>
+                            <Typography
+                                className="text-white"
+                                variant="bodyDefault"
+                            >
+                                {t('albums.countGuestMatched', { count: 37 })}
+                            </Typography>
+                        </div>
+                    </div>
+                    {/* photos and size */}
+                    <div className="mt-[1rem] flex w-full justify-around">
                         <Typography
-                            className="w-[6rem] text-secondary"
+                            className="text-white"
                             variant="bodyDefault"
                         >
-                            {t('albums.createdOn')}:
+                            {t('albums.countPhotos', { count: 241 })}
                         </Typography>
                         <Typography
                             className="text-white"
                             variant="bodyDefault"
                         >
-                            {formattedDate}
-                        </Typography>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Users className="text-secondary" size={20} />
-                        <Typography
-                            className="w-[6rem] text-secondary"
-                            variant="bodyDefault"
-                        >
-                            {t('albums.matches')}:
-                        </Typography>
-                        <Typography
-                            className="text-white"
-                            variant="bodyDefault"
-                        >
-                            {t('albums.countGuestMatched', { count: 37 })}
+                            {2.1}mb
                         </Typography>
                     </div>
                 </div>
-                {/* photos and size */}
-                <div className="mt-[1rem] flex w-full justify-around">
-                    <Typography className="text-white" variant="bodyDefault">
-                        {t('albums.countPhotos', { count: 241 })}
-                    </Typography>
-                    <Typography className="text-white" variant="bodyDefault">
-                        {2.1}mb
-                    </Typography>
-                </div>
-            </div>
+            )}
         </div>
     )
 }
