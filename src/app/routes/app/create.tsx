@@ -18,7 +18,7 @@ const CreateRoute: React.FC = () => {
         <Main className="flex w-full flex-col items-center lg:px-[8rem] lg:py-[3rem]">
             <Typography
                 className="mb-[0.75rem] text-center text-white"
-                variant={isMobile ? 'heading2' : 'heading1'}
+                variant={isMobile ? 'heading3' : 'heading1'}
             >
                 {t('albums.createNewAlbum')}
             </Typography>

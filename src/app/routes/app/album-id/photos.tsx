@@ -108,8 +108,8 @@ const AlbumPhotosRoute: React.FC = () => {
     return (
         <Main className="flex w-full flex-col items-center lg:px-[8rem] lg:py-[3rem]">
             <Typography
-                className="mb-[0.75rem] text-center text-white"
-                variant={isMobile ? 'heading2' : 'heading1'}
+                className="mb-[0.75rem] text-start text-white lg:text-center"
+                variant={isMobile ? 'heading3' : 'heading1'}
             >
                 {isUploading
                     ? t('albums.yourPhotosAreUploading')
@@ -118,22 +118,24 @@ const AlbumPhotosRoute: React.FC = () => {
                       : t('albums.photosFromAlbum', { albumName: album.name })}
             </Typography>
 
-            {!isMobile && (
-                <Typography
-                    className="mb-[4rem] text-secondary"
-                    variant={isMobile ? 'heading3' : 'heading3'}
-                >
-                    {totalPhotos > 0
-                        ? t('albums.photosFromAlbumSubtext', {
-                              count: totalPhotos,
-                          })
-                        : t('albums.uploadFirstPhotosSubtext', {
-                              albumName: album.name,
-                          })}
-                </Typography>
-            )}
+            <Typography
+                variant={isMobile ? 'bodyLarge' : 'heading3'}
+                className="text-secondary"
+            >
+                {totalPhotos > 0
+                    ? t('albums.photosFromAlbumSubtext', {
+                          count: totalPhotos,
+                      })
+                    : t('albums.uploadFirstPhotosSubtext', {
+                          albumName: album.name,
+                      })}
+            </Typography>
 
-            <Button onClick={() => openModal()} variant="primary">
+            <Button
+                className="mt-[2rem] lg:mt-[4rem]"
+                onClick={() => openModal()}
+                variant="primary"
+            >
                 <Typography className="text-white" variant="buttonText">
                     {t('albums.uploadPhotos')}
                 </Typography>

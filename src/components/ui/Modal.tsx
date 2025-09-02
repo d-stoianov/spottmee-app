@@ -31,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({ title, children, onClose }) => {
             onClick={onClose}
         >
             <motion.div
-                className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-lg"
+                className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-lg mx-8"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 50, opacity: 0 }}

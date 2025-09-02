@@ -38,7 +38,7 @@ const HomeRoute: React.FC = () => {
         <Main className="flex w-full flex-col items-center md:items-start md:px-[8rem] md:py-[3rem]">
             <Typography
                 className="mb-[2rem] text-white"
-                variant={isMobile ? 'heading2' : 'heading1'}
+                variant={isMobile ? 'heading3' : 'heading1'}
             >
                 {t('albums.yourAlbums')}
             </Typography>
