@@ -1,6 +1,6 @@
 import { useAuth } from '@/providers/AuthProvider'
 import { PhotoService } from '@/services/PhotoService'
-import { Photo } from '@/services/PhotoService/types'
+import { Photo, PhotosResponse } from '@/services/PhotoService/types'
 import { useMemo, useState } from 'react'
 
 type UploadProgress = { [batchIndex: number]: number } // progress is 0 - 100
@@ -23,7 +23,10 @@ const usePhotos = (albumId: string) => {
 
     // batch size splits photos into groups of uploads making upload faster
     // if batch is 10 - then 10 photos in a batch share the same progress
-    const uploadPhotosInBatches = async (files: File[], batchSize = 10) => {
+    const uploadPhotosInBatches = async (
+        files: File[],
+        batchSize = 10
+    ): Promise<Photo[]> => {
         setIsUploading(true)
         setError(null)
 
@@ -38,7 +41,7 @@ const usePhotos = (albumId: string) => {
 
                 batch.forEach((file) => formData.append('photos', file))
 
-                const photos = await photoService.uploadPhotos(
+                const { photos } = await photoService.uploadPhotos(
                     formData,
                     (percent) => {
                         // update progress for this batch
@@ -60,7 +63,7 @@ const usePhotos = (albumId: string) => {
     const getPhotos = async (
         offset?: number,
         size?: number
-    ): Promise<Photo[]> => {
+    ): Promise<PhotosResponse> => {
         return await photoService.getPhotos(offset, size)
     }
 

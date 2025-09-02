@@ -25,13 +25,17 @@ const AlbumPhotosRoute: React.FC = () => {
     const isMobile = useIsMobile()
 
     const { albumId } = useParams()
-
     const { isModalOpen, closeModal, openModal } = useModal()
 
     const [photos, setPhotos] = useState<Photo[]>([]) // photos from API
+    const [totalPhotos, setTotalPhotos] = useState<number>(0) // total number of photos (not current that are shown) need that to determine whether to show "see more" button
     const [photosToUpload, setPhotosToUpload] = useState<File[]>([])
 
     const [photosOffset, setPhotosOffset] = useState<number>(0)
+
+    // loading states
+    const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
+    const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false)
 
     const { getAlbumById } = useAlbums()
 
@@ -51,8 +55,9 @@ const AlbumPhotosRoute: React.FC = () => {
         closeModal()
         await uploadPhotosInBatches(files, PHOTOS_UPLOAD_BATCH_SIZE)
         if (album) {
-            const photos = await getPhotos(0, PHOTOS_GRID_SIZE)
+            const { photos, total } = await getPhotos(0, PHOTOS_GRID_SIZE)
             setPhotos(photos)
+            setTotalPhotos(total)
             setPhotosToUpload([])
             setPhotosOffset(0)
         }
@@ -61,17 +66,28 @@ const AlbumPhotosRoute: React.FC = () => {
     const loadMorePhotos = async () => {
         const newOffset = photosOffset + PHOTOS_GRID_SIZE
         if (album) {
-            const photos = await getPhotos(newOffset, PHOTOS_GRID_SIZE)
+            setIsLoadingMore(true)
+
+            const { photos, total } = await getPhotos(
+                newOffset,
+                PHOTOS_GRID_SIZE
+            )
             setPhotos((prev) => [...prev, ...photos])
+            setTotalPhotos(total)
             setPhotosOffset(newOffset)
+
+            setIsLoadingMore(false)
         }
     }
 
     useEffect(() => {
         const getAlbumPhotos = async () => {
             if (album) {
-                const photos = await getPhotos(0, PHOTOS_GRID_SIZE)
+                setIsPageLoading(true)
+                const { photos, total } = await getPhotos(0, PHOTOS_GRID_SIZE)
                 setPhotos(photos)
+                setTotalPhotos(total)
+                setIsPageLoading(false)
             }
         }
         getAlbumPhotos()
@@ -79,6 +95,14 @@ const AlbumPhotosRoute: React.FC = () => {
 
     if (!album) {
         return
+    }
+
+    if (isPageLoading) {
+        return (
+            <Typography className="text-secondary" variant="bodyLarge">
+                {t('general.loading')}
+            </Typography>
+        )
     }
 
     return (
@@ -99,9 +123,9 @@ const AlbumPhotosRoute: React.FC = () => {
                     className="mb-[4rem] text-secondary"
                     variant={isMobile ? 'heading3' : 'heading3'}
                 >
-                    {photos.length > 0
+                    {totalPhotos > 0
                         ? t('albums.photosFromAlbumSubtext', {
-                              count: photos.length,
+                              count: totalPhotos,
                           })
                         : t('albums.uploadFirstPhotosSubtext', {
                               albumName: album.name,
@@ -158,18 +182,34 @@ const AlbumPhotosRoute: React.FC = () => {
                                             (p) => p.id !== photo.id
                                         )
                                     )
+                                    setTotalPhotos((prev) => prev - 1)
                                 }}
                             />
                         )
                     })}
             </div>
 
-            {photos.length > 0 && (
-                <button onClick={loadMorePhotos}>
-                    <Typography className="text-secondary" variant="buttonText">
-                        {t('albums.seeMore')}
-                    </Typography>
-                </button>
+            {photos.length < totalPhotos && (
+                <>
+                    {/* TODO: replace with a spinner */}
+                    {isLoadingMore ? (
+                        <Typography
+                            className="text-secondary"
+                            variant="bodyLarge"
+                        >
+                            {t('general.loading')}
+                        </Typography>
+                    ) : (
+                        <button onClick={loadMorePhotos}>
+                            <Typography
+                                className="text-secondary"
+                                variant="buttonText"
+                            >
+                                {t('albums.seeMore')}
+                            </Typography>
+                        </button>
+                    )}
+                </>
             )}
 
             <AnimatePresence>

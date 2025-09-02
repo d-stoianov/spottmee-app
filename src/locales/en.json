@@ -1,4 +1,7 @@
-{
+{   
+    "general": {
+        "loading": "Loading..."
+    },
     "auth": {
         "login": "Log In",
         "newOnSpottmee": "New on Spottmee?",

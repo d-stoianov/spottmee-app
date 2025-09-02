@@ -1,4 +1,9 @@
-import { Photo, PhotoDTO } from '@/services/PhotoService/types'
+import {
+    Photo,
+    PhotoDTO,
+    PhotosResponse,
+    PhotosResponseDTO,
+} from '@/services/PhotoService/types'
 
 export class PhotoService {
     private PHOTO_URL: string
@@ -12,7 +17,10 @@ export class PhotoService {
         this.PHOTO_URL = `${import.meta.env.VITE_API_URL}/albums/${this.albumId}/photos`
     }
 
-    public async getPhotos(offset?: number, size?: number): Promise<Photo[]> {
+    public async getPhotos(
+        offset?: number,
+        size?: number
+    ): Promise<PhotosResponse> {
         const params = new URLSearchParams()
 
         if (offset !== undefined) params.append('offset', offset.toString())
@@ -27,15 +35,23 @@ export class PhotoService {
             },
         })
 
-        const photoDTOs: PhotoDTO[] = await response.json()
-        return photoDTOs.map((al) => this.photoDTOtoPhoto(al))
+        const photosResponseDTO: PhotosResponseDTO = await response.json()
+
+        const photos = photosResponseDTO.photos.map((al) =>
+            this.photoDTOtoPhoto(al)
+        )
+
+        return {
+            photos,
+            total: photosResponseDTO.total,
+        }
     }
 
     // instead of using fetch API, using XHR to track progress
     public uploadPhotos(
         formData: FormData,
         onProgress?: (percent: number) => void
-    ): Promise<Photo[]> {
+    ): Promise<PhotosResponse> {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest()
 
@@ -51,13 +67,18 @@ export class PhotoService {
             xhr.onload = async () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     try {
-                        const photoDTOs: PhotoDTO[] = JSON.parse(
+                        const photosResponseDTO: PhotosResponseDTO = JSON.parse(
                             xhr.responseText
                         )
-                        const photos = photoDTOs.map((al) =>
+
+                        const photos = photosResponseDTO.photos.map((al) =>
                             this.photoDTOtoPhoto(al)
                         )
-                        resolve(photos)
+
+                        resolve({
+                            photos: photos,
+                            total: photosResponseDTO.total,
+                        })
                     } catch (err) {
                         reject(err)
                     }

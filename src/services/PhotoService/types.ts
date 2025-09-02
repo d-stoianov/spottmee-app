@@ -15,3 +15,12 @@ export type PhotoDTO = {
 export type Photo = Omit<PhotoDTO, 'createdAt'> & {
     createdAt: Date
 }
+
+export type PhotosResponseDTO = {
+    photos: PhotoDTO[]
+    total: number
+}
+
+export type PhotosResponse = Omit<PhotosResponseDTO, 'photos'> & {
+    photos: Photo[]
+}
