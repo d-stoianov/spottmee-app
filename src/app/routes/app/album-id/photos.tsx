@@ -12,7 +12,7 @@ import { Photo } from '@/services/PhotoService/types'
 import { AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 // count of photos shown in a grid (API only, not the one that are uploading)
 const PHOTOS_GRID_SIZE = 20
@@ -21,12 +21,13 @@ const PHOTOS_GRID_SIZE = 20
 const PHOTOS_UPLOAD_BATCH_SIZE = 10
 
 const AlbumPhotosRoute: React.FC = () => {
+    // general
     const { t } = useTranslation()
     const isMobile = useIsMobile()
 
     const { albumId } = useParams()
-    const { isModalOpen, closeModal, openModal } = useModal()
 
+    // photos state
     const [photos, setPhotos] = useState<Photo[]>([]) // photos from API
     const [totalPhotos, setTotalPhotos] = useState<number>(0) // total number of photos (not current that are shown) need that to determine whether to show "see more" button
     const [photosToUpload, setPhotosToUpload] = useState<File[]>([])
@@ -36,6 +37,18 @@ const AlbumPhotosRoute: React.FC = () => {
     // loading states
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false)
+
+    // modals state
+    const {
+        isModalOpen: isUploadPhotosModalOpen,
+        closeModal: closeUploadPhotosModal,
+        openModal: openUploadPhotosModal,
+    } = useModal()
+    const {
+        isModalOpen: isUploadDoneModalOpen,
+        closeModal: closeUploadDoneModal,
+        openModal: openUploadDoneModal,
+    } = useModal()
 
     const { getAlbumById } = useAlbums()
 
@@ -52,11 +65,19 @@ const AlbumPhotosRoute: React.FC = () => {
 
     const handlePhotosUpload = async (files: File[]) => {
         setPhotosToUpload(files)
-        closeModal()
+        closeUploadPhotosModal()
         await uploadPhotosInBatches(files, PHOTOS_UPLOAD_BATCH_SIZE)
         if (album) {
-            const { photos, total } = await getPhotos(0, PHOTOS_GRID_SIZE)
-            setPhotos(photos)
+            // once upload is done show modal if its first upload
+            if (photos.length === 0) {
+                openUploadDoneModal()
+            }
+
+            const { photos: refetchedPhotos, total } = await getPhotos(
+                0,
+                PHOTOS_GRID_SIZE
+            )
+            setPhotos(refetchedPhotos)
             setTotalPhotos(total)
             setPhotosToUpload([])
             setPhotosOffset(0)
@@ -133,7 +154,7 @@ const AlbumPhotosRoute: React.FC = () => {
 
             <Button
                 className="mt-[2rem] lg:mt-[4rem]"
-                onClick={() => openModal()}
+                onClick={() => openUploadPhotosModal()}
                 variant="primary"
             >
                 <Typography className="text-white" variant="buttonText">
@@ -141,6 +162,7 @@ const AlbumPhotosRoute: React.FC = () => {
                 </Typography>
             </Button>
 
+            {/* grid with existing and photos that are currently uploading */}
             <div
                 className="mt-8 grid w-full justify-center gap-6"
                 style={{
@@ -191,6 +213,7 @@ const AlbumPhotosRoute: React.FC = () => {
                     })}
             </div>
 
+            {/* button to load more photos */}
             {photos.length < totalPhotos && (
                 <>
                     {/* TODO: replace with a spinner */}
@@ -215,13 +238,34 @@ const AlbumPhotosRoute: React.FC = () => {
             )}
 
             <AnimatePresence>
-                {isModalOpen && (
+                {isUploadPhotosModalOpen && (
                     <Modal
-                        onClose={closeModal}
+                        onClose={closeUploadPhotosModal}
                         title={t('albums.uploadPhotos')}
                     >
                         {/* upload drag-n-drop */}
                         <DragDropUpload onFilesSelected={handlePhotosUpload} />
+                    </Modal>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {isUploadDoneModalOpen && (
+                    <Modal
+                        onClose={closeUploadDoneModal}
+                        title={t('albums.uploadDone')}
+                        classname="items-center flex flex-col"
+                    >
+                        {/* navigation to sharing album page */}
+
+                        <Link to={`/${album.id}/share`}>
+                            <Typography
+                                className="text-primary underline"
+                                variant="buttonText"
+                            >
+                                {t('albums.shareTheAlbum')}
+                            </Typography>
+                        </Link>
                     </Modal>
                 )}
             </AnimatePresence>

@@ -4,11 +4,17 @@ import { useEffect } from 'react'
 
 export type ModalProps = {
     title?: string
+    classname?: string
     children: React.ReactNode
     onClose: () => void
 }
 
-const Modal: React.FC<ModalProps> = ({ title, children, onClose }) => {
+const Modal: React.FC<ModalProps> = ({
+    title,
+    classname,
+    children,
+    onClose,
+}) => {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
@@ -31,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({ title, children, onClose }) => {
             onClick={onClose}
         >
             <motion.div
-                className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-lg mx-8"
+                className="relative mx-8 w-full max-w-md rounded-2xl bg-white p-6 shadow-lg"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 50, opacity: 0 }}
@@ -49,7 +55,7 @@ const Modal: React.FC<ModalProps> = ({ title, children, onClose }) => {
                         </button>
                     </div>
                 )}
-                <div>{children}</div>
+                <div className={classname}>{children}</div>
             </motion.div>
         </motion.div>
     )

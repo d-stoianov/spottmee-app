@@ -84,8 +84,8 @@
         "photosFromAlbumSubtext_one": "This album has {{count}} photo",
         "photosFromAlbumSubtext_other": "This album has {{count}} photos",
         "seeMore": "see more+",
-        "uploadMore": "Upload More",
-        "reupload": "Reupload",
+        "uploadDone": "Upload has finished !",
+        "shareTheAlbum": "Share the Album",
         "yourAlbumIsReady": "Your album is ready to share !"
     }
 }
