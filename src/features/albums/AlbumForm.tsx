@@ -13,6 +13,7 @@ import DragDropUpload from '@/components/DragDropUpload'
 import Modal from '@/components/ui/Modal'
 import { AnimatePresence } from 'motion/react'
 import useModal from '@/hooks/useModal'
+import AlbumShareLink from '@/features/albums/AlbumShareLink'
 
 type AlbumFormProps = {
     onSubmit: (albumCreateDTO: AlbumCreateDTO) => Promise<void>
@@ -148,7 +149,7 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
             {/* inputs */}
             <form
                 onSubmit={onFormSubmit}
-                className="flex w-full flex-col items-start gap-[2rem] lg:w-auto"
+                className="flex w-full flex-col items-start gap-[1.5rem] lg:w-auto"
             >
                 <div className="flex w-full flex-col gap-[1rem]">
                     <div className="flex w-full flex-col gap-2 lg:w-[34rem]">
@@ -223,19 +224,27 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, onDelete, album }) => {
                         </Button>
                     )}
                 </div>
+
                 {album && (
-                    <Button
-                        className="w-full self-start text-nowrap px-10"
-                        variant="primary"
-                        onClick={() => {
-                            navigate(`/${album.id}/photos`)
-                        }}
-                        disabled={actionButtonsDisabled}
-                    >
-                        <Typography className="text-white" variant="buttonText">
-                            {t('albums.managePhotos')}
-                        </Typography>
-                    </Button>
+                    <div className="flex w-full flex-col gap-[1.5rem]">
+                        <Button
+                            className="w-full self-start text-nowrap px-10"
+                            variant="primary"
+                            onClick={() => {
+                                navigate(`/${album.id}/photos`)
+                            }}
+                            disabled={actionButtonsDisabled}
+                        >
+                            <Typography
+                                className="text-white"
+                                variant="buttonText"
+                            >
+                                {t('albums.managePhotos')}
+                            </Typography>
+                        </Button>
+
+                        <AlbumShareLink albumId={album.id} />
+                    </div>
                 )}
             </form>
 

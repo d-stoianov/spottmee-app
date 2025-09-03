@@ -25,7 +25,7 @@ const AlbumRoute: React.FC = () => {
     return (
         <Main className="flex w-full flex-col items-center lg:px-[8rem] lg:py-[3rem]">
             <Typography
-                className="mb-[3rem] text-white text-center"
+                className="mb-[3rem] text-center text-white"
                 variant={isMobile ? 'heading3' : 'heading1'}
             >
                 {t('albums.manageYourAlbum', { albumName: album.name })}
