@@ -1,4 +1,4 @@
-{   
+{
     "general": {
         "loading": "Loading...",
         "backToHome": "Back to Home"
@@ -87,5 +87,12 @@
         "uploadDone": "Upload has finished !",
         "shareTheAlbum": "Share the Album",
         "yourAlbumIsReady": "Your album is ready to share !"
+    },
+    "spot": {
+        "noAlbumFound": "Couldn't find album you are looking for",
+        "albumTitle": "Upload A Selfie -<br>Let Us Spot Your Memories",
+        "countPhotosUploaded": "{{count}} photos uploaded",
+        "album": "Album",
+        "sharedBy": "Shared by"
     }
 }

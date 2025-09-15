@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import ProtectedRoute from './routes/ProtectedRoute'
-import PublicRoute from './routes/PublicRoute'
+import PublicAlbumRouteWrapper from '@/app/routes/PublicAlbumRouteWrapper'
 
 import SignInRoute from './routes/auth/sign-in'
 import SignUpRoute from './routes/auth/sign-up'
 
-import HomeRoute from './routes/app'
+import AppIndexRoute from './routes/app'
 import CreateRoute from '@/app/routes/app/create'
 
 import PageLayout from '@/components/layout/PageLayout'
@@ -15,17 +15,53 @@ import { AlbumsProvider } from '@/features/albums/AlbumsProvider'
 import AlbumRoute from '@/app/routes/app/album-id'
 import AlbumPhotosRoute from '@/app/routes/app/album-id/photos'
 import AlbumShareRoute from '@/app/routes/app/album-id/share'
+import SpotAlbumRoute from '@/app/routes/spot/album-id'
+import SpotNotFoundRoute from '@/app/routes/spot/not-found'
 
 const createAppRouter = () => {
     return createBrowserRouter([
         {
-            element: <PublicRoute />,
             children: [
                 {
                     element: <PageLayout />,
                     children: [
                         { path: '/sign-in', Component: SignInRoute },
                         { path: '/sign-up', Component: SignUpRoute },
+                        {
+                            path: '/spot',
+                            children: [
+                                {
+                                    path: '/spot',
+                                    element: <SpotNotFoundRoute />,
+                                },
+                                {
+                                    path: '/spot/not-found',
+                                    element: <SpotNotFoundRoute />,
+                                },
+                                {
+                                    path: '/spot/:albumId',
+                                    element: <PublicAlbumRouteWrapper />,
+                                    children: [
+                                        {
+                                            path: '/spot/:albumId',
+                                            element: <SpotAlbumRoute />,
+                                        },
+                                        {
+                                            path: '/spot/:albumId/selfie',
+                                            element: <></>,
+                                        },
+                                        {
+                                            path: '/spot/:albumId/:matchId',
+                                            element: <></>,
+                                        },
+                                        {
+                                            path: '/spot/:albumId/:matchId/finish',
+                                            element: <></>,
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     ],
                 },
             ],
@@ -42,7 +78,7 @@ const createAppRouter = () => {
                         </AlbumsProvider>
                     ),
                     children: [
-                        { path: '/', element: <HomeRoute /> },
+                        { path: '/', element: <AppIndexRoute /> },
                         { path: '/create', element: <CreateRoute /> },
                         {
                             path: '/:albumId',

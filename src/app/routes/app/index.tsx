@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-const HomeRoute: React.FC = () => {
+const AppIndexRoute: React.FC = () => {
     const { albums } = useAlbums()
 
     const [filteredAlbums, setFilteredAlbums] = useState<Album[]>(albums)
@@ -105,4 +105,4 @@ const HomeRoute: React.FC = () => {
     )
 }
 
-export default HomeRoute
+export default AppIndexRoute

@@ -12,9 +12,10 @@ type TypographyVariant =
     | 'smallText'
 
 type TypographyProps = {
-    children: React.ReactNode
+    children?: React.ReactNode
     variant?: TypographyVariant
     className?: string
+    dangerouslySetInnerHTML?: { __html: string }
 }
 
 const variantClasses: Record<TypographyVariant, string> = {
@@ -41,11 +42,13 @@ export const Typography: React.FC<TypographyProps> = ({
     children,
     variant = 'bodyDefault',
     className,
+    dangerouslySetInnerHTML
 }) => {
     const Component = variantTag[variant]
     return (
         <Component
             className={twMerge(clsx(variantClasses[variant], className))}
+            dangerouslySetInnerHTML={dangerouslySetInnerHTML}
         >
             {children}
         </Component>
