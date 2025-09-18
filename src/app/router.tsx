@@ -17,6 +17,7 @@ import AlbumPhotosRoute from '@/app/routes/app/album-id/photos'
 import AlbumShareRoute from '@/app/routes/app/album-id/share'
 import SpotAlbumRoute from '@/app/routes/spot/album-id'
 import SpotNotFoundRoute from '@/app/routes/spot/not-found'
+import SpotSelfieRoute from '@/app/routes/spot/album-id/selfie'
 
 const createAppRouter = () => {
     return createBrowserRouter([
@@ -48,7 +49,7 @@ const createAppRouter = () => {
                                         },
                                         {
                                             path: '/spot/:albumId/selfie',
-                                            element: <></>,
+                                            element: <SpotSelfieRoute />,
                                         },
                                         {
                                             path: '/spot/:albumId/:matchId',

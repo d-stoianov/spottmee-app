@@ -9,10 +9,12 @@ import { AnimatePresence } from 'motion/react'
 import Modal from '@/components/ui/Modal.tsx'
 import DragDropUpload from '@/components/DragDropUpload.tsx'
 import useModal from '@/hooks/useModal.tsx'
+import { useNavigate } from 'react-router-dom'
 
 const SpotAlbumRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
+    const navigate = useNavigate()
 
     const { isModalOpen, closeModal, openModal } = useModal()
 
@@ -47,6 +49,7 @@ const SpotAlbumRoute: React.FC = () => {
                     <Button
                         className={'w-full border-primaryLight'}
                         variant={'transparent'}
+                        onClick={() => navigate(`/spot/${album.id}/selfie`)}
                     >
                         <Typography
                             className={'text-white'}

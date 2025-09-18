@@ -98,6 +98,12 @@
         "description": "Description",
         "descriptionPlaceholder": "No description added by the creator.",
         "useYourCamera": "Use Your Camera",
-        "uploadSelfie": "Upload A Selfie"
+        "uploadSelfie": "Upload A Selfie",
+        "preview": "Preview",
+        "startMatching": "Start Matching",
+        "retry": "Retry",
+        "selfieBulletPointOne": "Make sure your face is clearly visible.",
+        "selfieBulletPointTwo": "Try to use a photo without filters or sunglasses.",
+        "selfieBulletPointThree": "Use a recent photo for the best match!"
     }
 }
