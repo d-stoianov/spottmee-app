@@ -91,8 +91,13 @@
     "spot": {
         "noAlbumFound": "Couldn't find album you are looking for",
         "albumTitle": "Upload A Selfie -<br>Let Us Spot Your Memories",
-        "countPhotosUploaded": "{{count}} photos uploaded",
+        "countPhotosUploaded_one": "{{count}} photo uploaded",
+        "countPhotosUploaded_other": "{{count}} photos uploaded",
         "album": "Album",
-        "sharedBy": "Shared by"
+        "sharedBy": "Shared by",
+        "description": "Description",
+        "descriptionPlaceholder": "No description added by the creator.",
+        "useYourCamera": "Use Your Camera",
+        "uploadSelfie": "Upload A Selfie"
     }
 }

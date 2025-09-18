@@ -3,12 +3,25 @@ import { Typography } from '@/components/ui/Typography'
 import { usePublicAlbumProvider } from '@/features/match/PublicAlbumProvider'
 import useIsMobile from '@/hooks/useIsMobile'
 import { useTranslation } from 'react-i18next'
+import AlbumInfo from '@/features/match/AlbumInfo.tsx'
+import Button from '@/components/ui/Button.tsx'
+import { AnimatePresence } from 'motion/react'
+import Modal from '@/components/ui/Modal.tsx'
+import DragDropUpload from '@/components/DragDropUpload.tsx'
+import useModal from '@/hooks/useModal.tsx'
 
 const SpotAlbumRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
 
+    const { isModalOpen, closeModal, openModal } = useModal()
+
     const { album } = usePublicAlbumProvider()
+
+    const handleSelfieSelect = (files: File[]) => {
+        console.log('handleSelfieSelect', files)
+        closeModal()
+    }
 
     if (!album) return
 
@@ -20,35 +33,50 @@ const SpotAlbumRoute: React.FC = () => {
                 dangerouslySetInnerHTML={{ __html: t('spot.albumTitle') }}
             />
 
-            <div>
+            <div
+                className={
+                    'flex w-full flex-col items-center justify-center gap-[8rem] lg:flex-row'
+                }
+            >
                 {/* cards mosaic */}
-                <div></div>
+                <div className={'w-[25rem]'}></div>
 
                 {/*album info */}
-                <div>
-                    <Typography variant={'bodyLarge'}>
-                        {t('spot.countPhotosUploaded', {
-                            count: album.totalPhotosCount,
-                        })}
-                    </Typography>
-                    <div className="flex items-center gap-2">
-                        <Typography variant={'bodyLarge'}>
-                            {t('spot.album')}:
+                <div className={'flex flex-col gap-[2.5rem]'}>
+                    <AlbumInfo {...album} />
+                    <Button
+                        className={'w-full border-primaryLight'}
+                        variant={'transparent'}
+                    >
+                        <Typography
+                            className={'text-white'}
+                            variant={'buttonText'}
+                        >
+                            {t('spot.useYourCamera')}
                         </Typography>
-                        <Typography variant={'bodyLarge'}>
-                            {album.name}
+                    </Button>{' '}
+                    <Button
+                        className={'w-full'}
+                        variant={'primary'}
+                        onClick={openModal}
+                    >
+                        <Typography
+                            className={'text-white'}
+                            variant={'buttonText'}
+                        >
+                            {t('spot.uploadSelfie')}
                         </Typography>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Typography variant={'bodyLarge'}>
-                            {t('spot.sharedBy')}:
-                        </Typography>
-                        <Typography variant={'bodyLarge'}>
-                            {album.creator}
-                        </Typography>
-                    </div>
+                    </Button>
                 </div>
             </div>
+
+            <AnimatePresence>
+                {isModalOpen && (
+                    <Modal onClose={closeModal} title={t('spot.uploadSelfie')}>
+                        <DragDropUpload onFilesSelected={handleSelfieSelect} />
+                    </Modal>
+                )}
+            </AnimatePresence>
         </Main>
     )
 }
