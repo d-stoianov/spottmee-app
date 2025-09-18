@@ -2,6 +2,7 @@
 export type UserDTO = {
     id: number
     uuid: string
+    picture?: string
     name: string
     email: string
     createdAt: string // timestamp string from the API
