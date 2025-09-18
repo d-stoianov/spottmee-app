@@ -9,7 +9,10 @@ type AvatarProps = {
 
 const Avatar: React.FC<AvatarProps> = ({ user, size = 36, onClick }) => {
     return (
-        <button onClick={onClick}>
+        <button
+            onClick={onClick}
+            style={{ cursor: onClick !== undefined ? 'pointer' : 'default' }}
+        >
             <img
                 src={user?.picture ? user.picture : defaultUserPicture}
                 className={'rounded-full object-cover'}
