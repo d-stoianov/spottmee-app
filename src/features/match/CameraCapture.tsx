@@ -74,7 +74,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
                         className={'rounded-[1.25rem]'}
                     />
                 )}
-                <button onClick={captureImage}>
+                <button
+                    onClick={captureImage}
+                    style={{ visibility: capturedImage ? 'hidden' : 'visible' }}
+                >
                     <Typography
                         className={'px-6 text-white'}
                         variant={'buttonText'}
