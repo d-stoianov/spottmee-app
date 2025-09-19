@@ -9,6 +9,7 @@ interface AuthContextType {
     signInWithProvider: (provider: SignInProvider) => Promise<void>
     signUp: (name: string, email: string, password: string) => Promise<void>
     signOut: () => void
+    deleteAccount: () => Promise<void>
     user: User | null | undefined // User - user is authorized, null - user needs to sign in, undefined - value is unset
     token: string | null
 }
@@ -73,6 +74,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(result.user)
     }
 
+    const deleteAccount = async () => {
+        if (token) {
+            await authService.deleteUser(token)
+            setUser(null)
+            setToken(null)
+        }
+    }
+
     return (
         <AuthContext.Provider
             value={{
@@ -80,6 +89,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 signInWithProvider,
                 signUp,
                 signOut,
+                deleteAccount,
                 user,
                 token,
             }}

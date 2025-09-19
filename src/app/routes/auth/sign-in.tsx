@@ -50,7 +50,10 @@ const SignInRoute: React.FC = () => {
             <div className="mt-[6rem] w-[30rem]">
                 {/* header */}
                 <div className="mb-[5rem] flex w-full flex-col items-center">
-                    <Typography className='text-white' variant={isMobile ? "heading2" : "heading1"}>
+                    <Typography
+                        className="text-white"
+                        variant={isMobile ? 'heading2' : 'heading1'}
+                    >
                         {t('auth.login')}
                     </Typography>
                 </div>
@@ -67,6 +70,7 @@ const SignInRoute: React.FC = () => {
                     <IntegrationButton
                         onClick={async () => {
                             await signInWithProvider(SignInProvider.Google)
+                            navigate('/')
                         }}
                         className="w-full"
                         integration="Google"

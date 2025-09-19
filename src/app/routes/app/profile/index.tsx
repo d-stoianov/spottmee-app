@@ -1,18 +1,29 @@
 import Main from '@/components/layout/Main'
 import { Typography } from '@/components/ui/Typography'
-import useIsMobile from '@/hooks/useIsMobile'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/providers/AuthProvider.tsx'
 import Avatar from '@/features/profile/Avatar.tsx'
 import { LucideKey, LucideLogOut, LucideMail } from 'lucide-react'
-import Divider from '@/components/ui/Divider.tsx'
 import LabelInput from '@/components/ui/LabelInput.tsx'
+import { useState } from 'react'
 
 const ProfileRoute: React.FC = () => {
-    const { user, signOut } = useAuth()
+    const { user, signOut, deleteAccount } = useAuth()
+
+    const [isDeleting, setIsDeleting] = useState(false)
 
     const { t } = useTranslation()
-    const isMobile = useIsMobile()
+
+    const handleDeleting = async () => {
+        try {
+            setIsDeleting(true)
+            await deleteAccount()
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsDeleting(false)
+        }
+    }
 
     if (!user) return null
 
@@ -59,7 +70,7 @@ const ProfileRoute: React.FC = () => {
                     </Typography>
                     <LucideLogOut className={'text-white'} size={20} />
                 </button>
-                <button onClick={signOut}>
+                <button onClick={handleDeleting} disabled={isDeleting}>
                     <Typography
                         className={'text-[#E06459]'}
                         variant={'bodyDefault'}

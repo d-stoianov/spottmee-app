@@ -59,8 +59,9 @@ export class AuthService {
                 throw new Error('Failed to create user with Google')
             }
 
-            const userDTO: UserDTO = await response.json()
-            return { user: this.userDTOToUser(userDTO), jwt }
+            const signUpResponse: SignUpResponse = await response.json()
+
+            return { user: this.userDTOToUser(signUpResponse?.user), jwt }
         }
     }
 
@@ -116,6 +117,19 @@ export class AuthService {
         const userDTO: UserDTO = await response.json()
 
         return this.userDTOToUser(userDTO)
+    }
+
+    public async deleteUser(jwt: string): Promise<void> {
+        const response = await fetch(`${this.API_URL}/user`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to delete user')
+        }
     }
 
     private userDTOToUser(userDTO: UserDTO): User {

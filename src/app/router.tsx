@@ -27,8 +27,8 @@ const createAppRouter = () => {
                 {
                     element: <PageLayout />,
                     children: [
-                        { path: '/sign-in', Component: SignInRoute },
-                        { path: '/sign-up', Component: SignUpRoute },
+                        { path: '/sign-in', element: <SignInRoute /> },
+                        { path: '/sign-up', element: <SignUpRoute /> },
                         {
                             path: '/spot',
                             children: [
