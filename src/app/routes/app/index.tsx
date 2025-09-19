@@ -51,7 +51,7 @@ const AppIndexRoute: React.FC = () => {
                     placeholder={t('albums.searchForAlbums')}
                     icon={{
                         icon: <Search />,
-                        position: 'left'
+                        position: 'left',
                     }}
                 />
                 {!isMobile && (
@@ -78,10 +78,7 @@ const AppIndexRoute: React.FC = () => {
                 }}
             >
                 {filteredAlbums.map((al) => (
-                    <AlbumCard
-                        album={al}
-                        onClick={() => navigate(al.id)}
-                    />
+                    <AlbumCard album={al} onClick={() => navigate(al.id)} />
                 ))}
             </div>
 

@@ -10,6 +10,7 @@ import useModal from '@/hooks/useModal.tsx'
 import Modal from '@/components/ui/Modal.tsx'
 import DragDropUpload from '@/components/DragDropUpload.tsx'
 import { AnimatePresence } from 'motion/react'
+import InlineEdit from '@/components/ui/InlineEdit.tsx'
 
 const ProfileRoute: React.FC = () => {
     const { user, signOut, updateUser, deleteAccount } = useAuth()
@@ -23,6 +24,16 @@ const ProfileRoute: React.FC = () => {
         try {
             setIsUploadingAvatar(true)
             await updateUser({ picture: avatar })
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsUploadingAvatar(false)
+        }
+    }
+
+    const handleUpdateName = async (name: string) => {
+        try {
+            await updateUser({ name })
         } catch (error) {
             console.error(error)
         } finally {
@@ -63,9 +74,13 @@ const ProfileRoute: React.FC = () => {
                         onClick={openUploadAvatarModal}
                         disabled={isUploadingAvatar}
                     />
-                    <Typography className={'text-white'} variant={'bodyLarge'}>
-                        {user?.name}
-                    </Typography>
+
+                    <InlineEdit
+                        name={'name'}
+                        autoComplete={'name'}
+                        initialValue={user?.name}
+                        onSave={(name: string) => handleUpdateName(name)}
+                    />
                 </div>
                 <div
                     className={
