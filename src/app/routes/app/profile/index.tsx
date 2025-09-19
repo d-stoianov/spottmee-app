@@ -6,13 +6,29 @@ import Avatar from '@/features/profile/Avatar.tsx'
 import { LucideKey, LucideLogOut, LucideMail } from 'lucide-react'
 import LabelInput from '@/components/ui/LabelInput.tsx'
 import { useState } from 'react'
+import useModal from '@/hooks/useModal.tsx'
+import Modal from '@/components/ui/Modal.tsx'
+import DragDropUpload from '@/components/DragDropUpload.tsx'
+import { AnimatePresence } from 'motion/react'
 
 const ProfileRoute: React.FC = () => {
-    const { user, signOut, deleteAccount } = useAuth()
+    const { user, signOut, updateUser, deleteAccount } = useAuth()
 
     const [isDeleting, setIsDeleting] = useState(false)
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState<boolean>(false)
 
     const { t } = useTranslation()
+
+    const handleUploadAvatar = async (avatar: File) => {
+        try {
+            setIsUploadingAvatar(true)
+            await updateUser({ picture: avatar })
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsUploadingAvatar(false)
+        }
+    }
 
     const handleDeleting = async () => {
         try {
@@ -25,6 +41,12 @@ const ProfileRoute: React.FC = () => {
         }
     }
 
+    const {
+        openModal: openUploadAvatarModal,
+        closeModal: closeUploadAvatarModal,
+        isModalOpen: isUploadAvatarModalOpen,
+    } = useModal()
+
     if (!user) return null
 
     return (
@@ -35,7 +57,12 @@ const ProfileRoute: React.FC = () => {
                         'mb-[4rem] flex flex-col items-center justify-center gap-4'
                     }
                 >
-                    <Avatar user={user} size={100} />
+                    <Avatar
+                        user={user}
+                        size={100}
+                        onClick={openUploadAvatarModal}
+                        disabled={isUploadingAvatar}
+                    />
                     <Typography className={'text-white'} variant={'bodyLarge'}>
                         {user?.name}
                     </Typography>
@@ -79,6 +106,26 @@ const ProfileRoute: React.FC = () => {
                     </Typography>
                 </button>
             </div>
+
+            <AnimatePresence>
+                {isUploadAvatarModalOpen && (
+                    <Modal
+                        onClose={closeUploadAvatarModal}
+                        title={t('profile.uploadProfilePicture')}
+                    >
+                        {/* upload drag-n-drop */}
+                        <DragDropUpload
+                            onFilesSelected={(files) => {
+                                if (files.length > 0) {
+                                    handleUploadAvatar(files[0])
+                                }
+                                closeUploadAvatarModal()
+                            }}
+                            allowMultiple={false}
+                        />
+                    </Modal>
+                )}
+            </AnimatePresence>
         </Main>
     )
 }

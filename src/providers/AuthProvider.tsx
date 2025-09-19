@@ -1,5 +1,9 @@
 import { AuthService } from '@/services/AuthService'
-import { SignInProvider, User } from '@/services/AuthService/types'
+import {
+    SignInProvider,
+    UpdateUserDTO,
+    User,
+} from '@/services/AuthService/types'
 import { auth } from '@/services/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
@@ -10,6 +14,7 @@ interface AuthContextType {
     signUp: (name: string, email: string, password: string) => Promise<void>
     signOut: () => void
     deleteAccount: () => Promise<void>
+    updateUser: (updateUserDTO: UpdateUserDTO) => Promise<void>
     user: User | null | undefined // User - user is authorized, null - user needs to sign in, undefined - value is unset
     token: string | null
 }
@@ -35,6 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     setUser(user)
                     setToken(jwt)
                 } catch (error) {
+                    console.error('Error during token refresh', error)
                     // user not signed in
                     setUser(null)
                     setToken(null)
@@ -75,11 +81,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const deleteAccount = async () => {
-        if (token) {
-            await authService.deleteUser(token)
-            setUser(null)
-            setToken(null)
+        if (!token) {
+            return
         }
+
+        await authService.deleteUser(token)
+
+        setUser(null)
+        setToken(null)
+    }
+
+    const updateUser = async (updateUserDTO: UpdateUserDTO) => {
+        if (!token) return
+
+        const { name, picture } = updateUserDTO
+        const formData = new FormData()
+
+        // check if prev user values are not the same as new ones
+        // to avoid extra requests
+
+        if (name !== undefined && user?.name !== name) {
+            formData.append('name', name)
+        }
+
+        if (picture !== undefined) {
+            formData.append('picture', picture)
+        }
+
+        // don't make empty fetch
+        if ([...formData.keys()].length === 0) return
+
+        const updatedUser = await authService.updateUser(token, formData)
+
+        setUser(updatedUser)
     }
 
     return (
@@ -90,6 +124,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 signUp,
                 signOut,
                 deleteAccount,
+                updateUser,
                 user,
                 token,
             }}

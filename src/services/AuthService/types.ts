@@ -13,6 +13,11 @@ export type User = Omit<UserDTO, 'createdAt'> & {
     createdAt: Date
 }
 
+export type UpdateUserDTO = Partial<{
+    name: string
+    picture: File
+}>
+
 export type SignUpResponse = {
     user: UserDTO
     customToken: string // temporary token. need refresh to get JWT

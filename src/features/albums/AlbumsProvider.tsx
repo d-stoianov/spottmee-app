@@ -69,7 +69,9 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
         // to avoid extra requests
         const prevAlbum = getAlbumById(albumId)
 
-        prevAlbum?.name !== name && formData.append('name', name)
+        if (prevAlbum?.name !== name) {
+            formData.append('name', name)
+        }
 
         if (
             description !== undefined &&

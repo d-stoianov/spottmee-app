@@ -46,6 +46,8 @@
         }
     },
     "profile": {
+        "uploadProfilePicture": "Upload Profile Picture",
+        "uploadProfilePictureSubtitle": "",
         "email": "Email",
         "password": "Password",
         "connect": "Connect",

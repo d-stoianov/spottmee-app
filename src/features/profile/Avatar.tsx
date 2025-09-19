@@ -5,13 +5,26 @@ type AvatarProps = {
     user: User
     size?: number
     onClick?: () => void
+    disabled?: boolean
 }
 
-const Avatar: React.FC<AvatarProps> = ({ user, size = 36, onClick }) => {
+const Avatar: React.FC<AvatarProps> = ({
+    user,
+    size = 36,
+    onClick,
+    disabled = false,
+}) => {
     return (
         <button
             onClick={onClick}
-            style={{ cursor: onClick !== undefined ? 'pointer' : 'default' }}
+            style={{
+                cursor: disabled
+                    ? 'default'
+                    : onClick !== undefined
+                      ? 'pointer'
+                      : 'default',
+            }}
+            disabled={disabled}
         >
             <img
                 src={user?.picture ? user.picture : defaultUserPicture}

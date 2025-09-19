@@ -131,6 +131,22 @@ export class AuthService {
             throw new Error('Failed to delete user')
         }
     }
+    public async updateUser(jwt: string, formData: FormData): Promise<User> {
+        const response = await fetch(`${this.API_URL}/user`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            },
+            body: formData,
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to update user')
+        }
+
+        const userDTO: UserDTO = await response.json()
+        return this.userDTOToUser(userDTO)
+    }
 
     private userDTOToUser(userDTO: UserDTO): User {
         return {
