@@ -53,8 +53,8 @@
         "connect": "Connect",
         "logout": "Log Out",
         "deleteYourAccount": "Delete Your Account",
-        "deleteYourAccountConfirmation": "Are you sure you want to delete you account ?",
-        "deleteYourAccountSubtitle": "This action is not irreversible",
+        "deleteYourAccountConfirmation": "Are you sure you want to delete your account ?",
+        "deleteYourAccountSubtitle": "This action is irreversible",
         "cancel": "Cancel",
         "delete": "Delete"
     },

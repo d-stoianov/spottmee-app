@@ -58,6 +58,12 @@ const ProfileRoute: React.FC = () => {
         isModalOpen: isUploadAvatarModalOpen,
     } = useModal()
 
+    const {
+        openModal: openDeleteAccountModal,
+        closeModal: closeDeleteAccountModal,
+        isModalOpen: isDeleteAccountModalOpen,
+    } = useModal()
+
     if (!user) return null
 
     return (
@@ -112,7 +118,7 @@ const ProfileRoute: React.FC = () => {
                     </Typography>
                     <LucideLogOut className={'text-white'} size={20} />
                 </button>
-                <button onClick={handleDeleting} disabled={isDeleting}>
+                <button onClick={openDeleteAccountModal}>
                     <Typography
                         className={'text-[#E06459]'}
                         variant={'bodyDefault'}
@@ -121,6 +127,41 @@ const ProfileRoute: React.FC = () => {
                     </Typography>
                 </button>
             </div>
+
+            <AnimatePresence>
+                {isDeleteAccountModalOpen && (
+                    <Modal
+                        onClose={closeDeleteAccountModal}
+                        title={t('profile.deleteYourAccountConfirmation')}
+                    >
+                        <div className={'flex items-center justify-between'}>
+                            <button
+                                className={'px-4 py-2'}
+                                onClick={closeDeleteAccountModal}
+                            >
+                                <Typography
+                                    className={'text-black'}
+                                    variant={'bodyDefault'}
+                                >
+                                    {t('profile.cancel')}{' '}
+                                </Typography>
+                            </button>
+                            <button
+                                className={'px-4 py-2'}
+                                onClick={handleDeleting}
+                                disabled={isDeleting}
+                            >
+                                <Typography
+                                    className={'text-[#E06459]'}
+                                    variant={'bodyDefault'}
+                                >
+                                    {t('profile.delete')}
+                                </Typography>
+                            </button>
+                        </div>
+                    </Modal>
+                )}
+            </AnimatePresence>
 
             <AnimatePresence>
                 {isUploadAvatarModalOpen && (
