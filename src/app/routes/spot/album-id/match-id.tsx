@@ -4,18 +4,21 @@ import { usePublicAlbumProvider } from '@/features/match/PublicAlbumProvider'
 import useIsMobile from '@/hooks/useIsMobile'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { MatchResult } from '@/services/MatchService/types.ts'
 import LoadingPage from '@/app/loading.tsx'
 import PhotoCard from '@/features/photos/PhotoCard.tsx'
 import PhotosTable from '@/features/photos/PhotosTable.tsx'
-import { downloadFileFromURL } from '@/utils/file.ts'
+import { downloadFileFromURL, downloadFilesIntoZip } from '@/utils/file.ts'
+import Button from '@/components/ui/Button.tsx'
+import { RotateCcw } from 'lucide-react'
 
 const POLLING_INTERVAL = 5000
 
 const SpotMatchRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
+    const navigate = useNavigate()
 
     const { matchId } = useParams()
 
@@ -98,6 +101,39 @@ const SpotMatchRoute: React.FC = () => {
                     })}
                 totalPhotos={matchResult.matches.length}
             />
+            {matchResult && matchResult.status === 'READY' && (
+                <div className={'mt-[5rem] flex flex-col items-center gap-6'}>
+                    <Button
+                        variant={'primary'}
+                        className={'h-[3.5rem] w-[19.25rem]'}
+                        onClick={async () => {
+                            if (!matchResult) return
+
+                            await downloadFilesIntoZip(
+                                matchResult.matches.map((p) => {
+                                    return { url: p.url, name: p.originalName }
+                                })
+                            )
+                        }}
+                    >
+                        <Typography className="text-white" variant="buttonText">
+                            {t('spot.downloadAll')}
+                        </Typography>
+                    </Button>{' '}
+                    <button
+                        className={'flex items-center gap-2'}
+                        onClick={() => navigate(`/spot/${album.id}`)}
+                    >
+                        <Typography
+                            className="text-secondary"
+                            variant="buttonText"
+                        >
+                            {t('spot.reupload')}
+                        </Typography>
+                        <RotateCcw className={'text-secondary'} />
+                    </button>
+                </div>
+            )}
         </Main>
     )
 }

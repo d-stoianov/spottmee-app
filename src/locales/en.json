@@ -122,6 +122,8 @@
         "comparingSelfiesWithOtherPhotos": "Comparing your selfie with other photos...",
         "weFoundYourCountPhotos_one": "We Found Your {{count}} Photo!",
         "weFoundYourCountPhotos_other": "We Found Your {{count}} Photos!",
-        "noMatchesFound": "No matches found..."
+        "noMatchesFound": "No matches found...",
+        "downloadAll": "Download All",
+        "reupload": "Reupload"
     }
 }
