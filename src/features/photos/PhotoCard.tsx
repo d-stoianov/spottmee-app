@@ -3,7 +3,7 @@ import { formatFileSize } from '@/utils/formatting'
 import { Download, Trash } from 'lucide-react'
 import React from 'react'
 
-type PhotoCardProps = {
+export type PhotoCardProps = {
     photo: File | Photo
     uploadProgress?: number
     onDownload?: () => Promise<void>

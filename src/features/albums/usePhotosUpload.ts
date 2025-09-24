@@ -8,7 +8,6 @@ type UploadProgress = { [batchIndex: number]: number } // progress is 0 - 100
 const usePhotos = (albumId: string) => {
     const [uploadProgress, setUploadProgress] = useState<UploadProgress>({})
     const [isUploading, setIsUploading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
 
     const { token } = useAuth()
 
@@ -28,7 +27,6 @@ const usePhotos = (albumId: string) => {
         batchSize = 10
     ): Promise<Photo[]> => {
         setIsUploading(true)
-        setError(null)
 
         const batches = chunkArray(files, batchSize)
 
@@ -51,8 +49,8 @@ const usePhotos = (albumId: string) => {
 
                 allPhotos.push(...photos)
             }
-        } catch (err: any) {
-            setError(err.message)
+        } catch (error) {
+            console.error(error)
         } finally {
             setIsUploading(false)
         }
@@ -67,28 +65,6 @@ const usePhotos = (albumId: string) => {
         return await photoService.getPhotos(offset, size)
     }
 
-    const downloadPhoto = async (photo: Photo) => {
-        try {
-            const response = await fetch(photo.url)
-            const blob = await response.blob()
-
-            const url = window.URL.createObjectURL(blob)
-
-            const link = document.createElement('a')
-            link.href = url
-
-            link.download = photo.originalName
-
-            document.body.appendChild(link)
-            link.click()
-
-            link.remove()
-            window.URL.revokeObjectURL(url)
-        } catch (error) {
-            console.error('Failed to download photo:', error)
-        }
-    }
-
     const deletePhoto = async (photoId: string) => {
         await photoService.deletePhoto(photoId)
     }
@@ -97,10 +73,8 @@ const usePhotos = (albumId: string) => {
         getPhotos,
         uploadPhotosInBatches,
         uploadProgress,
-        downloadPhoto,
         deletePhoto,
         isUploading,
-        error,
     }
 }
 

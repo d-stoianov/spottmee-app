@@ -13,6 +13,8 @@ import { AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, Link } from 'react-router-dom'
+import PhotosTable from '@/features/photos/PhotosTable.tsx'
+import { downloadFileFromURL } from '@/utils/file.ts'
 
 // count of photos shown in a grid (API only, not the one that are uploading)
 const PHOTOS_GRID_SIZE = 20
@@ -36,7 +38,6 @@ const AlbumPhotosRoute: React.FC = () => {
 
     // loading states
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
-    const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false)
 
     // modals state
     const {
@@ -57,7 +58,6 @@ const AlbumPhotosRoute: React.FC = () => {
         uploadProgress,
         uploadPhotosInBatches,
         isUploading,
-        downloadPhoto,
         deletePhoto,
     } = usePhotos(albumId || '')
 
@@ -87,8 +87,6 @@ const AlbumPhotosRoute: React.FC = () => {
     const loadMorePhotos = async () => {
         const newOffset = photosOffset + PHOTOS_GRID_SIZE
         if (album) {
-            setIsLoadingMore(true)
-
             const { photos, total } = await getPhotos(
                 newOffset,
                 PHOTOS_GRID_SIZE
@@ -96,8 +94,6 @@ const AlbumPhotosRoute: React.FC = () => {
             setPhotos((prev) => [...prev, ...photos])
             setTotalPhotos(total)
             setPhotosOffset(newOffset)
-
-            setIsLoadingMore(false)
         }
     }
 
@@ -163,29 +159,9 @@ const AlbumPhotosRoute: React.FC = () => {
             </Button>
 
             {/* grid with existing and photos that are currently uploading */}
-            <div
-                className="mt-8 grid w-full justify-center gap-6"
-                style={{
-                    gridTemplateColumns:
-                        'repeat(auto-fit, minmax(25rem, max-content))',
-                }}
-            >
-                {/* uploading photos in the grid */}
-                {photosToUpload.map((f, idx) => {
-                    const batchIndex = Math.floor(
-                        idx / PHOTOS_UPLOAD_BATCH_SIZE
-                    )
 
-                    return (
-                        <PhotoCard
-                            key={idx} // make sure to have a unique key
-                            photo={f}
-                            uploadProgress={uploadProgress[batchIndex]}
-                        />
-                    )
-                })}
-                {/* existing photos in the grid */}
-                {photos
+            <PhotosTable
+                photosCards={photos
                     .sort(
                         (a, b) => b.createdAt.getTime() - a.createdAt.getTime() // sort by recents first
                     )
@@ -195,7 +171,10 @@ const AlbumPhotosRoute: React.FC = () => {
                                 key={photo.id}
                                 photo={photo}
                                 onDownload={async () => {
-                                    await downloadPhoto(photo)
+                                    await downloadFileFromURL(
+                                        photo.url,
+                                        photo.originalName
+                                    )
                                 }}
                                 onDelete={async () => {
                                     // delete in the API
@@ -211,31 +190,22 @@ const AlbumPhotosRoute: React.FC = () => {
                             />
                         )
                     })}
-            </div>
+                uploadingPhotosCards={photosToUpload.map((f, idx) => {
+                    const batchIndex = Math.floor(
+                        idx / PHOTOS_UPLOAD_BATCH_SIZE
+                    )
 
-            {/* button to load more photos */}
-            {photos.length < totalPhotos && (
-                <>
-                    {/* TODO: replace with a spinner */}
-                    {isLoadingMore ? (
-                        <Typography
-                            className="text-secondary"
-                            variant="bodyLarge"
-                        >
-                            {t('general.loading')}
-                        </Typography>
-                    ) : (
-                        <button onClick={loadMorePhotos}>
-                            <Typography
-                                className="text-secondary"
-                                variant="buttonText"
-                            >
-                                {t('albums.seeMore')}
-                            </Typography>
-                        </button>
-                    )}
-                </>
-            )}
+                    return (
+                        <PhotoCard
+                            key={idx} // make sure to have a unique key
+                            photo={f}
+                            uploadProgress={uploadProgress[batchIndex]}
+                        />
+                    )
+                })}
+                totalPhotos={totalPhotos}
+                onLoadMorePhotos={loadMorePhotos}
+            />
 
             <AnimatePresence>
                 {isUploadPhotosModalOpen && (

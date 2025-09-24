@@ -7,6 +7,9 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MatchResult } from '@/services/MatchService/types.ts'
 import LoadingPage from '@/app/loading.tsx'
+import PhotoCard from '@/features/photos/PhotoCard.tsx'
+import PhotosTable from '@/features/photos/PhotosTable.tsx'
+import { downloadFileFromURL } from '@/utils/file.ts'
 
 const POLLING_INTERVAL = 5000
 
@@ -63,7 +66,7 @@ const SpotMatchRoute: React.FC = () => {
     return (
         <Main className="flex w-full flex-col lg:px-[8rem] lg:py-[3rem]">
             <Typography
-                className="mb-[3rem] text-start text-white"
+                className="mb-[3rem] text-center text-white"
                 variant={isMobile ? 'heading3' : 'heading1'}
             >
                 {matchResult.status === 'PROCESSING'
@@ -74,7 +77,27 @@ const SpotMatchRoute: React.FC = () => {
                         })
                       : t('spot.noMatchesFound')}
             </Typography>
-            <div>{matchResult.status}</div>
+            <PhotosTable
+                photosCards={matchResult.matches
+                    .sort(
+                        (a, b) => b.createdAt.getTime() - a.createdAt.getTime() // sort by recents first
+                    )
+                    .map((photo) => {
+                        return (
+                            <PhotoCard
+                                key={photo.id}
+                                photo={photo}
+                                onDownload={async () => {
+                                    await downloadFileFromURL(
+                                        photo.url,
+                                        photo.originalName
+                                    )
+                                }}
+                            />
+                        )
+                    })}
+                totalPhotos={matchResult.matches.length}
+            />
         </Main>
     )
 }
