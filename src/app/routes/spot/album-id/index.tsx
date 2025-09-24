@@ -18,11 +18,17 @@ const SpotAlbumRoute: React.FC = () => {
 
     const { isModalOpen, closeModal, openModal } = useModal()
 
-    const { album } = usePublicAlbumProvider()
+    const { album, startMatching } = usePublicAlbumProvider()
 
-    const handleSelfieSelect = (files: File[]) => {
-        console.log('handleSelfieSelect', files)
+    const handleSelfieSelect = async (files: File[]) => {
+        if (!album || !files.length || !files[0]) {
+            return
+        }
+
         closeModal()
+
+        const matchId = await startMatching(files[0])
+        navigate(`/spot/${album.id}/${matchId}`)
     }
 
     if (!album) return

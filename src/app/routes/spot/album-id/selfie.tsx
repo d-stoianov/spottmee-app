@@ -1,21 +1,24 @@
-import Main from '@/components/layout/Main'
-import { usePublicAlbumProvider } from '@/features/match/PublicAlbumProvider'
-import useIsMobile from '@/hooks/useIsMobile'
+import Main from '@/components/layout/Main.tsx'
+import { usePublicAlbumProvider } from '@/features/match/PublicAlbumProvider.tsx'
+import useIsMobile from '@/hooks/useIsMobile.tsx'
 import { useTranslation } from 'react-i18next'
 import { Typography } from '@/components/ui/Typography.tsx'
 import Button from '@/components/ui/Button.tsx'
 import CameraCapture from '@/features/match/CameraCapture.tsx'
 import { useState } from 'react'
+import { dataURLtoFile } from '@/utils/file.ts'
+import { useNavigate } from 'react-router-dom'
 
 const SpotSelfieRoute: React.FC = () => {
     const { t } = useTranslation()
     const isMobile = useIsMobile()
+    const navigate = useNavigate()
 
     const [resetTrigger, setResetTrigger] = useState<boolean>(false)
     const [selfieData, setSelfieData] = useState<string | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const { album } = usePublicAlbumProvider()
+    const { album, startMatching } = usePublicAlbumProvider()
 
     if (!album) return
 
@@ -30,11 +33,13 @@ const SpotSelfieRoute: React.FC = () => {
     }
 
     const onSelfieSubmit = async () => {
+        if (!selfieData) return
         try {
             setIsSubmitting(true)
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-            // API call
-            // navigate to route
+            const matchId = await startMatching(
+                dataURLtoFile(selfieData, 'selfie.png')
+            )
+            navigate(`/spot/${album.id}/${matchId}`)
         } catch (error) {
             console.error(error)
         } finally {

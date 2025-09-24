@@ -6,9 +6,9 @@ import {
 } from '@/services/PhotoService/types'
 
 export class PhotoService {
-    private PHOTO_URL: string
-    private jwt: string
-    private albumId: string
+    private readonly PHOTO_URL: string
+    private readonly jwt: string
+    private readonly albumId: string
 
     constructor(jwt: string, albumId: string) {
         this.jwt = jwt
@@ -38,7 +38,7 @@ export class PhotoService {
         const photosResponseDTO: PhotosResponseDTO = await response.json()
 
         const photos = photosResponseDTO.photos.map((al) =>
-            this.photoDTOtoPhoto(al)
+            PhotoService.photoDTOtoPhoto(al)
         )
 
         return {
@@ -72,7 +72,7 @@ export class PhotoService {
                         )
 
                         const photos = photosResponseDTO.photos.map((al) =>
-                            this.photoDTOtoPhoto(al)
+                            PhotoService.photoDTOtoPhoto(al)
                         )
 
                         resolve({
@@ -113,7 +113,7 @@ export class PhotoService {
         })
     }
 
-    private photoDTOtoPhoto(photoDTO: PhotoDTO): Photo {
+    public static photoDTOtoPhoto(photoDTO: PhotoDTO): Photo {
         return {
             ...photoDTO,
             createdAt: new Date(photoDTO.createdAt),
