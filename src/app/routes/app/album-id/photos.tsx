@@ -142,6 +142,8 @@ const AlbumPhotosRoute: React.FC = () => {
                 {totalPhotos > 0
                     ? t('albums.photosFromAlbumSubtext', {
                           count: totalPhotos,
+                          readyCount: photos.filter((p) => p.status === 'READY')
+                              .length,
                       })
                     : t('albums.uploadFirstPhotosSubtext', {
                           albumName: album.name,

@@ -1,6 +1,9 @@
-const PHOTO_STATUS = ['UPLOADED', 'PROCESSING', 'READY', 'FAILED'] as const
-
-export type PhotoStatus = (typeof PHOTO_STATUS)[number]
+export type PhotoStatus =
+    | 'UPLOADED'
+    | 'PROCESSING'
+    | 'NO_FACES_FOUND'
+    | 'FAILED'
+    | 'READY'
 
 export type PhotoDTO = {
     id: string

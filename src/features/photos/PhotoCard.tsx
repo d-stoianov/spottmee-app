@@ -1,31 +1,35 @@
-import { Photo } from '@/services/PhotoService/types'
+import { Photo, PhotoStatus } from '@/services/PhotoService/types'
 import { formatFileSize } from '@/utils/formatting'
 import { Download, Trash } from 'lucide-react'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type PhotoCardProps = {
     photo: File | Photo
     uploadProgress?: number
     onDownload?: () => Promise<void>
     onDelete?: () => Promise<void>
+    showStatusExplanation?: boolean
 }
 
-const PhotoCard: React.FC<PhotoCardProps> = (props) => {
-    const isFile = (p: Photo | File): p is File => p instanceof File
+const PhotoCard: React.FC<PhotoCardProps> = ({
+    photo,
+    uploadProgress,
+    onDownload,
+    onDelete,
+    showStatusExplanation = true,
+}) => {
+    const { t } = useTranslation()
 
-    const name = isFile(props.photo)
-        ? props.photo.name
-        : props.photo.originalName
+    const isFile = photo instanceof File
 
-    const size = isFile(props.photo) ? props.photo.size : props.photo.size
+    const name = isFile ? photo.name : photo.originalName
 
-    const src = isFile(props.photo)
-        ? URL.createObjectURL(props.photo)
-        : props.photo.url
+    const status: PhotoStatus | 'UPLOADING' = isFile
+        ? 'UPLOADING'
+        : photo.status
 
-    const progress = isFile(props.photo)
-        ? props.uploadProgress
-        : (props.uploadProgress ?? 0)
+    const src = isFile ? URL.createObjectURL(photo) : photo.url
 
     return (
         <div className="flex w-[25rem] items-center justify-between rounded-lg p-4 shadow-sm">
@@ -34,7 +38,7 @@ const PhotoCard: React.FC<PhotoCardProps> = (props) => {
                     {/* uploading progress overlay */}
                     <div
                         className="absolute left-0 top-0 h-full bg-purple-600 opacity-50"
-                        style={{ width: `${progress}%` }}
+                        style={{ width: `${uploadProgress}%` }}
                     ></div>
 
                     <img
@@ -50,25 +54,30 @@ const PhotoCard: React.FC<PhotoCardProps> = (props) => {
                         {name}
                     </p>
                     <p className="text-sm text-gray-400">
-                        {formatFileSize(size)}
+                        {formatFileSize(photo.size)}
                     </p>
+                    {showStatusExplanation && (
+                        <p className="text-sm text-gray-400">
+                            {t(`albums.photoStatusExplanation.${status}`)}
+                        </p>
+                    )}
                 </div>
             </div>
 
-            {!isFile(props.photo) && (props.onDownload || props.onDelete) && (
+            {!isFile && (onDownload || onDelete) && (
                 <div className="flex items-center gap-2">
-                    {props.onDownload && (
+                    {onDownload && (
                         <button
-                            onClick={props.onDownload}
+                            onClick={onDownload}
                             className="text-gray-400 hover:text-white"
                             aria-label="Download file"
                         >
                             <Download size={24} />
                         </button>
                     )}
-                    {props.onDelete && (
+                    {onDelete && (
                         <button
-                            onClick={props.onDelete}
+                            onClick={onDelete}
                             className="text-gray-400 hover:text-white"
                             aria-label="Delete file"
                         >

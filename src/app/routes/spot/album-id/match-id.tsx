@@ -96,6 +96,7 @@ const SpotMatchRoute: React.FC = () => {
                                         photo.originalName
                                     )
                                 }}
+                                showStatusExplanation={false}
                             />
                         )
                     })}
@@ -103,23 +104,31 @@ const SpotMatchRoute: React.FC = () => {
             />
             {matchResult && matchResult.status === 'READY' && (
                 <div className={'mt-[5rem] flex flex-col items-center gap-6'}>
-                    <Button
-                        variant={'primary'}
-                        className={'h-[3.5rem] w-[19.25rem]'}
-                        onClick={async () => {
-                            if (!matchResult) return
+                    {matchResult.matches.length > 0 && (
+                        <Button
+                            variant={'primary'}
+                            className={'h-[3.5rem] w-[19.25rem]'}
+                            onClick={async () => {
+                                if (!matchResult) return
 
-                            await downloadFilesIntoZip(
-                                matchResult.matches.map((p) => {
-                                    return { url: p.url, name: p.originalName }
-                                })
-                            )
-                        }}
-                    >
-                        <Typography className="text-white" variant="buttonText">
-                            {t('spot.downloadAll')}
-                        </Typography>
-                    </Button>{' '}
+                                await downloadFilesIntoZip(
+                                    matchResult.matches.map((p) => {
+                                        return {
+                                            url: p.url,
+                                            name: p.originalName,
+                                        }
+                                    })
+                                )
+                            }}
+                        >
+                            <Typography
+                                className="text-white"
+                                variant="buttonText"
+                            >
+                                {t('spot.downloadAll')}
+                            </Typography>
+                        </Button>
+                    )}
                     <button
                         className={'flex items-center gap-2'}
                         onClick={() => navigate(`/spot/${album.id}`)}
