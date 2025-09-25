@@ -10,7 +10,7 @@ import useIsMobile from '@/hooks/useIsMobile'
 import useModal from '@/hooks/useModal'
 import { Photo } from '@/services/PhotoService/types'
 import { AnimatePresence } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, Link } from 'react-router-dom'
 import PhotosTable from '@/features/photos/PhotosTable.tsx'
@@ -18,6 +18,9 @@ import { downloadFileFromURL } from '@/utils/file.ts'
 
 // count of photos shown in a grid (API only, not the one that are uploading)
 const PHOTOS_GRID_SIZE = 20
+
+// polling interval for updating photos status
+const POLLING_INTERVAL = 5000 // ms
 
 // size of the batch the photos are being uploaded to the API (whole batch shares the same progress)
 const PHOTOS_UPLOAD_BATCH_SIZE = 10
@@ -32,12 +35,15 @@ const AlbumPhotosRoute: React.FC = () => {
     // photos state
     const [photos, setPhotos] = useState<Photo[]>([]) // photos from API
     const [totalPhotos, setTotalPhotos] = useState<number>(0) // total number of photos (not current that are shown) need that to determine whether to show "see more" button
+    const [readyPhotosCount, setReadyPhotosCount] = useState<number>(0)
+
     const [photosToUpload, setPhotosToUpload] = useState<File[]>([])
 
     const [photosOffset, setPhotosOffset] = useState<number>(0)
 
     // loading states
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
+    const isPolling = useRef<boolean>(false)
 
     // modals state
     const {
@@ -73,12 +79,14 @@ const AlbumPhotosRoute: React.FC = () => {
                 openUploadDoneModal()
             }
 
-            const { photos: refetchedPhotos, total } = await getPhotos(
-                0,
-                PHOTOS_GRID_SIZE
-            )
+            const {
+                photos: refetchedPhotos,
+                total,
+                readyCount,
+            } = await getPhotos(0, PHOTOS_GRID_SIZE)
             setPhotos(refetchedPhotos)
             setTotalPhotos(total)
+            setReadyPhotosCount(readyCount)
             setPhotosToUpload([])
             setPhotosOffset(0)
         }
@@ -87,12 +95,13 @@ const AlbumPhotosRoute: React.FC = () => {
     const loadMorePhotos = async () => {
         const newOffset = photosOffset + PHOTOS_GRID_SIZE
         if (album) {
-            const { photos, total } = await getPhotos(
+            const { photos, total, readyCount } = await getPhotos(
                 newOffset,
                 PHOTOS_GRID_SIZE
             )
             setPhotos((prev) => [...prev, ...photos])
             setTotalPhotos(total)
+            setReadyPhotosCount(readyCount)
             setPhotosOffset(newOffset)
         }
     }
@@ -101,14 +110,67 @@ const AlbumPhotosRoute: React.FC = () => {
         const getAlbumPhotos = async () => {
             if (album) {
                 setIsPageLoading(true)
-                const { photos, total } = await getPhotos(0, PHOTOS_GRID_SIZE)
+                const { photos, total, readyCount } = await getPhotos(
+                    0,
+                    PHOTOS_GRID_SIZE
+                )
                 setPhotos(photos)
                 setTotalPhotos(total)
+                setReadyPhotosCount(readyCount)
                 setIsPageLoading(false)
             }
         }
         getAlbumPhotos()
     }, [album])
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout | null = null
+
+        const startPolling = () => {
+            // don’t start multiple times
+            if (isPolling.current) {
+                return
+            }
+            isPolling.current = true
+
+            interval = setInterval(async () => {
+                // refetch all photos that are visible
+                const {
+                    photos: updatedPhotos,
+                    total,
+                    readyCount,
+                } = await getPhotos(0, photosOffset + PHOTOS_GRID_SIZE)
+
+                setPhotos(updatedPhotos)
+                setTotalPhotos(total)
+                setReadyPhotosCount(readyCount)
+
+                // if none are UPLOADED or PROCESSING, stop polling
+                const stillProcessing = updatedPhotos.some(
+                    (p) => p.status === 'UPLOADED' || p.status === 'PROCESSING'
+                )
+                if (!stillProcessing && interval) {
+                    clearInterval(interval)
+                    isPolling.current = false
+                }
+            }, POLLING_INTERVAL)
+        }
+
+        const shouldPoll = photos.some(
+            (p) => p.status === 'UPLOADED' || p.status === 'PROCESSING'
+        )
+
+        if (shouldPoll) {
+            startPolling()
+        }
+
+        return () => {
+            if (interval) {
+                clearInterval(interval)
+                isPolling.current = false
+            }
+        }
+    }, [photos, photosOffset])
 
     if (!album) {
         return
@@ -142,8 +204,7 @@ const AlbumPhotosRoute: React.FC = () => {
                 {totalPhotos > 0
                     ? t('albums.photosFromAlbumSubtext', {
                           count: totalPhotos,
-                          readyCount: photos.filter((p) => p.status === 'READY')
-                              .length,
+                          readyCount: readyPhotosCount,
                       })
                     : t('albums.uploadFirstPhotosSubtext', {
                           albumName: album.name,

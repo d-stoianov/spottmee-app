@@ -44,6 +44,7 @@ export class PhotoService {
         return {
             photos,
             total: photosResponseDTO.total,
+            readyCount: photosResponseDTO.readyCount,
         }
     }
 
@@ -78,6 +79,7 @@ export class PhotoService {
                         resolve({
                             photos: photos,
                             total: photosResponseDTO.total,
+                            readyCount: photosResponseDTO.readyCount,
                         })
                     } catch (err) {
                         reject(err)

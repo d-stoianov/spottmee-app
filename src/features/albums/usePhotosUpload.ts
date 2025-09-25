@@ -1,6 +1,6 @@
 import { useAuth } from '@/providers/AuthProvider'
 import { PhotoService } from '@/services/PhotoService'
-import { Photo, PhotosResponse } from '@/services/PhotoService/types'
+import { PhotosResponse } from '@/services/PhotoService/types'
 import { useMemo, useState } from 'react'
 
 type UploadProgress = { [batchIndex: number]: number } // progress is 0 - 100
@@ -25,12 +25,16 @@ const usePhotos = (albumId: string) => {
     const uploadPhotosInBatches = async (
         files: File[],
         batchSize = 10
-    ): Promise<Photo[]> => {
+    ): Promise<PhotosResponse> => {
         setIsUploading(true)
 
         const batches = chunkArray(files, batchSize)
 
-        const allPhotos: Photo[] = []
+        const photosResponse: PhotosResponse = {
+            photos: [],
+            total: 0,
+            readyCount: 0,
+        }
 
         try {
             for (let i = 0; i < batches.length; i++) {
@@ -39,15 +43,15 @@ const usePhotos = (albumId: string) => {
 
                 batch.forEach((file) => formData.append('photos', file))
 
-                const { photos } = await photoService.uploadPhotos(
-                    formData,
-                    (percent) => {
+                const { photos, readyCount, total } =
+                    await photoService.uploadPhotos(formData, (percent) => {
                         // update progress for this batch
                         setUploadProgress((prev) => ({ ...prev, [i]: percent }))
-                    }
-                )
+                    })
 
-                allPhotos.push(...photos)
+                photosResponse.photos.push(...photos)
+                photosResponse.total += total
+                photosResponse.readyCount += readyCount
             }
         } catch (error) {
             console.error(error)
@@ -55,7 +59,7 @@ const usePhotos = (albumId: string) => {
             setIsUploading(false)
         }
 
-        return allPhotos
+        return photosResponse
     }
 
     const getPhotos = async (

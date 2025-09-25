@@ -22,6 +22,7 @@ export type Photo = Omit<PhotoDTO, 'createdAt'> & {
 export type PhotosResponseDTO = {
     photos: PhotoDTO[]
     total: number
+    readyCount: number
 }
 
 export type PhotosResponse = Omit<PhotosResponseDTO, 'photos'> & {
