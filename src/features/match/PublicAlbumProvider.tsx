@@ -10,6 +10,7 @@ interface PublicAlbumContextType {
         offset?: number,
         size?: number
     ) => Promise<MatchResult>
+    downloadMatchedPhotos: (matchId: string) => Promise<void>
 }
 
 const PublicAlbumContext = createContext<PublicAlbumContextType | undefined>(
@@ -57,12 +58,17 @@ export const PublicAlbumProvider = ({
         return await matchService.getMatchResult(matchId, offset, size)
     }
 
+    const downloadMatchedPhotos = async (matchId: string) => {
+        return await matchService.downloadMatchedPhotos(matchId)
+    }
+
     return (
         <PublicAlbumContext.Provider
             value={{
                 album,
                 startMatching,
                 getMatchResult,
+                downloadMatchedPhotos,
             }}
         >
             {children}

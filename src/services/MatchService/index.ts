@@ -79,4 +79,29 @@ export class MatchService {
             total: matchResult.total,
         }
     }
+
+    public async downloadMatchedPhotos(matchId: string): Promise<void> {
+        const response = await fetch(
+            `${this.MATCH_ALBUMS_URL}/${this.albumId}/${matchId}/download`
+        )
+
+        if (!response.ok) {
+            const text = await response.text()
+            throw new Error(`Error: ${response.status} - ${text}`)
+        }
+
+        const blob = await response.blob()
+
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+
+        const fileName = `spottmee-${matchId}.zip`
+
+        link.setAttribute('download', fileName)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        window.URL.revokeObjectURL(url)
+    }
 }

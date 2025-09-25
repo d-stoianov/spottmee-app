@@ -9,7 +9,7 @@ import { MatchResult } from '@/services/MatchService/types.ts'
 import LoadingPage from '@/app/loading.tsx'
 import PhotoCard from '@/features/photos/PhotoCard.tsx'
 import PhotosTable from '@/features/photos/PhotosTable.tsx'
-import { downloadFileFromURL, downloadFilesIntoZip } from '@/utils/file.ts'
+import { downloadFileFromURL } from '@/utils/file.ts'
 import Button from '@/components/ui/Button.tsx'
 import { RotateCcw } from 'lucide-react'
 
@@ -28,8 +28,12 @@ const SpotMatchRoute: React.FC = () => {
 
     const [offset, setOffset] = useState<number>(0)
 
-    const { album, getMatchResult } = usePublicAlbumProvider()
+    const { album, getMatchResult, downloadMatchedPhotos } =
+        usePublicAlbumProvider()
+
     const [matchResult, setMatchResult] = useState<null | MatchResult>(null)
+
+    const [isDownloading, setIsDownloading] = useState<boolean>(false)
 
     useEffect(() => {
         if (!album || !matchId) return
@@ -133,17 +137,13 @@ const SpotMatchRoute: React.FC = () => {
                             variant={'primary'}
                             className={'h-[3.5rem] w-[19.25rem]'}
                             onClick={async () => {
-                                if (!matchResult) return
+                                if (!matchResult || !matchId) return
 
-                                await downloadFilesIntoZip(
-                                    matchResult.matches.map((p) => {
-                                        return {
-                                            url: p.url,
-                                            name: p.originalName,
-                                        }
-                                    })
-                                )
+                                setIsDownloading(true)
+                                await downloadMatchedPhotos(matchId)
+                                setIsDownloading(false)
                             }}
+                            disabled={isDownloading}
                         >
                             <Typography
                                 className="text-white"
