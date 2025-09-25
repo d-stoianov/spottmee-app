@@ -16,6 +16,7 @@ export type MatchResultDTO = {
     id: string
     status: MatchResultStatus
     matches: PhotoDTO[]
+    total: number
 }
 
 export type MatchResult = Omit<MatchResultDTO, 'matches'> & {

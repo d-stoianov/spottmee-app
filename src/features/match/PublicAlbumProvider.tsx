@@ -5,7 +5,11 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 interface PublicAlbumContextType {
     album: MatchAlbumDTO | null | undefined // MatchAlbum - album has found, null - no album found, undefined - value is unset
     startMatching: (selfie: File) => Promise<string> // return match id to be redirected to
-    getMatchResult: (matchId: string) => Promise<MatchResult>
+    getMatchResult: (
+        matchId: string,
+        offset?: number,
+        size?: number
+    ) => Promise<MatchResult>
 }
 
 const PublicAlbumContext = createContext<PublicAlbumContextType | undefined>(
@@ -45,8 +49,12 @@ export const PublicAlbumProvider = ({
         return await matchService.startMatching(formData)
     }
 
-    const getMatchResult = async (matchId: string) => {
-        return await matchService.getMatchResult(matchId)
+    const getMatchResult = async (
+        matchId: string,
+        offset?: number,
+        size?: number
+    ) => {
+        return await matchService.getMatchResult(matchId, offset, size)
     }
 
     return (

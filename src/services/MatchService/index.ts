@@ -46,15 +46,23 @@ export class MatchService {
         return await response.text()
     }
 
-    public async getMatchResult(matchId: string): Promise<MatchResult> {
-        const response = await fetch(
-            `${this.MATCH_ALBUMS_URL}/${this.albumId}/${matchId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        )
+    public async getMatchResult(
+        matchId: string,
+        offset?: number,
+        size?: number
+    ): Promise<MatchResult> {
+        const params = new URLSearchParams()
+
+        if (offset !== undefined) params.append('offset', offset.toString())
+        if (size !== undefined) params.append('size', size.toString())
+
+        const url = `${this.MATCH_ALBUMS_URL}/${this.albumId}/${matchId}?${params.toString()}`
+
+        const response = await fetch(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
 
         if (response.status === 404) {
             throw new Error('Album not found')
@@ -68,6 +76,7 @@ export class MatchService {
             matches: matchResult.matches.map((p) =>
                 PhotoService.photoDTOtoPhoto(p)
             ),
+            total: matchResult.total,
         }
     }
 }

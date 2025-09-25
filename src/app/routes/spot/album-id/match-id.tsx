@@ -13,7 +13,11 @@ import { downloadFileFromURL, downloadFilesIntoZip } from '@/utils/file.ts'
 import Button from '@/components/ui/Button.tsx'
 import { RotateCcw } from 'lucide-react'
 
-const POLLING_INTERVAL = 5000
+// count of photos shown in a grid (per page)
+const PAGE_SIZE = 20
+
+// polling interval for updating matching status
+const POLLING_INTERVAL = 5000 // ms
 
 const SpotMatchRoute: React.FC = () => {
     const { t } = useTranslation()
@@ -21,6 +25,8 @@ const SpotMatchRoute: React.FC = () => {
     const navigate = useNavigate()
 
     const { matchId } = useParams()
+
+    const [offset, setOffset] = useState<number>(0)
 
     const { album, getMatchResult } = usePublicAlbumProvider()
     const [matchResult, setMatchResult] = useState<null | MatchResult>(null)
@@ -32,7 +38,7 @@ const SpotMatchRoute: React.FC = () => {
 
         const fetchMatchResult = async () => {
             try {
-                const result = await getMatchResult(matchId)
+                const result = await getMatchResult(matchId, offset, PAGE_SIZE)
                 setMatchResult(result)
 
                 // if still processing, keep polling
@@ -60,7 +66,24 @@ const SpotMatchRoute: React.FC = () => {
                 clearInterval(intervalId)
             }
         }
-    }, [album, matchId, getMatchResult])
+    }, [album, matchId])
+
+    const loadMorePhotos = async () => {
+        if (!matchId) return
+
+        const newOffset = offset + PAGE_SIZE
+        const result = await getMatchResult(matchId, newOffset, PAGE_SIZE)
+
+        setMatchResult((prev) =>
+            prev
+                ? {
+                      ...prev,
+                      matches: [...prev.matches, ...result.matches], // concatinate existing photos
+                  }
+                : result
+        )
+        setOffset(newOffset)
+    }
 
     if (!album) return
 
@@ -76,7 +99,7 @@ const SpotMatchRoute: React.FC = () => {
                     ? t('spot.comparingSelfiesWithOtherPhotos')
                     : matchResult.matches.length > 0
                       ? t('spot.weFoundYourCountPhotos', {
-                            count: matchResult.matches.length,
+                            count: matchResult.total,
                         })
                       : t('spot.noMatchesFound')}
             </Typography>
@@ -100,7 +123,8 @@ const SpotMatchRoute: React.FC = () => {
                             />
                         )
                     })}
-                totalPhotos={matchResult.matches.length}
+                totalPhotos={matchResult.total}
+                onLoadMorePhotos={loadMorePhotos}
             />
             {matchResult && matchResult.status === 'READY' && (
                 <div className={'mt-[5rem] flex flex-col items-center gap-6'}>
