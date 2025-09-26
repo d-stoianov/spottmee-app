@@ -4,6 +4,7 @@ import {
     MatchResultDTO,
 } from '@/services/MatchService/types'
 import { PhotoService } from '@/services/PhotoService'
+import { downloadFileFromURL } from '@/utils/file.ts'
 
 export class MatchService {
     private readonly MATCH_ALBUMS_URL = `${import.meta.env.VITE_API_URL}/match-albums`
@@ -81,27 +82,9 @@ export class MatchService {
     }
 
     public async downloadMatchedPhotos(matchId: string): Promise<void> {
-        const response = await fetch(
-            `${this.MATCH_ALBUMS_URL}/${this.albumId}/${matchId}/download`
+        await downloadFileFromURL(
+            `${this.MATCH_ALBUMS_URL}/${this.albumId}/${matchId}/download`,
+            `spottmee-matches-${matchId}`
         )
-
-        if (!response.ok) {
-            const text = await response.text()
-            throw new Error(`Error: ${response.status} - ${text}`)
-        }
-
-        const blob = await response.blob()
-
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-
-        const fileName = `spottmee-${matchId}.zip`
-
-        link.setAttribute('download', fileName)
-        document.body.appendChild(link)
-        link.click()
-        link.remove()
-        window.URL.revokeObjectURL(url)
     }
 }

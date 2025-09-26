@@ -37,6 +37,9 @@ const AlbumPhotosRoute: React.FC = () => {
     const [totalPhotos, setTotalPhotos] = useState<number>(0) // total number of photos (not current that are shown) need that to determine whether to show "see more" button
     const [readyPhotosCount, setReadyPhotosCount] = useState<number>(0)
 
+    const [isDownloadingPhotos, setIsDownloadingPhotos] =
+        useState<boolean>(false)
+
     const [photosToUpload, setPhotosToUpload] = useState<File[]>([])
 
     const [photosOffset, setPhotosOffset] = useState<number>(0)
@@ -57,7 +60,7 @@ const AlbumPhotosRoute: React.FC = () => {
         openModal: openUploadDoneModal,
     } = useModal()
 
-    const { getAlbumById } = useAlbums()
+    const { getAlbumById, downloadAlbumPhotos } = useAlbums()
 
     const {
         getPhotos,
@@ -269,6 +272,25 @@ const AlbumPhotosRoute: React.FC = () => {
                 totalPhotos={totalPhotos}
                 onLoadMorePhotos={loadMorePhotos}
             />
+
+            <div className={'mt-[5rem] flex flex-col items-center gap-6'}>
+                {photos.length > 0 && (
+                    <Button
+                        variant={'primary'}
+                        className={'h-[3.5rem] w-[19.25rem]'}
+                        onClick={async () => {
+                            setIsDownloadingPhotos(true)
+                            await downloadAlbumPhotos(album.id)
+                            setIsDownloadingPhotos(false)
+                        }}
+                        disabled={isDownloadingPhotos}
+                    >
+                        <Typography className="text-white" variant="buttonText">
+                            {t('spot.downloadAll')}
+                        </Typography>
+                    </Button>
+                )}
+            </div>
 
             <AnimatePresence>
                 {isUploadPhotosModalOpen && (

@@ -12,10 +12,11 @@ export const dataURLtoFile = (dataUrl: string, filename: string): File => {
 
 export const downloadFileFromURL = async (
     fileUrl: string,
-    fileName: string
+    fileName: string,
+    headers?: Record<string, string>
 ) => {
     try {
-        const response = await fetch(fileUrl)
+        const response = await fetch(fileUrl, { headers })
         const blob = await response.blob()
 
         const url = window.URL.createObjectURL(blob)

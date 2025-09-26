@@ -12,6 +12,7 @@ interface AlbumsContextType {
         albumCreateDTO: AlbumCreateDTO
     ) => Promise<Album | undefined>
     deleteAlbum: (albumId: string) => Promise<void>
+    downloadAlbumPhotos: (albumId: string) => Promise<void>
 }
 
 const AlbumsContext = createContext<AlbumsContextType | undefined>(undefined)
@@ -112,6 +113,14 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
         return albums.find((al) => al.id === albumId)
     }
 
+    const downloadAlbumPhotos = async (albumId: string) => {
+        const album = getAlbumById(albumId)
+        if (!album) {
+            return
+        }
+        await albumService.downloadAlbumPhotos(album)
+    }
+
     return (
         <AlbumsContext.Provider
             value={{
@@ -120,6 +129,7 @@ export const AlbumsProvider = ({ children }: { children: React.ReactNode }) => {
                 getAlbumById,
                 updateAlbum,
                 deleteAlbum,
+                downloadAlbumPhotos,
             }}
         >
             {children}

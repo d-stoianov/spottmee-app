@@ -1,4 +1,5 @@
 import { Album, AlbumDTO } from '@/services/AlbumService/types'
+import { downloadFileFromURL } from '@/utils/file.ts'
 
 export class AlbumService {
     private ALBUM_URL = `${import.meta.env.VITE_API_URL}/albums`
@@ -58,6 +59,16 @@ export class AlbumService {
                 Authorization: `Bearer ${this.jwt}`,
             },
         })
+    }
+
+    public async downloadAlbumPhotos(album: Album): Promise<void> {
+        await downloadFileFromURL(
+            `${this.ALBUM_URL}/${album.id}/photos/download`,
+            `spottmee-album-${album.name}`,
+            {
+                Authorization: `Bearer ${this.jwt}`,
+            }
+        )
     }
 
     private albumDTOtoAlbum(albumDTO: AlbumDTO): Album {
