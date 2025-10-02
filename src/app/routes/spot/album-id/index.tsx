@@ -10,6 +10,10 @@ import Modal from '@/components/ui/Modal.tsx'
 import DragDropUpload from '@/components/DragDropUpload.tsx'
 import useModal from '@/hooks/useModal.tsx'
 import { useNavigate } from 'react-router-dom'
+import GlowingParticleDesktop from '@/assets/glowing-particle-desktop.svg'
+import GlowingParticleMobile from '@/assets/glowing-particle-mobile.svg'
+import AlbumCard from '@/features/albums/AlbumCard.tsx'
+import { InfoIcon } from 'lucide-react'
 
 const SpotAlbumRoute: React.FC = () => {
     const { t } = useTranslation()
@@ -43,11 +47,31 @@ const SpotAlbumRoute: React.FC = () => {
 
             <div
                 className={
-                    'flex w-full flex-col items-center justify-center gap-[8rem] lg:flex-row'
+                    'flex w-full flex-col items-center justify-center gap-[5rem] lg:flex-row lg:items-start lg:gap-[12rem]'
                 }
             >
-                {/* cards mosaic */}
-                <div className={'w-[25rem]'}></div>
+                <div className="relative overflow-visible">
+                    <AlbumCard
+                        className="relative z-[15] h-[18rem] w-[18rem] lg:h-[24rem] lg:w-[24rem]"
+                        album={album}
+                        showDetails={false}
+                    />
+                    {isMobile ? (
+                        <img
+                            className="absolute -left-[4rem] top-[7.5rem] z-[10] max-h-none max-w-none scale-[0.9]"
+                            src={GlowingParticleMobile}
+                            alt="Glowing particle"
+                        />
+                    ) : (
+                        <img
+                            className="absolute -left-[8rem] top-[4rem] z-[10] max-h-none max-w-none scale-[0.9]"
+                            src={GlowingParticleDesktop}
+                            alt="Glowing particle"
+                        />
+                    )}
+
+                    {!isMobile && <Tooltip />}
+                </div>
 
                 {/*album info */}
                 <div className={'flex flex-col gap-[2.5rem]'}>
@@ -77,6 +101,8 @@ const SpotAlbumRoute: React.FC = () => {
                         </Typography>
                     </Button>
                 </div>
+
+                {isMobile && <Tooltip />}
             </div>
 
             <AnimatePresence>
@@ -87,6 +113,19 @@ const SpotAlbumRoute: React.FC = () => {
                 )}
             </AnimatePresence>
         </Main>
+    )
+}
+
+const Tooltip: React.FC = () => {
+    const { t } = useTranslation()
+
+    return (
+        <div className={'mt-[0rem] flex items-center gap-2 lg:mt-[3rem]'}>
+            <InfoIcon className={'text-secondary'} size={'1.25rem'} />
+            <Typography className={'text-secondary'} variant={'bodyDefault'}>
+                {t('spot.weOnlyUseThisToFindYourPhotos')}
+            </Typography>
+        </div>
     )
 }
 

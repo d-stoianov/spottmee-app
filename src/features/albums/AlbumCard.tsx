@@ -1,36 +1,44 @@
 import { Typography } from '@/components/ui/Typography'
 import { Album } from '@/services/AlbumService/types'
+import { MatchAlbumDTO } from '@/services/MatchService/types.ts'
 import { CalendarDays, Users } from 'lucide-react'
 import defaultAlbumCover from '@/assets/default-album-cover.jpg'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 type AlbumCardProps = {
-    album: Album
+    album: Album | MatchAlbumDTO
+    className?: string
     showDetails?: boolean
     onClick?: () => any
 }
 
 const AlbumCard: React.FC<AlbumCardProps> = ({
     album,
+    className,
     showDetails = true,
     onClick,
 }) => {
     const { t } = useTranslation()
 
-    const { createdAt, name, coverImageUrl } = album
-
-    const formattedDate = createdAt.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    })
+    const formattedDate =
+        'createdAt' in album
+            ? album.createdAt.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+              })
+            : null
 
     return (
         <div
-            className={clsx(
-                'relative h-[20rem] w-[20rem] overflow-hidden rounded-[1.25rem]',
-                { 'cursor-pointer': onClick }
+            className={twMerge(
+                clsx(
+                    'relative h-[20rem] w-[20rem] overflow-hidden rounded-[1.25rem]',
+                    className,
+                    { 'cursor-pointer': onClick }
+                )
             )}
             onClick={onClick}
         >
@@ -38,15 +46,19 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
             <div className="absolute inset-0 rounded-[1.25rem] bg-gradient-to-t from-black/60 to-transparent" />
 
             <img
-                src={coverImageUrl ? coverImageUrl : defaultAlbumCover}
+                src={
+                    album.coverImageUrl
+                        ? album.coverImageUrl
+                        : defaultAlbumCover
+                }
                 className="h-full w-full object-cover"
-                alt={`${name} album cover`}
+                alt={`${album.name} album cover`}
             />
 
             {showDetails && (
                 <div className="absolute left-1/2 top-2/3 flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center p-[1rem]">
                     <Typography className="text-white" variant="heading3">
-                        {name}
+                        {album.name}
                     </Typography>
                     {/* created on and matches */}
                     <div className="mt-[2rem] grid w-full grid-rows-2 justify-center">

@@ -113,6 +113,7 @@
         "albumTitle": "Upload A Selfie -<br>Let Us Spot Your Memories",
         "countPhotosUploaded_one": "{{count}} photo uploaded",
         "countPhotosUploaded_other": "{{count}} photos uploaded",
+        "weOnlyUseThisToFindYourPhotos": "We only use this to find your photos",
         "album": "Album",
         "sharedBy": "Shared by",
         "description": "Description",
