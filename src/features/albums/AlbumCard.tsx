@@ -6,12 +6,13 @@ import defaultAlbumCover from '@/assets/default-album-cover.jpg'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { formatFileSize } from '@/utils/formatting.ts'
 
 type AlbumCardProps = {
     album: Album | MatchAlbumDTO
     className?: string
     showDetails?: boolean
-    onClick?: () => any
+    onClick?: () => void
 }
 
 const AlbumCard: React.FC<AlbumCardProps> = ({
@@ -22,14 +23,15 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
 }) => {
     const { t } = useTranslation()
 
-    const formattedDate =
-        'createdAt' in album
-            ? album.createdAt.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-              })
-            : null
+    const isAlbumDTO = 'createdAt' in album
+
+    const formattedDate = isAlbumDTO
+        ? album.createdAt.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+          })
+        : null
 
     return (
         <div
@@ -55,7 +57,7 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
                 alt={`${album.name} album cover`}
             />
 
-            {showDetails && (
+            {showDetails && isAlbumDTO && (
                 <div className="absolute left-1/2 top-2/3 flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center p-[1rem]">
                     <Typography className="text-white" variant="heading3">
                         {album.name}
@@ -98,18 +100,24 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
                     </div>
                     {/* photos and size */}
                     <div className="mt-[1rem] flex w-full justify-around">
-                        <Typography
-                            className="text-white"
-                            variant="bodyDefault"
-                        >
-                            {t('albums.countPhotos', { count: 241 })}
-                        </Typography>
-                        <Typography
-                            className="text-white"
-                            variant="bodyDefault"
-                        >
-                            {2.1}mb
-                        </Typography>
+                        {album.totalPhotosCount !== undefined && (
+                            <Typography
+                                className="text-white"
+                                variant="bodyDefault"
+                            >
+                                {t('albums.countPhotos', {
+                                    count: album.totalPhotosCount,
+                                })}
+                            </Typography>
+                        )}
+                        {album.size !== undefined && (
+                            <Typography
+                                className="text-white"
+                                variant="bodyDefault"
+                            >
+                                {formatFileSize(album.size)}
+                            </Typography>
+                        )}
                     </div>
                 </div>
             )}

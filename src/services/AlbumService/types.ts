@@ -4,6 +4,8 @@ export type AlbumDTO = {
     createdAt: string // timestamp string from the API
     description?: string
     coverImageUrl?: string
+    totalPhotosCount?: number
+    size?: number // size of the album (in bytes)
 }
 
 // album with parsed JS Date object
