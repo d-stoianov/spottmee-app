@@ -4,6 +4,7 @@ export type AlbumDTO = {
     createdAt: string // timestamp string from the API
     description?: string
     coverImageUrl?: string
+    matchesCount: number
     totalPhotosCount?: number
     size?: number // size of the album (in bytes)
 }
@@ -15,7 +16,7 @@ export type Album = Omit<AlbumDTO, 'createdAt'> & {
 
 export type AlbumCreateDTO = Omit<
     AlbumDTO,
-    'id' | 'createdAt' | 'coverImageUrl'
+    'id' | 'createdAt' | 'coverImageUrl' | 'matchesCount' | 'totalPhotosCount'
 > & {
     coverImage?: File
 }

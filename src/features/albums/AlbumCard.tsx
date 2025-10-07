@@ -94,7 +94,9 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
                                 className="text-white"
                                 variant="bodyDefault"
                             >
-                                {t('albums.countGuestMatched', { count: 37 })}
+                                {t('albums.countTotalMatches', {
+                                    count: album.matchesCount,
+                                })}
                             </Typography>
                         </div>
                     </div>
