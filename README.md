@@ -1,34 +1,54 @@
 # Spottmee App
 
-This project is **Spottmee App**, initially developed during the **Amsterdam Hack!** ([hackathon](https://lu.ma/j7oaryet?tk=Qf5bH2)). The app was built in just 30 hours and achieved **3rd place** in the competition. The goal was to build a platform powered with AI. Spottmee simplifies the process of sharing photos from events by providing a self face recognition.
+**Spottmee** is a platform that simplifies photo sharing by using a selfie for **automatic face recognition**. It's an ideal tool for **photographers and event managers** to share their event photo collections, making it easy for attendees to quickly find and access their own photos.
 
-The project consumes the **Spottmee Service** ([GitHub Repository](https://github.com/d-stoianov/spottmee-service)) REST API.
+🧠 Powered by the [Spottmee API](https://github.com/d-stoianov/spottmee-api) & [Spottmee Face Embeddings Worker](https://github.com/d-stoianov/spottmee-face-embeddings-worker)  
+🌐 Live App: [app.spottmee.com](https://app.spottmee.com)  
+💡 Landing Page: [spottmee.com](https://spottmee.com)
 
-The app is live on [spottmee.com](https://spottmee.com)
+---
 
-<img width="1490" alt="screenshot-1" src="https://github.com/user-attachments/assets/94ad13a0-08b1-4e88-8b96-c78e82577e87" />
-<img width="1490" alt="screenshot-2" src="https://github.com/user-attachments/assets/b580e3cd-181f-43a6-8ed4-ebf38092b067" />
-<img width="1490" alt="screenshot-3" src="https://github.com/user-attachments/assets/c4ec68ea-9ba7-4858-ae4b-bf1c9b597f04" />
-<img width="1490" alt="screenshot-4" src="https://github.com/user-attachments/assets/d56ac6ff-bf81-4a4d-bed0-221e30bacd18" />
-<img width="1490" alt="screenshot-5" src="https://github.com/user-attachments/assets/0f453bb8-51ec-4d23-998f-1c292998ed5e" />
+### 🏆 Hackathon Achievement
+
+**Spottmee** was initially developed during the [Amsterdam Hack!](https://lu.ma/j7oaryet?tk=Qf5bH2) — a 30-hour hackathon sponsored by [JetBrains](https://www.jetbrains.com/) where the team achieved **3rd place** and  **€1,000** in cash for building a functional prototype within a very tight timeline.
+
+---
+
+##  🖼️ Screenshots
+
+<img width="1508" height="854" alt="1" src="https://github.com/user-attachments/assets/c0f5fd4b-eb77-4edf-b939-425d8bc553b0" />
+<img width="1508" height="849" alt="2" src="https://github.com/user-attachments/assets/0564048d-0e03-4362-9fe1-09cde45df8f0" />
+<img width="1511" height="855" alt="3" src="https://github.com/user-attachments/assets/6617625b-ca1e-4268-b738-f338d6ba84ab" />
+<img width="1511" height="849" alt="4" src="https://github.com/user-attachments/assets/cfdb1cd6-fe22-4a20-9cb8-b62cf2691575" />
+<img width="1512" height="857" alt="5" src="https://github.com/user-attachments/assets/0fecb0bc-5da5-4085-80f1-c1f22676b35a" />
+
+---
 
 ## Tech Stack
 
 -   **Vite**
 -   **React**
 -   **TypeScript**
--   **Tailwind CSS**
 -   **React Router DOM**
+-   **Tailwind CSS**
+-   **Motion**
 
-## Pages
+---
 
-### Home Page
+## Project Structure
+-   `src/`: Contains all the source code
+    -   `app/`: App's entry point and routes definitions
+    -   `assets/`: Static assets (images)
+    -   `components/`: Contains reusable components like Button, Input, etc
+    -   `config/`: Configuration files
+    -   `features/`: This folder includes separate features and its components
+    -   `hooks/`: Reusable hooks (not feature specific)
+    -   `locales/`: Localization files with key-value translation pairs
+    -   `providers/`: App's global providers, e.g. AuthProvider
+    -   `services/`: Services to work with the API data
+    -   `utils/`: Helper functions
 
-The home page provides an ability to upload group photos, for instance for event manager or photographer, then sharing the link created with people from these photos to let them find themselves.
-
-### Event Page
-
-The event page is being created with a unique link containing an (`eventId`) in it, enabling users to access photos from the specific event that were uploaded by event manager. On this page, people can download zip containing all the photos uploaded by the event manager or find themselves uploading their selfie and afterwards downloading zip with photos only with themselves.
+---
 
 ## Getting Started
 
@@ -49,45 +69,42 @@ The event page is being created with a unique link containing an (`eventId`) in 
 2.  Install dependencies:
 
     ```bash
-    npm install
+    pnpm install
     ```
 
 3.  Setup .env file:
 
     Create file in the root of the project called `.env`, with the following content:
-    `VITE_API_URL=https://api_url`
+    ```bash
+    VITE_API_URL=https://api_url
+    VITE_FIREBASE_CONFIG_STR=YOUR_FIREBASE_CONFIG
+    ```
+    You can run and build spottmee-api yourself and put the localhost url there. Please see - [spottmee-api](https://github.com/d-stoianov/spottmee-api)
+    <br>
+    <br>
+    How to setup Firebase and get the config you can find here - https://firebase.google.com/docs/web/setup
+    <br>
+    <br>
 
-    You can run and build an spottmee-service yourself and put the link from localhost there. Please see - [spottmee-service](https://github.com/d-stoianov/spottmee-service)
-
-4.  Start the development server:
+4. Start the development server:
 
     ```bash
-    npm run dev
+    pnpm run dev
     ```
+5. Open your browser and navigate to `http://localhost:5173`.
 
-5.  Open your browser and navigate to `http://localhost:5173`.
-
-## Project Structure
-
--   `src/`: Contains all the source code
-    -   `pages/`: Components for each page (Home, Event)
-    -   `services/`: API service to fetch data from the spottmee service
-    -   `router/`: Router setup
-    -   `layout/`: Contains page layout component
-    -   `components/`: Contains reusable components that are used in other components
-
-## ESLint
+### ESLint
 
 The project uses ESLint and Prettier for code quality and consistency. You can run the linter with:
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
-## Building project
+### Building project
 
-To generate static assets for deployment the project, you can use the following command:
+To generate static assets for deployment, you can use the following command:
 
 ```bash
-npm run build
+pnpm run build
 ```
