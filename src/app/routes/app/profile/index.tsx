@@ -102,7 +102,6 @@ const ProfileRoute: React.FC = () => {
                         icon={<LucideKey />}
                         label={t('profile.password')}
                         value={'****************'}
-                        onClick={() => {}}
                     />
                 </div>
 
