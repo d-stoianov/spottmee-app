@@ -52,7 +52,7 @@ const DragDropUpload: React.FC<DragDropUploadProps> = ({
                 <input
                     ref={inputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/png, image/jpeg, image/jpg"
                     multiple={allowMultiple}
                     className="hidden"
                     onChange={handleFileChange}
