@@ -2,9 +2,9 @@
 
 **Spottmee** is a platform that simplifies photo sharing by using a selfie for **automatic face recognition**. It's an ideal tool for **photographers and event managers** to share their event photo collections, making it easy for attendees to quickly find and access their own photos.
 
-🧠 Powered by the [Spottmee API](https://github.com/d-stoianov/spottmee-api) & [Spottmee Face Embeddings Worker](https://github.com/d-stoianov/spottmee-face-embeddings-worker)  
-🌐 Live App: [app.spottmee.com](https://app.spottmee.com)  
-💡 Landing Page: [spottmee.com](https://spottmee.com)
+Powered by the [Spottmee API](https://github.com/d-stoianov/spottmee-api) & [Spottmee Face Embeddings Worker](https://github.com/d-stoianov/spottmee-face-embeddings-worker)  
+Live App: [app.spottmee.com](https://app.spottmee.com)  
+Landing Page: [spottmee.com](https://spottmee.com)
 
 ---
 
@@ -14,7 +14,7 @@
 
 ---
 
-##  🖼️ Screenshots
+## Screenshots
 
 <img width="1508" height="854" alt="1" src="https://github.com/user-attachments/assets/c0f5fd4b-eb77-4edf-b939-425d8bc553b0" />
 <img width="1508" height="849" alt="2" src="https://github.com/user-attachments/assets/0564048d-0e03-4362-9fe1-09cde45df8f0" />
